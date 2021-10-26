@@ -1,4 +1,4 @@
-# Python script to hold XS * BR for normalisation of signal models
+# Python script to hold XS * BR for normalisatioin of signal models
 from collections import OrderedDict as od
 from commonObjects import *
   
@@ -9,6 +9,10 @@ globalXSBRMap = od()
 #globalXSBRMap['example'] = od()
 #globalXSBRMap['example']['decay'] = {'mode':'constant','factor':1}
 #globalXSBRMap['example']['PROCNAME'] = {'mode':'constant','factor':0.001}
+
+globalXSBRMap['ggtt_resonant'] = od()
+globalXSBRMap['ggtt_resonant']['decay'] = {'mode':'constant','factor':1}
+globalXSBRMap['ggtt_resonant']['radionm500'] = {'mode':'constant','factor':1}
 
 # For case of inclusive production mode then have no additional factor beyond V branching ratios
 globalXSBRMap['example'] = od()
