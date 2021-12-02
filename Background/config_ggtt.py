@@ -3,7 +3,8 @@
 backgroundScriptCfg = {
   
   # Setup
-  'inputWSDir':'/home/hep/mdk16/PhD/ggtt/CMSSW_10_2_0/src/HHToGGTT/output_trees/ws/data_2018/', # location of 'allData.root' file
+  #'inputWSDir':'/home/hep/mdk16/PhD/ggtt/CMSSW_10_2_0/src/HHToGGTT/output_trees/ws/data_2018/', # location of 'allData.root' file
+  'inputWSDir':'/home/hep/mdk16/PhD/ggtt/ParamNN/outputTrees/ws/data_2018/',
   'cats':'auto', # auto: automatically inferred from input ws
   'catOffset':0, # add offset to category numbers (useful for categories from different allData.root files)  
   'ext':'test', # extension to add to output directory

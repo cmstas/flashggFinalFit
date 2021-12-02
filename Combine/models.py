@@ -1,6 +1,9 @@
 models = {
   "mu_inclusive":"",
 
+  "ggtt_w_resonant_bkg":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/radionm.*:r[1,0,2]\"",
+
   "mu":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
 --PO \"map=.*/ggH.*:r_ggH[1,0,2]\" \
 --PO \"map=.*/bbH.*:r_ggH[1,0,2]\" \

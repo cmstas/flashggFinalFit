@@ -13,6 +13,9 @@ globalXSBRMap = od()
 globalXSBRMap['ggtt_resonant'] = od()
 globalXSBRMap['ggtt_resonant']['decay'] = {'mode':'constant','factor':1}
 globalXSBRMap['ggtt_resonant']['radionm500'] = {'mode':'constant','factor':1}
+#globalXSBRMap['ggtt_resonant']['VH'] = {'mode':'constant','factor':5.12}
+globalXSBRMap['ggtt_resonant']['VH'] = {'mode':'VH','factor':BR_H_gg}
+
 
 # For case of inclusive production mode then have no additional factor beyond V branching ratios
 globalXSBRMap['example'] = od()

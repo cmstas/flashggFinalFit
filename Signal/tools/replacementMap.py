@@ -38,10 +38,12 @@ globalReplacementMap['ggtt_resonant']['catWV'] = "radionm500cat0"
 globalReplacementMap['ggtt_resonant']['procRVMap'] = od()
 globalReplacementMap["ggtt_resonant"]["procRVMap"]["radionm500cat0"] = "radionm500"
 globalReplacementMap["ggtt_resonant"]["procRVMap"]["radionm500cat1"] = "radionm500"
+globalReplacementMap["ggtt_resonant"]["procRVMap"]["radionm500cat2"] = "radionm500"
 # Replacement category for RV fit
 globalReplacementMap["ggtt_resonant"]["catRVMap"] = od()
 globalReplacementMap["ggtt_resonant"]["catRVMap"]["radionm500cat0"] = "radionm500cat0"
 globalReplacementMap["ggtt_resonant"]["catRVMap"]["radionm500cat1"] = "radionm500cat1"
+globalReplacementMap["ggtt_resonant"]["catRVMap"]["radionm500cat2"] = "radionm500cat2"
 
 # STXS analysis
 globalReplacementMap['STXS'] = od()

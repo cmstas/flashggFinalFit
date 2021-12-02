@@ -24,6 +24,8 @@ BR_Z_nunu = 20.00*0.01
 BR_Z_qq = 69.91*0.01
 BR_W_qq = 67.41*0.01
 
+BR_H_gg = 2.27e-3
+
 # Production modes and decay channel: for extract XS from combine
 productionModes = ['ggH','qqH','ttH','tHq','tHW','ggZH','WH','ZH','bbH']
 decayMode = 'hgg'

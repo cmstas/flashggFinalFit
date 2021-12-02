@@ -5,7 +5,8 @@ _year = '2018'
 signalScriptCfg = {
   
   # Setup
-  'inputWSDir':'/home/hep/mdk16/PhD/ggtt/CMSSW_10_2_0/src/HHToGGTT/output_trees/ws/signal_%s'%_year,
+  #'inputWSDir':'/home/hep/mdk16/PhD/ggtt/CMSSW_10_2_0/src/HHToGGTT/output_trees/ws/signal_%s'%_year,
+  'inputWSDir':'/home/hep/mdk16/PhD/ggtt/ParamNN/outputTrees/ws/signal_%s'%_year,
   'procs':'auto', # if auto: inferred automatically from filenames
   'cats':'auto', # if auto: inferred automatically from (0) workspace
   'ext':'test_%s'%_year,
