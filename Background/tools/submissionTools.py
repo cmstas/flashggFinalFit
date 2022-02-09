@@ -73,16 +73,19 @@ def writeSubFiles(_opts):
     
   # SGE...
   if (_opts['batch'] == "IC")|(_opts['batch'] == "SGE")|(_opts['batch'] == "local" ):
+    print("Doing something")
     _executable = "sub_%s_%s"%(_opts['mode'],_opts['ext'])
 
     # Write details depending on mode
 
     # For separate submission file per category
     if _opts['mode'] == "fTest":
+      print("Start")
       for cidx in range(_opts['nCats']):
         c = _opts['cats'].split(",")[cidx]
         _f = open("%s/%s_%s.sh"%(_jobdir,_executable,c),"w")
         writePreamble(_f)
+        print("wrote")
         _cmd = "python %s/scripts/fTest.py --inputWSFile %s --cat %s --ext %s --year %s %s"%(bwd__,_opts['inputWSFile'],c,_opts['ext'],_opts['year'],_opts['modeOpts'])
         _f.write("%s\n"%_cmd)
         _f.close()

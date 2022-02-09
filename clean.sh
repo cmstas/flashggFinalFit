@@ -4,7 +4,9 @@ set -x
 #set -e
 
 #trees=/home/hep/mdk16/PhD/ggtt/CMSSW_10_2_0/src/HHToGGTT/output_trees
-trees=/home/hep/mdk16/PhD/ggtt/ParamNN/outputTrees
+#trees=/home/hep/mdk16/PhD/ggtt/ParamNN/outputTrees
+#trees=/home/hep/mdk16/PhD/ggtt/ResonantGGTT/tagging_output/NMSSM_XYH_Y_gg_H_tautau_MX_500_MY_100/outputTrees
+trees=/home/hep/mdk16/PhD/ggtt/ResonantGGTT/tagging_output/radionM500_HHggTauTau/outputTrees
 
 pushd $trees
  rm -r 2018/*/

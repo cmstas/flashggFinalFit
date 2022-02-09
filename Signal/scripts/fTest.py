@@ -39,11 +39,14 @@ def get_options():
   parser.add_option('--threshold', dest='threshold', default=30, type='int', help="Threshold number of events")
   parser.add_option('--nGaussMax', dest='nGaussMax', default=5, type='int', help="Max number of gaussians to test")
   parser.add_option('--skipWV', dest='skipWV', default=False, action="store_true", help="Skip processing of WV case")
+
+  #parser.add_option('--MH-bounds', dest='MH_bounds', default='120,130', type=str)
   # Minimizer options
   parser.add_option('--minimizerMethod', dest='minimizerMethod', default='TNC', help="(Scipy) Minimizer method")
   parser.add_option('--minimizerTolerance', dest='minimizerTolerance', default=1e-8, type='float', help="(Scipy) Minimizer toleranve")
   return parser.parse_args()
 (opt,args) = get_options()
+#MHLow, MHHigh = opt.MH_bounds.split(",")
 
 ROOT.gStyle.SetOptStat(0)
 ROOT.gROOT.SetBatch(True)
@@ -101,7 +104,7 @@ for pidx, proc in enumerate(procsToFTest):
     min_reduced_chi2, nGauss_opt = 999, 1
     for nGauss in range(1,opt.nGaussMax+1):
       k = "nGauss_%g"%nGauss
-      ssf = SimultaneousFit("fTest_RV_%g"%nGauss,proc,opt.cat,datasets_RV,xvar.Clone(),MH,MHLow,MHHigh,opt.mass,opt.nBins,0,opt.minimizerMethod,opt.minimizerTolerance,verbose=False)
+      ssf = SimultaneousFit("fTest_RV_%g"%nGauss,proc,opt.cat,datasets_RV,xvar.Clone(),MH,opt.mass,MHLow,MHHigh,opt.mass,opt.nBins,0,opt.minimizerMethod,opt.minimizerTolerance,verbose=False)
       ssf.buildNGaussians(nGauss)
       ssf.runFit()
       ssf.buildSplines()
@@ -126,7 +129,7 @@ for pidx, proc in enumerate(procsToFTest):
     min_reduced_chi2, nGauss_opt = 999, 1
     for nGauss in range(1,opt.nGaussMax+1):
       k = "nGauss_%g"%nGauss
-      ssf = SimultaneousFit("fTest_WV_%g"%nGauss,proc,opt.cat,datasets_WV,xvar.Clone(),MH,MHLow,MHHigh,opt.mass,opt.nBins,0,opt.minimizerMethod,opt.minimizerTolerance,verbose=False)
+      ssf = SimultaneousFit("fTest_WV_%g"%nGauss,proc,opt.cat,datasets_WV,xvar.Clone(),MH,opt.mass,MHLow,MHHigh,opt.mass,opt.nBins,0,opt.minimizerMethod,opt.minimizerTolerance,verbose=False)
       ssf.buildNGaussians(nGauss)
       ssf.runFit()
       ssf.buildSplines()

@@ -144,3 +144,8 @@ globalXSBRMap['STXS']['THQ_FWDH'] = {'mode':'tHq','factor':0.0279}
 globalXSBRMap['STXS']['THQ'] = {'mode':'tHq','factor':0.9721}
 globalXSBRMap['STXS']['THW_FWDH'] = {'mode':'tHW','factor':0.0106}
 globalXSBRMap['STXS']['THW'] = {'mode':'tHW','factor':0.9894}
+
+globalXSBRMap['ggtt_resonant_500'] = od()
+globalXSBRMap['ggtt_resonant_500']['decay'] = {'mode':'constant','factor':1}
+globalXSBRMap['ggtt_resonant_500']['radionm500'] = {'mode':'constant','factor':1}
+globalXSBRMap['ggtt_resonant_500']['VH'] = {'mode':'VH','factor':BR_H_gg}

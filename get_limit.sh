@@ -7,7 +7,9 @@ source /vols/grid/cms/setup.sh
 
 #trees=/home/hep/mdk16/PhD/ggtt/CMSSW_10_2_0/src/HHToGGTT/output_trees
 #trees=/home/hep/mdk16/PhD/ggtt/ParamNN/outputTrees
-trees=/home/hep/mdk16/PhD/ggtt/ResonantGGTT/tagging_output/NMSSM_XYH_Y_gg_H_tautau_MX_500_MY_100/outputTrees
+#trees=/home/hep/mdk16/PhD/ggtt/ResonantGGTT/tagging_output/NMSSM_XYH_Y_gg_H_tautau_MX_500_MY_100/outputTrees
+trees=/home/hep/mdk16/PhD/ggtt/ResonantGGTT/tagging_output/radionM500_HHggTauTau/outputTrees
+
 m=$1
 mh=125
 #nCats=$2
@@ -47,6 +49,7 @@ pushd Signal
  cp config_ggtt.py config_ggtt_${m}.py
  sed -i "s;<trees/year/m/ws/signal_year>;${trees}/2018/${m}/ws/signal_2018;g" config_ggtt_${m}.py
  sed -i "s;<m>;${m};g" config_ggtt_${m}.py
+ sed -i "s;<mh>;${mh};g" config_ggtt_${m}.py
 
  if [[ -z $(grep "ggtt_resonant_${m}" tools/replacementMap.py) ]]; then
   sed "s;<m>;${m};g" tools/replacementTemplate.py >> tools/replacementMap.py

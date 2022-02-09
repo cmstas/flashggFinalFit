@@ -19,6 +19,7 @@ def get_options():
   return parser.parse_args()
 
 (opt,args) = get_options()
+print(opt.modeOpts)
 
 print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ RUNNING BACKGROUND SCRIPTS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 def leave():

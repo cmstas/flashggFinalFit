@@ -42,6 +42,8 @@ def get_options():
   return parser.parse_args()
 (opt,args) = get_options()
 
+print(opt.blindingRegion)
+
 ROOT.gStyle.SetOptStat(0)
 ROOT.gROOT.SetBatch(True)
 
@@ -74,12 +76,12 @@ model.goodnessOfFit(_gofCriteria = opt.gofCriteria)
 
 for k in model.pdfs: print "%s --> Success: %s, Evals = %g, NLL = %.3f"%(k,model.pdfs[k]['status']['success'],model.pdfs[k]['status']['nfev'],model.pdfs[k]['NLL'])
 
-pdf_null = model.pdfs[('Exponential',3)]
-pdf_test = model.pdfs[('Exponential',5)]
+pdf_null = model.pdfs[('Exponential',1)]
+pdf_test = model.pdfs[('Exponential',1)]
 
-model.getProbabilityFTestFromToys(pdf_null,pdf_test,_outDir="/eos/home-j/jlangfor/www/CMS/postdoc/finalfits/Jul21/Background/fTest_with_toys",nToys=10)
+model.getProbabilityFTestFromToys(pdf_null,pdf_test,_outDir="/home/hep/mdk16/PhD/ggtt/finalfits_try2/CMSSW_10_2_13/src/flashggFinalFit/Background/fTest_with_toys",nToys=10)
 
-sys.exit(1)
+#sys.exit(1)
 
 # Build envelope
 if opt.year == "merged": model.buildEnvelope(_extension="_%s"%sqrts__)
@@ -94,7 +96,7 @@ else: model.buildNorm( norm, _extension="_%s_%s"%(opt.year,sqrts__))
 
 # Plotting
 print "\n --> Plotting envelope"
-plotPdfMap(model,model.envelopePdfs,_outdir="/eos/home-j/jlangfor/www/CMS/postdoc/finalfits/Jul21/Background",_cat=opt.cat)
+plotPdfMap(model,model.envelopePdfs,_outdir="/home/hep/mdk16/PhD/ggtt/finalfits_try2/CMSSW_10_2_13/src/flashggFinalFit/Background",_cat=opt.cat)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # SAVE: to output workspace

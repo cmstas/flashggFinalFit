@@ -215,3 +215,15 @@ globalReplacementMap["STXS"]["catRVMap"]["RECO_WH_LEP_PTV_75_150_Tag1"] = "RECO_
 globalReplacementMap["STXS"]["catRVMap"]["RECO_WH_LEP_PTV_GT150_Tag0"] = "RECO_WH_LEP_PTV_GT150_Tag0"
 globalReplacementMap["STXS"]["catRVMap"]["RECO_ZH_LEP_Tag0"] = "RECO_ZH_LEP_Tag0"
 globalReplacementMap["STXS"]["catRVMap"]["RECO_ZH_LEP_Tag1"] = "RECO_ZH_LEP_Tag1"
+
+globalReplacementMap['ggtt_resonant_500'] = od()
+globalReplacementMap['ggtt_resonant_500']['procWV'] = "radionm500"
+globalReplacementMap['ggtt_resonant_500']['catWV'] = "radionm500cat0"
+globalReplacementMap['ggtt_resonant_500']['procRVMap'] = od()
+globalReplacementMap["ggtt_resonant_500"]["procRVMap"]["radionm500cat0"] = "radionm500"
+globalReplacementMap["ggtt_resonant_500"]["procRVMap"]["radionm500cat1"] = "radionm500"
+globalReplacementMap["ggtt_resonant_500"]["procRVMap"]["radionm500cat2"] = "radionm500"
+globalReplacementMap["ggtt_resonant_500"]["catRVMap"] = od()
+globalReplacementMap["ggtt_resonant_500"]["catRVMap"]["radionm500cat0"] = "radionm500cat0"
+globalReplacementMap["ggtt_resonant_500"]["catRVMap"]["radionm500cat1"] = "radionm500cat1"
+globalReplacementMap["ggtt_resonant_500"]["catRVMap"]["radionm500cat2"] = "radionm500cat2"
