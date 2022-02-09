@@ -7,31 +7,35 @@ set -x
 trees=/home/hep/mdk16/PhD/ggtt/ParamNN/outputTrees
 
 pushd $trees
- rm -r ws
- rm -r 2018/ws*
- find 2018/ -type f -not -name "*TeV*" -exec rm {} \;
+ rm -r 2018/*/
 popd
 
-cd flashggFinalFit
+#cd flashggFinalFit
 
 pushd Signal
- rm -r outdir_test_2018
- rm -r outdir_packaged
+ rm -r outdir*/
+ rm config_ggtt_*.py*
+ sed -i '/ggtt_resonant/d' tools/replacementMap.py
+ sed -i -e :a -e '/^\n*$/{$d;N;ba' -e '}' tools/replacementMap.py #remove blank lines at end
+ sed -i '/ggtt_resonant/d' tools/XSBRMap.py
+ sed -i -e :a -e '/^\n*$/{$d;N;ba' -e '}' tools/XSBRMap.py #remove blank lines at end
 popd 
 
 pushd Background
- rm -r outdir_test
+ rm -r outdir*/
+ rm config_ggtt_*.py*
 popd
 
 pushd Datacard
- rm -r yields_test
- rm Datacard.txt
+ rm -r yields*/
+ rm Datacard*.txt
 popd
 
 pushd Combine
  rm -r Models
  rm -r runFits_mu_inclusive
  rm -r t2w_jobs
- rm Datacard.txt 
+ rm Datacard*.txt 
  rm *.root
+ rm combine_results*.txt
 popd

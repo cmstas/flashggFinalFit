@@ -16,7 +16,7 @@ def rooiter(x):
 
 def extractWSFileNames( _inputWSDir ): 
   if not os.path.isdir(_inputWSDir):
-    print " --> [ERROR] No such directory (%s)"
+    print " --> [ERROR] No such directory (%s)"%_inputWSDir
     return False
   return glob.glob("%s/output_*.root"%_inputWSDir)
 

@@ -25,26 +25,14 @@ globalReplacementMap["example"]["catRVMap"]["VBF_Tag0"] = "VBF_Tag0"
 
 
 # Example analysis which with cats Untagged_Tag0,VBF_Tag0
-globalReplacementMap['ggtt_resonant'] = od()
 # For WRONG VERTEX SCENARIO:
 #  * single proc x cat for wrong vertex since for dZ > 1cm shape independent of proc x cat
 #  * use proc x cat with highest number of WV events
-globalReplacementMap['ggtt_resonant']['procWV'] = "radionm500"
-globalReplacementMap['ggtt_resonant']['catWV'] = "radionm500cat0"
 # For RIGHT VERTEX SCENARIO:
 #  * default you should add is diagonal process from given category 
 #  * if few events in diagonal process then may need to change the category aswell (see catRVMap)
 #  * map must contain entry for all cats being processed (for replacement proc and cat)
-globalReplacementMap['ggtt_resonant']['procRVMap'] = od()
-globalReplacementMap["ggtt_resonant"]["procRVMap"]["radionm500cat0"] = "radionm500"
-globalReplacementMap["ggtt_resonant"]["procRVMap"]["radionm500cat1"] = "radionm500"
-globalReplacementMap["ggtt_resonant"]["procRVMap"]["radionm500cat2"] = "radionm500"
 # Replacement category for RV fit
-globalReplacementMap["ggtt_resonant"]["catRVMap"] = od()
-globalReplacementMap["ggtt_resonant"]["catRVMap"]["radionm500cat0"] = "radionm500cat0"
-globalReplacementMap["ggtt_resonant"]["catRVMap"]["radionm500cat1"] = "radionm500cat1"
-globalReplacementMap["ggtt_resonant"]["catRVMap"]["radionm500cat2"] = "radionm500cat2"
-
 # STXS analysis
 globalReplacementMap['STXS'] = od()
 # For WRONG VERTEX SCENARIO:
