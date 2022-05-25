@@ -20,8 +20,8 @@ from finalModel import *
 from plottingTools import *
 
 # Constant
-MHLow, MHHigh = '120', '130'
-MHNominal = '125'
+#MHLow, MHHigh = '120', '130'
+#MHNominal = '125'
 
 def leave():
   print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ HGG SIGNAL FITTER (END) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
@@ -61,8 +61,21 @@ def get_options():
   # Minimizer options
   parser.add_option('--minimizerMethod', dest='minimizerMethod', default='TNC', help="(Scipy) Minimizer method")
   parser.add_option('--minimizerTolerance', dest='minimizerTolerance', default=1e-8, type='float', help="(Scipy) Minimizer toleranve")
+
+  parser.add_option('--MHNominal', dest='MHNominal', default='125', help="Mass point to fit")
+  parser.add_option('--MHLow', dest='MHLow', default='120')
+  parser.add_option('--MHHigh', dest='MHHigh', default='130')
   return parser.parse_args()
 (opt,args) = get_options()
+
+MHNominal = opt.MHNominal
+MHLow = opt.MHLow
+MHHigh = opt.MHHigh
+
+print(MHNominal, type(MHNominal))
+print(MHLow, MHHigh, type(MHLow), type(MHHigh))
+
+print(opt.massPoints, type(opt.massPoints))
 
 ROOT.gStyle.SetOptStat(0)
 ROOT.gROOT.SetBatch(True)
@@ -280,7 +293,7 @@ if opt.doVoigtian:
 # FIT: simultaneous signal fit (ssf)
 ssfMap = od()
 name = "Total" if opt.skipVertexScenarioSplit else "RV"
-ssfRV = SimultaneousFit(name,opt.proc,opt.cat,datasetRVForFit,xvar.Clone(),MH,MHLow,MHHigh,opt.massPoints,opt.nBins,opt.MHPolyOrder,opt.minimizerMethod,opt.minimizerTolerance)
+ssfRV = SimultaneousFit(name,opt.proc,opt.cat,datasetRVForFit,xvar.Clone(),MH,MHNominal,MHLow,MHHigh,opt.massPoints,opt.nBins,opt.MHPolyOrder,opt.minimizerMethod,opt.minimizerTolerance)
 if opt.useDCB: ssfRV.buildDCBplusGaussian()
 else: ssfRV.buildNGaussians(nRV)
 ssfRV.runFit()
@@ -289,7 +302,7 @@ ssfMap[name] = ssfRV
 
 if not opt.skipVertexScenarioSplit:
   name = "WV"
-  ssfWV = SimultaneousFit(name,opt.proc,opt.cat,datasetWVForFit,xvar.Clone(),MH,MHLow,MHHigh,opt.massPoints,opt.nBins,opt.MHPolyOrder,opt.minimizerMethod,opt.minimizerTolerance)
+  ssfWV = SimultaneousFit(name,opt.proc,opt.cat,datasetWVForFit,xvar.Clone(),MH,MHNominal,MHLow,MHHigh,opt.massPoints,opt.nBins,opt.MHPolyOrder,opt.minimizerMethod,opt.minimizerTolerance)
   if opt.useDCB: ssfWV.buildDCBplusGaussian()
   else: ssfWV.buildNGaussians(nWV)
   ssfWV.runFit()

@@ -136,16 +136,19 @@ class FinalModel:
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Functions to get XS, BR and EA splines for given proc/decay from map
   def buildXSBRSplines(self):
-    mh = np.linspace(120.,130.,101)
+    #mh = np.linspace(120.,130.,101)
+    mh = np.linspace(float(self.MHLow),float(self.MHHigh),101)
     # XS
     fp = self.xsbrMap[self.proc]['factor'] if 'factor' in self.xsbrMap[self.proc] else 1.
     mp = self.xsbrMap[self.proc]['mode']
-    xs = fp*self.XSBR[mp]
+    #xs = fp*self.XSBR[mp]
+    xs = np.ones_like(mh)
     self.Splines['xs'] = ROOT.RooSpline1D("fxs_%s_%s"%(self.proc,self.sqrts),"fxs_%s_%s"%(self.proc,self.sqrts),self.MH,len(mh),mh,xs)
     # BR
     fd = self.xsbrMap['decay']['factor'] if 'factor' in self.xsbrMap['decay'] else 1.
     md = self.xsbrMap['decay']['mode']
-    br = fd*self.XSBR[md]
+    #br = fd*self.XSBR[md]
+    br = np.ones_like(mh)
     self.Splines['br'] = ROOT.RooSpline1D("fbr_%s"%self.sqrts,"fbr_%s"%self.sqrts,self.MH,len(mh),mh,br)
 
   def buildEffAccSpline(self):
@@ -421,7 +424,7 @@ class FinalModel:
     wsout.imp = getattr(wsout,"import")
     wsout.imp(self.Pdfs['final'],ROOT.RooFit.RecycleConflictNodes())
     wsout.imp(self.Functions['final_norm'],ROOT.RooFit.RecycleConflictNodes())
-    #wsout.imp(self.Functions['final_normThisLumi'],ROOT.RooFit.RecycleConflictNodes())
-    #wsout.imp(self.Pdfs['final_extend'],ROOT.RooFit.RecycleConflictNodes())
-    #wsout.imp(self.Pdfs['final_extendThisLumi'],ROOT.RooFit.RecycleConflictNodes())
+    wsout.imp(self.Functions['final_normThisLumi'],ROOT.RooFit.RecycleConflictNodes())
+    wsout.imp(self.Pdfs['final_extend'],ROOT.RooFit.RecycleConflictNodes())
+    wsout.imp(self.Pdfs['final_extendThisLumi'],ROOT.RooFit.RecycleConflictNodes())
     for d in self.Datasets.itervalues(): wsout.imp(d) 

@@ -13,7 +13,7 @@ signalScriptCfg = {
   'ext':'ggtt_resonant_<m>',
   'analysis':'ggtt_resonant_<m>', # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)
   'year':'%s'%_year, # Use 'combined' if merging all years: not recommended
-  'massPoints':'125',
+  'massPoints':'<mh>',
 
   #Photon shape systematics  
   'scales':'',

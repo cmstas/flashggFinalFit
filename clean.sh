@@ -3,10 +3,9 @@
 set -x
 #set -e
 
-#trees=/home/hep/mdk16/PhD/ggtt/CMSSW_10_2_0/src/HHToGGTT/output_trees
-#trees=/home/hep/mdk16/PhD/ggtt/ParamNN/outputTrees
-#trees=/home/hep/mdk16/PhD/ggtt/ResonantGGTT/tagging_output/NMSSM_XYH_Y_gg_H_tautau_MX_500_MY_100/outputTrees
-trees=/home/hep/mdk16/PhD/ggtt/ResonantGGTT/tagging_output/radionM500_HHggTauTau/outputTrees
+#trees=/home/hep/mdk16/PhD/ggtt/ResonantGGTT/tagging_output/forFinalFits/outputTrees
+#trees=/home/hep/mdk16/PhD/ggtt/ResonantGGTT/tagging_output/Radion_paramBDT/radionM300_HHggTauTau/outputTrees
+trees=/home/hep/mdk16/PhD/ggtt/ResonantGGTT/Outputs/LowMassVsSM/tagging/sm_trigger_2017_more_estimators/outputTrees
 
 pushd $trees
  rm -r 2018/*/
@@ -26,6 +25,8 @@ popd
 pushd Background
  rm -r outdir*/
  rm config_ggtt_*.py*
+ rm bkgmodel*.pdf
+ rm bkgmodel*.png
 popd
 
 pushd Datacard
