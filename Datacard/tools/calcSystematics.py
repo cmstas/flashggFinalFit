@@ -91,7 +91,7 @@ def factoryType(d,s):
       f.Close()
 
   # If never found:
-  print " --> [ERROR] systematic %s: cannot extract type in factoryType function. Doesn't match requirement for (anti)-symmetric weights or anti-symmetric histograms. Leaving..."
+  print " --> [ERROR] systematic %s: cannot extract type in factoryType function. Doesn't match requirement for (anti)-symmetric weights or anti-symmetric histograms. Leaving..."%(s['name'])
   sys.exit(1)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -160,7 +160,7 @@ def calcSystYields(_nominalDataName,_nominalDataContents,_inputWS,_systFactoryTy
           f_up, f_down = p.getRealValue("%sUp01sigma"%s), p.getRealValue("%sDown01sigma"%s)
           # Checks:
           # 1) if central weights are zero then skip event
-          if f_central == 0: continue
+          if f_central == 0 or w == 0: continue
           # 2) if up weight is equal to down weight (=1) then set to nominal
           elif f_up == f_down: w_up, w_down = w, w
           else:

@@ -23,6 +23,7 @@
 #include "RooMsgService.h"
 #include "RooMinuit.h"
 
+#include "../../tools/mgg_window.h"
 #include "boost/program_options.hpp"
 #include "boost/algorithm/string/split.hpp"
 #include "boost/algorithm/string/classification.hpp"
@@ -124,7 +125,7 @@ int main(int argc, char *argv[]){
 	//std::cout << "[INFO] Got intLumi var from ws, value "<< intLumiREAD->getVal()<<std::endl;
 
 	RooWorkspace *outWS = new RooWorkspace();
-	RooRealVar  newmass("CMS_hgg_mass","CMS_hgg_mass",100,180) ;
+	RooRealVar  newmass("CMS_hgg_mass","CMS_hgg_mass",mgg_low,mgg_high) ;
 	RooRealVar  newweight("wCMS_hgg_mass","wCMS_hgg_mass",0,10) ;
 	RooRealVar  sqrts("SqrtS","SqrtS",0,14) ;
 	RooRealVar  intlumi("IntLumi","IntLumi",0,300000) ;

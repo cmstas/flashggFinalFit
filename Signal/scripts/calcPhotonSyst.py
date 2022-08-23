@@ -39,7 +39,7 @@ def get_options():
 (opt,args) = get_options()
 
 # RooRealVar to fill histograms
-mgg = ROOT.RooRealVar(opt.xvar,opt.xvar,125)
+mgg = ROOT.RooRealVar(opt.xvar,opt.xvar,mgg_res)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Function to extact histograms from WS
@@ -113,8 +113,8 @@ data = pd.DataFrame( columns=columns_data )
 # Loop over processes and add row to dataframe
 for _proc in opt.procs.split(","):
   # Glob M125 filename
-  _WSFileName = glob.glob("%s/output*M125*%s.root"%(opt.inputWSDir,_proc))[0]
-  _nominalDataName = "%s_125_%s_%s"%(procToData(_proc.split("_")[0]),sqrts__,opt.cat)
+  _WSFileName = glob.glob("%s/output*M%s*%s.root"%(opt.inputWSDir,str(mgg_res),_proc))[0]
+  _nominalDataName = "%s_%s_%s_%s"%(procToData(_proc.split("_")[0]),str(mgg_res),sqrts__,opt.cat)
   data = data.append({'proc':_proc,'cat':opt.cat,'inputWSFile':_WSFileName,'nominalDataName':_nominalDataName}, ignore_index=True, sort=False)
 
 # Loop over rows in dataFrame and open ws

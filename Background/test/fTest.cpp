@@ -36,6 +36,7 @@
 #include "HiggsAnalysis/CombinedLimit/interface/RooMultiPdf.h"
 
 #include "../interface/PdfModelBuilder.h"
+#include "../../tools/mgg_window.h"
 #include <Math/PdfFuncMathCore.h>
 #include <Math/ProbFunc.h>
 #include <iomanip>
@@ -55,8 +56,6 @@ namespace po = program_options;
 
 bool BLIND = true;
 bool runFtestCheckWithToys=false;
-int mgg_low =100;
-int mgg_high =180;
 int nBinsForMass = 4*(mgg_high-mgg_low);
 
 RooRealVar *intLumi_ = new RooRealVar("IntLumi","hacked int lumi", 1000.);
@@ -316,8 +315,8 @@ void plot(RooRealVar *mass, RooAbsPdf *pdf, RooDataSet *data, string name,vector
  
   *prob = getGoodnessOfFit(mass,pdf,data,name);
   RooPlot *plot = mass->frame();
-  mass->setRange("unblindReg_1",mgg_low,115);
-  mass->setRange("unblindReg_2",135,mgg_high);
+  mass->setRange("unblindReg_1",mgg_low,mgg_veto_low);
+  mass->setRange("unblindReg_2",mgg_veto_high,mgg_high);
   if (BLIND) {
     data->plotOn(plot,Binning(mgg_high-mgg_low),CutRange("unblindReg_1"));
     data->plotOn(plot,Binning(mgg_high-mgg_low),CutRange("unblindReg_2"));
@@ -352,8 +351,8 @@ void plot(RooRealVar *mass, RooMultiPdf *pdfs, RooCategory *catIndex, RooDataSet
   leg->SetLineColor(1);
   RooPlot *plot = mass->frame();
 
-  mass->setRange("unblindReg_1",mgg_low,115);
-  mass->setRange("unblindReg_2",135,mgg_high);
+  mass->setRange("unblindReg_1",mgg_low,mgg_veto_low);
+  mass->setRange("unblindReg_2",mgg_veto_high,mgg_high);
   if (BLIND) {
     data->plotOn(plot,Binning(mgg_high-mgg_low),CutRange("unblindReg_1"));
     data->plotOn(plot,Binning(mgg_high-mgg_low),CutRange("unblindReg_2"));
@@ -417,7 +416,7 @@ void plot(RooRealVar *mass, RooMultiPdf *pdfs, RooCategory *catIndex, RooDataSet
   plotdata->GetPoint(ipoint, xtmp,ytmp);
   double bkgval = nomBkgCurve->interpolate(xtmp);
   if (BLIND) {
-   if ((xtmp > 115 ) && ( xtmp < 135) ) continue;
+   if ((xtmp > mgg_veto_low ) && ( xtmp < mgg_veto_high) ) continue;
   }
   std::cout << "[INFO] plotdata->Integral() " <<  plotdata->Integral() << " ( bins " << npoints  << ") hbkgplots[i]->Integral() " << hbplottmp->Integral() << " (bins " << hbplottmp->GetNbinsX() << std::endl;
  double errhi = plotdata->GetErrorYhigh(ipoint);
@@ -464,8 +463,8 @@ void plot(RooRealVar *mass, map<string,RooAbsPdf*> pdfs, RooDataSet *data, strin
   leg->SetLineColor(0);
   RooPlot *plot = mass->frame();
 
-  mass->setRange("unblindReg_1",mgg_low,115);
-  mass->setRange("unblindReg_2",135,mgg_high);
+  mass->setRange("unblindReg_1",mgg_low,mgg_veto_low);
+  mass->setRange("unblindReg_2",mgg_veto_high,mgg_high);
   if (BLIND) {
     data->plotOn(plot,Binning(mgg_high-mgg_low),CutRange("unblindReg_1"));
     data->plotOn(plot,Binning(mgg_high-mgg_low),CutRange("unblindReg_2"));

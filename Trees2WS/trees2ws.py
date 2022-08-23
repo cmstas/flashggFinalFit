@@ -8,12 +8,13 @@
 import os, sys
 import re
 from optparse import OptionParser
+from mgg_window import *
 
 def get_options():
   parser = OptionParser()
   parser.add_option('--inputConfig',dest='inputConfig', default="", help='Input config: specify list of variables/systematics/analysis categories')
   parser.add_option('--inputTreeFile',dest='inputTreeFile', default="./output_0.root", help='Input tree file')
-  parser.add_option('--inputMass',dest='inputMass', default="125", help='Input mass')
+  parser.add_option('--inputMass',dest='inputMass', default=str(mgg_res), help='Input mass')
   parser.add_option('--productionMode',dest='productionMode', default="ggh", help='Production mode [ggh,vbf,wh,zh,tth,thq,ggzh,bbh]')
   parser.add_option('--year',dest='year', default="2016", help='Year')
   parser.add_option('--decayExt',dest='decayExt', default='', help='Decay extension')
@@ -53,7 +54,7 @@ def add_vars_to_workspace(_ws=None,_data=None,_stxsVar=None):
   for var in _data.columns:
     if var in ['type','cat',_stxsVar]: continue
     if var == "CMS_hgg_mass": 
-      _vars[var] = ROOT.RooRealVar(var,var,125.,100.,180.)
+      _vars[var] = ROOT.RooRealVar(var,var,mgg_res,mgg_low,mgg_high)
       _vars[var].setBins(160)
     elif var == "dZ": 
       _vars[var] = ROOT.RooRealVar(var,var,0.,-20.,20.)
@@ -69,7 +70,8 @@ def add_vars_to_workspace(_ws=None,_data=None,_stxsVar=None):
 # Function to make RooArgSet
 def make_argset(_ws=None,_varNames=None):
   _aset = ROOT.RooArgSet()
-  for v in _varNames: _aset.add(_ws.var(v))
+  for v in _varNames:
+    _aset.add(_ws.var(v))
   return _aset
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -108,13 +110,13 @@ theoryWeightColumns = {}
 for ts, nWeights in theoryWeightContainers.iteritems(): theoryWeightColumns[ts] = ["%s_%g"%(ts[:-1],i) for i in range(0,nWeights)] # drop final s from container name
 
 # If year == 2018, add HET
-if opt.year == '2018': systematics.append("JetHEM")
+#if opt.year == '2018': systematics.append("JetHEM")
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # UPROOT file
 f = uproot.open(opt.inputTreeFile)
-if inputTreeDir == '': listOfTreeNames == f.keys()
+if inputTreeDir == '': listOfTreeNames = f.keys()
 else: listOfTreeNames = f[inputTreeDir].keys()
 # If cats = 'auto' then determine from list of trees
 if cats == 'auto':

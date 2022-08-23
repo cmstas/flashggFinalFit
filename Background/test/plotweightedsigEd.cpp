@@ -40,6 +40,7 @@
 #include "TArrow.h"
 #include "RooHist.h"
 
+#include "../../tools/mgg_window.h"
 #include "boost/program_options.hpp"
 #include "boost/algorithm/string/split.hpp"
 #include "boost/algorithm/string/classification.hpp"
@@ -642,8 +643,8 @@ int main(int argc, char *argv[]) {
     histogramMap[catnames[chan->numTypes()+1].Data()]=hwsig;
 
     // set mass range around the Higgs 
-    mass->setRange("binrange",124.5,125.5);
-    mass->setRange("fullrange",124.5,125.5);  
+    mass->setRange("binrange" ,mgg_res-1,mgg_res);
+    mass->setRange("fullrange",mgg_res-1,mgg_res);  
     
 
 
@@ -728,10 +729,10 @@ int main(int argc, char *argv[]) {
   }
   RooRealVar *mcMass= (RooRealVar*)hggWS->var("CMS_hgg_mass");
   RooRealVar *mcMh = (RooRealVar*)hggWS->var("MH");
-  mcMh->setVal(125);
+  mcMh->setVal(mgg_res);
   mcMass->setRange("higgsRange",105.,140.);
   map<string,RooDataSet*> dataSets;
-  dataSets = getFlashggData( hggWS, catnamesVector[0], 125 );
+  dataSets = getFlashggData( hggWS, catnamesVector[0], mgg_res );
   TH1* hWeightedMC =  new TH1F("hWeightedMC","desc",70,105.,140.);
   vector<TString> mcCatNames = catnamesVector[0];
   vector<TH1*> vecMChists;

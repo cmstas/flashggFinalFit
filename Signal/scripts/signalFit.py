@@ -12,6 +12,7 @@ from collections import OrderedDict as od
 
 from commonTools import *
 from commonObjects import *
+from mgg_window import *
 from signalTools import *
 from replacementMap import globalReplacementMap
 from XSBRMap import *
@@ -20,8 +21,9 @@ from finalModel import *
 from plottingTools import *
 
 # Constant
-MHLow, MHHigh = '120', '130'
-MHNominal = '125'
+
+#MHLow, MHHigh = '120', '130'		defined in mgg_window
+#MHNominal = '125'
 
 def leave():
   print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ HGG SIGNAL FITTER (END) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
@@ -36,7 +38,7 @@ def get_options():
   parser.add_option("--cat", dest='cat', default='', help="RECO category")
   parser.add_option("--year", dest='year', default='2016', help="Year")
   parser.add_option("--analysis", dest='analysis', default='STXS', help="Analysis handle: used to specify replacement map and XS*BR normalisations")
-  parser.add_option('--massPoints', dest='massPoints', default='120,125,130', help="Mass points to fit")
+  parser.add_option('--massPoints', dest='massPoints', default='90,95,100', help="Mass points to fit")
   parser.add_option('--doEffAccFromJson', dest='doEffAccFromJson', default=False, action="store_true", help="Extract eff x acc from json (produced by getEffAcc). Else, extract from nominal weights in flashgg workspaces")
   parser.add_option('--skipBeamspotReweigh', dest='skipBeamspotReweigh', default=False, action="store_true", help="Skip beamspot reweigh to match beamspot distribution in data")
   parser.add_option('--doPlots', dest='doPlots', default=False, action="store_true", help="Produce Signal Fitting plots")
@@ -64,6 +66,7 @@ def get_options():
   return parser.parse_args()
 (opt,args) = get_options()
 
+#opt.massPoints = str(mgg_res)+","
 ROOT.gStyle.SetOptStat(0)
 ROOT.gROOT.SetBatch(True)
 

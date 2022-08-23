@@ -15,11 +15,11 @@ from collections import OrderedDict as od
 
 from commonTools import *
 from commonObjects import *
+from mgg_window import *
 from signalTools import *
 from simultaneousFit import *
 from plottingTools import *
 
-MHLow, MHHigh = '120', '130'
 
 def leave():
   print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ HGG SIGNAL FTEST (END) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ "
@@ -33,7 +33,7 @@ def get_options():
   parser.add_option("--procs", dest='procs', default='', help="Signal processes")
   parser.add_option("--nProcsToFTest", dest='nProcsToFTest', default=5, type='int',help="Number of signal processes to fTest (ordered by sum entries), others are set to nRV=1,nWV=1. Set to -1 to run over all")
   parser.add_option("--cat", dest='cat', default='', help="RECO category")
-  parser.add_option('--mass', dest='mass', default='125', help="Mass point to fit")
+  parser.add_option('--mass', dest='mass', default=str(mgg_res), help="Mass point to fit")
   parser.add_option('--doPlots', dest='doPlots', default=False, action="store_true", help="Produce Signal fTest plots")
   parser.add_option('--nBins', dest='nBins', default=80, type='int', help="Number of bins for fit")
   parser.add_option('--threshold', dest='threshold', default=30, type='int', help="Threshold number of events")
@@ -44,6 +44,9 @@ def get_options():
   parser.add_option('--minimizerTolerance', dest='minimizerTolerance', default=1e-8, type='float', help="(Scipy) Minimizer toleranve")
   return parser.parse_args()
 (opt,args) = get_options()
+
+#opt.mass = int(mgg_res)
+MHLow, MHHigh = str(int(opt.mass)-5), str(int(opt.mass)+5)
 
 ROOT.gStyle.SetOptStat(0)
 ROOT.gROOT.SetBatch(True)
@@ -95,7 +98,8 @@ for pidx, proc in enumerate(procsToFTest):
 
   # Run fTest: RV
   # If numEntries below threshold then keep as n = 1
-  if datasets_RV[opt.mass].numEntries() < opt.threshold: continue  
+  if datasets_RV[opt.mass].numEntries() < opt.threshold:
+    continue  
   else:
     ssfs = od()
     min_reduced_chi2, nGauss_opt = 999, 1

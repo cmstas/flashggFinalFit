@@ -20,6 +20,8 @@ BATCH=""
 QUEUE=""
 YEAR="2016"
 CATOFFSET=0
+MGG_LOW=100
+MGG_HIGH=180
 
 usage(){
 	echo "The script runs background scripts:"
@@ -180,8 +182,8 @@ fi
 if [ $UNBLIND == 1 ]; then
 OPT=" --unblind"
 fi
-echo "./scripts/subBkgPlots.py -b CMS-HGG_multipdf_$EXT.root -d $OUTDIR/bkgPlots$DATAEXT -S 13 --isMultiPdf --useBinnedData  --doBands --massStep 1 $SIG -L 100 -H 180 -f $CATS -l $CATS --intLumi $INTLUMI $OPT --batch $BATCH -q $QUEUE --year $YEAR"
-./scripts/subBkgPlots.py -b CMS-HGG_multipdf_$EXT.root -d $OUTDIR/bkgPlots$DATAEXT -S 13 --isMultiPdf --useBinnedData  --doBands  --massStep 1 $SIG -L 100 -H 180 -f $CATS -l $CATS --intLumi $INTLUMI $OPT --batch $BATCH -q $QUEUE --year $YEAR
+echo "./scripts/subBkgPlots.py -b CMS-HGG_multipdf_$EXT.root -d $OUTDIR/bkgPlots$DATAEXT -S 13 --isMultiPdf --useBinnedData  --doBands --massStep 1 $SIG -L $MGG_LOW -H $MGG_HIGH -f $CATS -l $CATS --intLumi $INTLUMI $OPT --batch $BATCH -q $QUEUE --year $YEAR"
+./scripts/subBkgPlots.py -b CMS-HGG_multipdf_$EXT.root -d $OUTDIR/bkgPlots$DATAEXT -S 13 --isMultiPdf --useBinnedData  --doBands  --massStep 1 $SIG -L $MGG_LOW -H $MGG_HIGH -f $CATS -l $CATS --intLumi $INTLUMI $OPT --batch $BATCH -q $QUEUE --year $YEAR
 
 # FIX THIS FOR CONDOR: 
 #continueLoop=1

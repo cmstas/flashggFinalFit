@@ -36,6 +36,8 @@
 #include "TLine.h"
 #include "RooHist.h"
 
+#include "../../tools/mgg_window.h"
+
 #include "boost/program_options.hpp"
 #include "boost/algorithm/string/split.hpp"
 #include "boost/algorithm/string/classification.hpp"
@@ -388,22 +390,22 @@ int main(int argc, char *argv[]) {
   nbweight*=weightscale;
   nsbweight*=weightscale;
   std::cout << "[INFO] weightscale " << weightscale << std::endl; 
-  double lowedge = 100.;
-  double highedge = 180;
+  double lowedge = mgg_low;
+  double highedge = mgg_high;
   int nbins = 80;
   
   
-  TH1D *hsig = new TH1D("hsig","",3200,100.,180.);
-  TH1D *hwsig = new TH1D("hwsig","",3200,100.,180.);
+  TH1D *hsig = new TH1D("hsig","",3200,mgg_low,mgg_high);
+  TH1D *hwsig = new TH1D("hwsig","",3200,mgg_low,mgg_high);
   
-  TH1D *hbkg = new TH1D("hbkg","",3200,100.,180.);
-  TH1D *hwbkg = new TH1D("hwbkg","",3200,100.,180.);
+  TH1D *hbkg = new TH1D("hbkg","",3200,mgg_low,mgg_high);
+  TH1D *hwbkg = new TH1D("hwbkg","",3200,mgg_low,mgg_high);
 
   TH1D *hbkgplot = new TH1D("hbkgplot","",nbins,lowedge,highedge);
   TH1D *hwbkgplot = new TH1D("hwbkgplot","",nbins,lowedge,highedge);
   
-  TH1D *hsigbkg = new TH1D("hsigbkg","",3200,100.,180.);
-  TH1D *hwsigbkg = new TH1D("hwsigbkg","",3200,100.,180.);   
+  TH1D *hsigbkg = new TH1D("hsigbkg","",3200,mgg_low,mgg_high);
+  TH1D *hwsigbkg = new TH1D("hwsigbkg","",3200,mgg_low,mgg_high);   
   
   int nbinsfine = 40*(highedge-lowedge);
   TH1D *hbkgplotfine = new TH1D("hbkgplotfine","",nbinsfine,lowedge,highedge);
@@ -474,7 +476,7 @@ int main(int argc, char *argv[]) {
     hbkgplot_cat->Add(hbplottmp,bevents);
     hbkgplots.push_back(hbkgplot_cat);
     
-    TH1D *hsigplot_cat = new TH1D(TString::Format("hsigplot_cat%s",catnames[i].Data()),"",3200,100.,180.);
+    TH1D *hsigplot_cat = new TH1D(TString::Format("hsigplot_cat%s",catnames[i].Data()),"",3200,mgg_low,mgg_high);
     hsigplot_cat->Add(hstmp);
     hsigplotsfine.push_back(hsigplot_cat);
     
@@ -512,8 +514,8 @@ int main(int argc, char *argv[]) {
   
   printf("wdata = %5f, wdatarel = %5f\n",wdata->sumEntries(),wdatarel->sumEntries());
   
-  mass->setRange("binrange",124.5,125.5);
-  mass->setRange("fullrange",124.5,125.5);  
+  mass->setRange("binrange" ,mgg_res-1,mgg_res);
+  mass->setRange("fullrange",mgg_res-1,mgg_res);  
  
   new TCanvas;
   hsig->Draw();

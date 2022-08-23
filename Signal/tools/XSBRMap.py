@@ -10,6 +10,18 @@ globalXSBRMap = od()
 #globalXSBRMap['example']['decay'] = {'mode':'constant','factor':1}
 #globalXSBRMap['example']['PROCNAME'] = {'mode':'constant','factor':0.001}
 
+globalXSBRMap['bbgg_res'] = od()
+globalXSBRMap['bbgg_res']['decay'] 								= {'mode':'constant','factor':1}
+globalXSBRMap['bbgg_res']['NMSSMYggHbbMX600MY90'] 	= {'mode':'constant','factor':1}
+globalXSBRMap['bbgg_res']['NMSSMYggHbbMX600MY95'] 	= {'mode':'constant','factor':1}
+globalXSBRMap['bbgg_res']['NMSSMYggHbbMX600MY100'] 	= {'mode':'constant','factor':1}
+globalXSBRMap['bbgg_res']['NMSSMYggHbbMX650MY90'] 	= {'mode':'constant','factor':1}
+globalXSBRMap['bbgg_res']['NMSSMYggHbbMX650MY95'] 	= {'mode':'constant','factor':1}
+globalXSBRMap['bbgg_res']['NMSSMYggHbbMX650MY100'] 	= {'mode':'constant','factor':1}
+globalXSBRMap['bbgg_res']['NMSSMYggHbbMX700MY90'] 	= {'mode':'constant','factor':1}
+globalXSBRMap['bbgg_res']['NMSSMYggHbbMX700MY95'] 	= {'mode':'constant','factor':1}
+globalXSBRMap['bbgg_res']['NMSSMYggHbbMX700MY100'] 	= {'mode':'constant','factor':1}
+
 # For case of inclusive production mode then have no additional factor beyond V branching ratios
 globalXSBRMap['example'] = od()
 globalXSBRMap['example']['decay'] = {'mode':'hgg'}

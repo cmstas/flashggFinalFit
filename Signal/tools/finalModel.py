@@ -9,6 +9,7 @@ import pickle
 from collections import OrderedDict as od
 from commonObjects import *
 from commonTools import *
+from mgg_window import *
 from signalTools import *
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   
@@ -27,7 +28,8 @@ class dummy_options:
     self.cexpr = False
     self.out = "wsdefault"
     self.verbose = 0
-    self.mass = 125
+    #self.mass = 125
+    self.mass = mgg_res
     self.funcXSext = "dummy"
 
 # Functions to get XS/BR
@@ -59,8 +61,8 @@ def initialiseXSBR():
   for pm in productionModes: xsbr[pm] = []
   xsbr[decayMode] = []
   xsbr['constant'] = []
-  mh = 120.
-  while( mh < 130.05 ):
+  mh = float(MHLow)
+  while( mh < float(MHHigh) + 0.05):
     for pm in productionModes: xsbr[pm].append(getXS(SM,MHVar,mh,pm))
     xsbr[decayMode].append(getBR(SM,MHVar,mh,decayMode))
     xsbr['constant'].append(1.)
@@ -70,6 +72,7 @@ def initialiseXSBR():
   xsbr['constant'] = np.asarray(xsbr['constant'])
   # If ggZH and ZH in production modes then make qqZH numpy array
   if('ggZH' in productionModes)&('ZH' in productionModes): xsbr['qqZH'] = xsbr['ZH']-xsbr['ggZH']
+  if('WH' in productionModes)&('ZH' in productionModes): xsbr['VH'] = xsbr['WH']+xsbr['ZH']
   return xsbr
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   
@@ -135,7 +138,7 @@ class FinalModel:
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Functions to get XS, BR and EA splines for given proc/decay from map
   def buildXSBRSplines(self):
-    mh = np.linspace(120.,130.,101)
+    mh = np.linspace(float(MHLow),float(MHHigh),101)
     # XS
     fp = self.xsbrMap[self.proc]['factor'] if 'factor' in self.xsbrMap[self.proc] else 1.
     mp = self.xsbrMap[self.proc]['mode']

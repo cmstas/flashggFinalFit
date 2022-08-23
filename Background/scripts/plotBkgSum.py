@@ -36,11 +36,11 @@ def makePlot(datfile,bkgfile,sigfile,ncats,sqrtS):
 	bkgpdf = r.RooAddPdf('bkg','bkg',bkgPdfs,bkgNorms)
 
 	mass = bws.var('CMS_hgg_mass')
-	mass.setRange('low',100,110)
-	mass.setRange('high',150,180)
+	mass.setRange('low',mgg_low,mgg_veto_low)
+	mass.setRange('high',mgg_veto_high,mgg_high)
 
 	mh = sws.var('MH')
-	mh.setVal(125)
+	mh.setVal(mgg_res)
 	mh.setConstant()
 
 	canv = r.TCanvas()

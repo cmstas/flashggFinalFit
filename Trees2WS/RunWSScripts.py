@@ -23,8 +23,8 @@ def get_options():
   parser.add_option('--flashggPath', dest='flashggPath', default='', help="Path to flashgg area required for hadding")
   parser.add_option('--outputWSDir', dest='outputWSDir', default='', help="Location to store output workspaces of hadding script")
   # Specifically for mass shifting
-  parser.add_option('--inputMass', dest='inputMass', default='125', help="Input mass of workspace")
-  parser.add_option('--targetMasses', dest='targetMasses', default='120,130', help="Comma separated list of target masses")
+  parser.add_option('--inputMass', dest='inputMass', default=str(mgg_res), help="Input mass of workspace")
+  parser.add_option('--targetMasses', dest='targetMasses', default=MHLow+","+MHHigh, help="Comma separated list of target masses")
   # Job submission options
   parser.add_option('--batch', dest='batch', default='IC', help='Batch')
   parser.add_option('--queue', dest='queue', default='hep.q', help='Queue: can take a while if including all systematics for many categories')

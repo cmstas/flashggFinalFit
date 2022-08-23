@@ -24,6 +24,32 @@ globalReplacementMap["example"]["catRVMap"]["Untagged_Tag0"] = "Untagged_Tag0"
 globalReplacementMap["example"]["catRVMap"]["VBF_Tag0"] = "VBF_Tag0"
 
 
+# Example analysis which with cats Untagged_Tag0,VBF_Tag0
+globalReplacementMap['bbgg_res'] = od()
+globalReplacementMap['bbgg_res']['procWV'] = "NMSSMYggHbbMX600MY90"
+globalReplacementMap['bbgg_res']['catWV'] = "NMSSMYggHbbMX600MY90_SR1"
+globalReplacementMap['bbgg_res']['catWV'] = "NMSSMYggHbbMX600MY90_SR2"
+
+globalReplacementMap['bbgg_res']['procWV'] = "NMSSMYggHbbMX600MY90"
+globalReplacementMap['bbgg_res']['catWV'] = "SR1"
+globalReplacementMap['bbgg_res']['catWV'] = "SR2"
+# For RIGHT VERTEX SCENARIO:
+#  * default you should add is diagonal process from given category 
+#  * if few events in diagonal process then may need to change the category aswell (see catRVMap)
+#  * map must contain entry for all cats being processed (for replacement proc and cat)
+globalReplacementMap['bbgg_res']['procRVMap'] = od()
+#globalReplacementMap['bbgg_res']["procRVMap"]["SR1"] = "NMSSMYggHbbMX600MY90"
+#globalReplacementMap['bbgg_res']["procRVMap"]["SR2"] = "NMSSMYggHbbMX600MY90"
+
+globalReplacementMap['bbgg_res']["procRVMap"]["SR1"] = "NMSSMYggHbbMX600MY90"
+globalReplacementMap['bbgg_res']["procRVMap"]["SR2"] = "NMSSMYggHbbMX600MY90"
+
+# Replacement category for RV fit
+globalReplacementMap['bbgg_res']["catRVMap"] = od()
+globalReplacementMap['bbgg_res']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['bbgg_res']["catRVMap"]["SR2"] = "SR2"
+
+
 # STXS analysis
 globalReplacementMap['STXS'] = od()
 # For WRONG VERTEX SCENARIO:

@@ -41,6 +41,7 @@
 #include "RooStats/RooStatsUtils.h"
 #include "RooCategory.h"
 #include "../interface/WSTFileWrapper.h"
+#include "../../tools/mgg_window.h"
 
 #include "boost/program_options.hpp"
 #include "boost/algorithm/string/split.hpp"
@@ -649,8 +650,8 @@ void plotAllPdfs(RooRealVar *mgg, RooAbsData *data, RooMultiPdf *mpdf, RooCatego
 	plot->GetXaxis()->SetTitle("m_{#gamma#gamma} (GeV)");
 	plot->GetYaxis()->SetTitle("Events");
 	if (!unblind) {
-		mgg->setRange("unblind_up",135,180);
-		mgg->setRange("unblind_down",100,115);
+		mgg->setRange("unblind_up",mgg_veto_high,mgg_high);
+		mgg->setRange("unblind_down",mgg_low,mgg_veto_low);
 		data->plotOn(plot,Binning(80),CutRange("unblind_down,unblind_up"));
 	}
 	else {
@@ -766,8 +767,8 @@ int main(int argc, char* argv[]){
 		("makeCrossCheckProfPlots",																													"Make some cross check plots -- very slow!")
 		("massStep,m", po::value<double>(&massStep)->default_value(0.5),						   			"Mass step for calculating bands. Use a large number like 5 for quick running")
 		("nllTolerance,n", po::value<double>(&nllTolerance)->default_value(0.05),			 			"Tolerance for nll calc in %")
-		("mhLow,L", po::value<int>(&mhLow)->default_value(100),															"Starting point for scan")
-		("mhHigh,H", po::value<int>(&mhHigh)->default_value(180),														"End point for scan")
+		("mhLow,L", po::value<int>(&mhLow)->default_value(mgg_low),															"Starting point for scan")
+		("mhHigh,H", po::value<int>(&mhHigh)->default_value(mgg_high),														"End point for scan")
 		("mhVal", po::value<double>(&mhvalue_)->default_value(125.),														"Choose the MH for the plots")
 		("higgsResolution", po::value<double>(&higgsResolution_)->default_value(1.),															"Starting point for scan")
 		("intLumi", po::value<float>(&intLumi)->default_value(0.),																"What intLumi in fb^{-1}")
@@ -1022,8 +1023,8 @@ int main(int argc, char* argv[]){
 		plot->Draw();
 
 		if (!unblind) {
-			mgg->setRange("unblind_up",135,180);
-			mgg->setRange("unblind_down",100,115);
+			mgg->setRange("unblind_up",mgg_veto_high,mgg_high);
+			mgg->setRange("unblind_down",mgg_low,mgg_veto_low);
 			data->plotOn(plot,Binning(80),CutRange("unblind_down,unblind_up"));
 		}
 		else {
@@ -1147,7 +1148,7 @@ int main(int argc, char* argv[]){
   plotdata->GetPoint(ipoint, xtmp,ytmp);
   double bkgval = nomBkgCurve->interpolate(xtmp);
   if (!unblind) {
-   if ((xtmp > 115 ) && ( xtmp < 135) ) continue;
+   if ((xtmp > mgg_veto_low ) && ( xtmp < mgg_veto_high) ) continue;
   }
   //std::cout << "[INFO] plotdata->Integral() " <<  plotdata->Integral() << " ( bins " << npoints  << ") hbkgplots[i]->Integral() " << hbplottmp->Integral() << " (bins " << hbplottmp->GetNbinsX() << std::endl;
  double errhi = plotdata->GetErrorYhigh(ipoint);
@@ -1162,7 +1163,7 @@ int main(int argc, char* argv[]){
  point++;
   } 
   pad2->cd();
-  TH1 *hdummy = new TH1D("hdummyweight","",80,100,180);
+  TH1 *hdummy = new TH1D("hdummyweight","",80,mgg_low,mgg_high);
   hdummy->SetMaximum(hdatasub->GetHistogram()->GetMaximum()+1);
   hdummy->SetMinimum(hdatasub->GetHistogram()->GetMinimum()-1);
   hdummy->GetYaxis()->SetTitle("data - best fit PDF");
@@ -1174,7 +1175,7 @@ int main(int argc, char* argv[]){
 	if (doBands) oneSigmaBand_r->Draw("L3 SAME");
   hdummy->GetYaxis()->SetNdivisions(808);
 
-  TLine *line3 = new TLine(100,0.,180,0.);
+  TLine *line3 = new TLine(mgg_low,0.,mgg_high,0.);
   line3->SetLineColor(kRed);
   //line3->SetLineStyle(kDashed);
   line3->SetLineWidth(4.0);
