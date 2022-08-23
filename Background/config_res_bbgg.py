@@ -5,7 +5,7 @@ _tag="dummy"
 backgroundScriptCfg = {
   
   # Setup
-  'inputWSDir':'/home/users/fsetti/ambulance_bbgg_flashggFinalFit/CMSSW_10_2_13/src/flashggFinalFit/files/%s/Data/ws/'%(_tag), # location of 'allData.root' file
+  'inputWSDir':'/home/users/fsetti/flashggFinalFit_resonant/CMSSW_10_2_13/src/flashggFinalFit/files/%s/Data/ws/'%(_tag), # location of 'allData.root' file
   'cats':'auto', # auto: automatically inferred from input ws
   'catOffset':0, # add offset to category numbers (useful for categories from different allData.root files)  
   'ext':'%s'%(_tag), # extension to add to output directory

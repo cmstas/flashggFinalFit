@@ -6,7 +6,7 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 source /vols/grid/cms/setup.sh
 
 tag=15Aug2022_bbgg_res
-trees=/home/users/fsetti/ambulance_bbgg_flashggFinalFit/CMSSW_10_2_13/src/flashggFinalFit/files/$tag/
+trees=/home/users/fsetti/flashggFinalFit_resonant/CMSSW_10_2_13/src/flashggFinalFit/files/$tag/
 
 cmsenv
 source setup.sh
