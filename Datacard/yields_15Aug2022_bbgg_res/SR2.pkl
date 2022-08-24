@@ -254,11 +254,11 @@ ag113
 ag113
 ag113
 ag113
-aS'/home/users/fsetti/ambulance_bbgg_flashggFinalFit/CMSSW_10_2_13/src/flashggFinalFit/files/15Aug2022_bbgg_res//ws_signal_2016/output_NMSSMYggHbbMX600MY90_M90_13TeV_pythia8_NMSSMYggHbbMX600MY90.root'
+aS'/home/users/fsetti/flashggFinalFit_resonant/CMSSW_10_2_13/src/flashggFinalFit/files/15Aug2022_bbgg_res//ws_signal_2016/output_NMSSMYggHbbMX600MY90_M90_13TeV_pythia8_NMSSMYggHbbMX600MY90.root'
 p114
-aS'/home/users/fsetti/ambulance_bbgg_flashggFinalFit/CMSSW_10_2_13/src/flashggFinalFit/files/15Aug2022_bbgg_res//ws_signal_2017/output_NMSSMYggHbbMX600MY90_M90_13TeV_pythia8_NMSSMYggHbbMX600MY90.root'
+aS'/home/users/fsetti/flashggFinalFit_resonant/CMSSW_10_2_13/src/flashggFinalFit/files/15Aug2022_bbgg_res//ws_signal_2017/output_NMSSMYggHbbMX600MY90_M90_13TeV_pythia8_NMSSMYggHbbMX600MY90.root'
 p115
-aS'/home/users/fsetti/ambulance_bbgg_flashggFinalFit/CMSSW_10_2_13/src/flashggFinalFit/files/15Aug2022_bbgg_res//ws_signal_2018/output_NMSSMYggHbbMX600MY90_M90_13TeV_pythia8_NMSSMYggHbbMX600MY90.root'
+aS'/home/users/fsetti/flashggFinalFit_resonant/CMSSW_10_2_13/src/flashggFinalFit/files/15Aug2022_bbgg_res//ws_signal_2018/output_NMSSMYggHbbMX600MY90_M90_13TeV_pythia8_NMSSMYggHbbMX600MY90.root'
 p116
 ag112
 ag112

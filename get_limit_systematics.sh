@@ -69,7 +69,7 @@ model_sig(){
 				 sed -i "s/dummy/${tag}/g" syst_config_res_bbgg_$year.py
 				 sed -i "s/mass_value/${my}/g" syst_config_res_bbgg_$year.py
 
-  		   python RunSignalScripts.py --inputConfig syst_config_res_bbgg_$year.py --mode fTest --modeOpts "--doPlots"
+  		   python RunSignalScripts.py --inputConfig syst_config_res_bbgg_$year.py --mode fTest --modeOpts "--doPlots --mass ${my}"
 				 python RunSignalScripts.py --inputConfig syst_config_res_bbgg_$year.py --mode calcPhotonSyst
 				 #python RunSignalScripts.py --inputConfig syst_config_res_bbgg_$year.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit --replacementThreshold 100 --useDCB "
 				 python RunSignalScripts.py --inputConfig syst_config_res_bbgg_$year.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit --replacementThreshold 100 "
@@ -86,8 +86,8 @@ model_sig(){
 			rm -rf outdir_packaged
 			python RunPackager.py --cats SR1 --exts ${tag}_2016,${tag}_2017,${tag}_2018 --batch local --massPoints $my --mergeYears
 			python RunPackager.py --cats SR2 --exts ${tag}_2016,${tag}_2017,${tag}_2018 --batch local --massPoints $my --mergeYears
-		#	python RunPlotter.py --procs HHggTauTau --cats SR1 --years 2016,2017,2018 --ext packaged
-		#	python RunPlotter.py --procs HHggTauTau --cats SR2 --years 2016,2017,2018 --ext packaged
+		#	python RunPlotter.py --procs HHggTauTau --cats SR1 --years 2016,2017,2018 --ext packaged --massPoints $my 
+		#	python RunPlotter.py --procs HHggTauTau --cats SR2 --years 2016,2017,2018 --ext packaged --massPoints $my 
 		popd
 
 	done
@@ -140,7 +140,7 @@ run_combine(){
 	done
 }
 
-model_bkg
+#model_bkg
 model_sig
 make_datacard
 run_combine

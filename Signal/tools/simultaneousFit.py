@@ -6,6 +6,7 @@ from scipy.optimize import minimize
 import scipy.stats
 from collections import OrderedDict as od
 from array import array
+from mgg_window import *
 
 # Parameter lookup table for initialisation
 # So far defined up to MHPolyOrder=2
@@ -70,7 +71,8 @@ def poisson_interval(x,eSumW2,level=0.68):
 # Function to calc chi2 for binned fit given pdf, RooDataHist and xvar as inputs
 #def calcChi2(x,pdf,d,errorType="Sumw2",_verbose=False,fitRange=[100,180]):
 #def calcChi2(x,pdf,d,errorType="Poisson",_verbose=False,fitRange=[110,140]):
-def calcChi2(x,pdf,d,errorType="Poisson",_verbose=False,fitRange=[105,150]):
+#def calcChi2(x,pdf,d,errorType="Poisson",_verbose=False,fitRange=[105,150]):
+def calcChi2(x,pdf,d,errorType="Poisson",_verbose=False,fitRange=[mgg_res-15,mgg_res+15]):
 
   k = 0. # number of non empty bins (for calc degrees of freedom)
   normFactor = d.sumEntries()
@@ -166,10 +168,10 @@ class SimultaneousFit:
     self.verbose = verbose
     # Prepare vars
     self.MH.setConstant(False)
-    self.MH.setVal(125)
+    self.MH.setVal(mgg_res)
     self.MH.setBins(10)
-    self.dMH = ROOT.RooFormulaVar("dMH","dMH","@0-125.0",ROOT.RooArgList(self.MH)) 
-    self.xvar.setVal(125)
+    self.dMH = ROOT.RooFormulaVar("dMH","dMH","@0-"+MHNominal+".0",ROOT.RooArgList(self.MH)) 
+    self.xvar.setVal(mgg_res)
     self.xvar.setBins(self.nBins)
     # Dicts to store all fit vars, polynomials, pdfs and splines
     self.nGaussians = 1
@@ -351,8 +353,8 @@ class SimultaneousFit:
     # Loop over polynomials
     for k, poly in self.Polynomials.iteritems():
       _x, _y = [], []
-      _mh = 100.
-      while(_mh<180.1):
+      _mh = mgg_low
+      while(_mh< mgg_high+.1):
         self.MH.setVal(_mh)
         _x.append(_mh)
         _y.append(poly.getVal())
