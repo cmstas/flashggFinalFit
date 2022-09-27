@@ -46,7 +46,7 @@ def get_options():
 (opt,args) = get_options()
 
 #opt.mass = int(mgg_res)
-MHLow, MHHigh = str(int(opt.mass)-5), str(int(opt.mass)+5)
+MHLow, MHHigh = str(int(opt.mass)-fit_window), str(int(opt.mass)+fit_window)
 
 ROOT.gStyle.SetOptStat(0)
 ROOT.gROOT.SetBatch(True)

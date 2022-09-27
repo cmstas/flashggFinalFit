@@ -47,8 +47,8 @@ def getHistograms( _ws, _nominalDataName, _sname ):
   _hists = {}
   # Define histograms
   for htype in ['nominal','up','down']:
-    if htype == 'nominal': _hists[htype] = ROOT.TH1F(htype,htype,opt.nBins,100,180)
-    else: _hists[htype] = ROOT.TH1F("%s_%s"%(_sname,htype),"%s_%s"%(_sname,htype),opt.nBins,100,180)
+    if htype == 'nominal': _hists[htype] = ROOT.TH1F(htype,htype,opt.nBins,mgg_low,mgg_high)
+    else: _hists[htype] = ROOT.TH1F("%s_%s"%(_sname,htype),"%s_%s"%(_sname,htype),opt.nBins,mgg_low,mgg_high)
   # Extract nominal RooDataSet and syst RooDataHists
   rds_nominal = _ws.data(_nominalDataName)
   rdh_up = _ws.data("%s_%sUp01sigma"%(_nominalDataName,_sname))

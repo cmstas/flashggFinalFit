@@ -119,7 +119,7 @@ for year in years:
 
     # Extract rate from lumi
     #_rate = float(lumiMap[year])*1000
-    _rate = 1000
+    _rate = 1000.
 
     # Add signal process to dataFrame:
     print " --> Adding to dataFrame: (proc,cat) = (%s,%s)"%(_proc,_cat)

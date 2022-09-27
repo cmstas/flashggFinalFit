@@ -5,14 +5,14 @@ set -x
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 source /vols/grid/cms/setup.sh
 
-tag=15Aug2022_bbgg_res
-trees=/home/users/fsetti/flashggFinalFit_resonant/CMSSW_10_2_13/src/flashggFinalFit/files/$tag/
-
 cmsenv
 source setup.sh
 
 MY=95
 MX=-1
+
+tag=21Sep2022_MY${MY}
+trees=/home/users/fsetti/flashggFinalFit_resonant/CMSSW_10_2_13/src/flashggFinalFit/files/$tag/
 
 model_bkg(){
  sed -i "s/mass_value/${MY}/g" tools/mgg_window.py
@@ -44,8 +44,10 @@ model_bkg(){
 #Construct Signal Models (one per year)
 model_sig(){
 	sed -i "s/mass_value/${MY}/g" tools/mgg_window.py
+
 	#Manully add all MX processes
-	procs=("NMSSMYggHbbMX600MY${MY}" "NMSSMYggHbbMX650MY${MY}" "NMSSMYggHbbMX700MY${MY}" )
+	#procs=("NMSSMYggHbbMX600MY${MY}" "NMSSMYggHbbMX650MY${MY}" "NMSSMYggHbbMX700MY${MY}" )
+	procs=("NMSSMYggHbbMX600MY${MY}" )
 
 	for year in 2016 2017 2018
 	#for year in 2016
@@ -68,26 +70,27 @@ model_sig(){
 
 	   python RunSignalScripts.py --inputConfig syst_config_res_bbgg_$year.py --mode fTest --modeOpts "--doPlots --mass ${MY}"
 		 python RunSignalScripts.py --inputConfig syst_config_res_bbgg_$year.py --mode calcPhotonSyst
-		 #python RunSignalScripts.py --inputConfig syst_config_res_bbgg_$year.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit --replacementThreshold 100 --useDCB "
-		 python RunSignalScripts.py --inputConfig syst_config_res_bbgg_$year.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit --replacementThreshold 100 "
+		 python RunSignalScripts.py --inputConfig syst_config_res_bbgg_$year.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit --replacementThreshold 100 --useDCB "
+		 #python RunSignalScripts.py --inputConfig syst_config_res_bbgg_$year.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit --replacementThreshold 100 "
 
 		 sed -i "s/${tag}/dummy/g" syst_config_res_bbgg_$year.py
 		 sed -i "s/${MY}/mass_value/g" syst_config_res_bbgg_$year.py
 		popd
 	done
-	sed -i "s/${MY}/mass_value/g" tools/mgg_window.py
 
 	pushd Signal	
 		rm -rf outdir_packaged
 		python RunPackager.py --cats SR1 --exts ${tag}_2016,${tag}_2017,${tag}_2018 --batch local --massPoints $MY --mergeYears
 		python RunPackager.py --cats SR2 --exts ${tag}_2016,${tag}_2017,${tag}_2018 --batch local --massPoints $MY --mergeYears
-		python RunPlotter.py --procs NMSSMYggHbbMX600MY${MY} --cats SR1 --years 2016,2017,2018 --ext packaged --massPoints $MY 
-		python RunPlotter.py --procs NMSSMYggHbbMX600MY${MY} --cats SR2 --years 2016,2017,2018 --ext packaged --massPoints $MY 
-		python RunPlotter.py --procs NMSSMYggHbbMX650MY${MY} --cats SR1 --years 2016,2017,2018 --ext packaged --massPoints $MY 
-		python RunPlotter.py --procs NMSSMYggHbbMX650MY${MY} --cats SR2 --years 2016,2017,2018 --ext packaged --massPoints $MY 
-		python RunPlotter.py --procs NMSSMYggHbbMX700MY${MY} --cats SR1 --years 2016,2017,2018 --ext packaged --massPoints $MY 
-		python RunPlotter.py --procs NMSSMYggHbbMX700MY${MY} --cats SR2 --years 2016,2017,2018 --ext packaged --massPoints $MY 
+		python RunPlotter.py --procs NMSSMYggHbbMX600MY${MY} --cats SR1 --ext packaged --MH $MY --mass $MY
+		python RunPlotter.py --procs NMSSMYggHbbMX600MY${MY} --cats SR2 --ext packaged --MH $MY --mass $MY
+		#python RunPlotter.py --procs NMSSMYggHbbMX650MY${MY} --cats SR1 --ext packaged --MH $MY --mass $MY
+		#python RunPlotter.py --procs NMSSMYggHbbMX650MY${MY} --cats SR2 --ext packaged --MH $MY --mass $MY
+		#python RunPlotter.py --procs NMSSMYggHbbMX700MY${MY} --cats SR1 --ext packaged --MH $MY --mass $MY
+		#python RunPlotter.py --procs NMSSMYggHbbMX700MY${MY} --cats SR2 --ext packaged --MH $MY --mass $MY
 	popd
+
+	sed -i "s/${MY}/mass_value/g" tools/mgg_window.py
 }
 
 make_datacard(){
@@ -127,21 +130,52 @@ run_combine(){
 	popd	
 }
 
+copy_plots(){
+
+	plot_dir=/home/users/fsetti/public_html/HH2bbgg/flashggFinalFit/$tag
+	mkdir -p $plot_dir
+	mkdir -p $plot_dir/sig
+	mkdir -p $plot_dir/bkg
+
+	cp Signal/outdir_packaged/Plots/*.png $plot_dir/sig
+	cp ~/public_html/niceplots/index.php $plot_dir/sig
+	
+	cp Background/outdir_${tag}_MX600_MY${MY}/bkgfTest-Data/*.png $plot_dir/bkg
+	cp ~/public_html/niceplots/index.php $plot_dir/bkg
+}
 
 MY=90
-model_bkg
+tag=21Sep2022_MY${MY}
+trees=/home/users/fsetti/flashggFinalFit_resonant/CMSSW_10_2_13/src/flashggFinalFit/files/$tag/
+#
+#model_bkg
 model_sig
-make_datacard
-run_combine
+copy_plots
+#make_datacard
+#run_combine
+#
 
-MY=95
-model_bkg
-model_sig
-make_datacard
-run_combine
+####################################################################
 
-MY=100
-model_bkg
-model_sig
-make_datacard
-run_combine
+#MY=95
+#tag=21Sep2022_MY${MY}
+#trees=/home/users/fsetti/flashggFinalFit_resonant/CMSSW_10_2_13/src/flashggFinalFit/files/$tag/
+#
+#model_bkg
+#model_sig
+#copy_plots
+#make_datacard
+#run_combine
+#
+#
+#####################################################################
+#
+#MY=100
+#tag=21Sep2022_MY${MY}
+#trees=/home/users/fsetti/flashggFinalFit_resonant/CMSSW_10_2_13/src/flashggFinalFit/files/$tag/
+#
+#model_bkg
+#model_sig
+#copy_plots
+#make_datacard
+#run_combine

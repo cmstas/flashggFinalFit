@@ -72,7 +72,7 @@ def poisson_interval(x,eSumW2,level=0.68):
 #def calcChi2(x,pdf,d,errorType="Sumw2",_verbose=False,fitRange=[100,180]):
 #def calcChi2(x,pdf,d,errorType="Poisson",_verbose=False,fitRange=[110,140]):
 #def calcChi2(x,pdf,d,errorType="Poisson",_verbose=False,fitRange=[105,150]):
-def calcChi2(x,pdf,d,errorType="Poisson",_verbose=False,fitRange=[mgg_res-15,mgg_res+15]):
+def calcChi2(x,pdf,d,errorType="Poisson",_verbose=False,fitRange=[mgg_veto_low,mgg_veto_high]):
 
   k = 0. # number of non empty bins (for calc degrees of freedom)
   normFactor = d.sumEntries()
@@ -353,8 +353,10 @@ class SimultaneousFit:
     # Loop over polynomials
     for k, poly in self.Polynomials.iteritems():
       _x, _y = [], []
-      _mh = mgg_low
-      while(_mh< mgg_high+.1):
+      #_mh = mgg_low
+      _mh = 100.
+      #while(_mh< mgg_high+.1):
+      while(_mh< 180.1):
         self.MH.setVal(_mh)
         _x.append(_mh)
         _y.append(poly.getVal())
