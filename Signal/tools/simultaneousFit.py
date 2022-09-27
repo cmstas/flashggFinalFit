@@ -15,7 +15,8 @@ pLUT['DCB'] = od()
 pLUT['DCB']['dm_p0'] = [0.1,-2.5,2.5]
 pLUT['DCB']['dm_p1'] = [0.0,-0.1,0.1]
 pLUT['DCB']['dm_p2'] = [0.0,-0.001,0.001]
-pLUT['DCB']['sigma_p0'] = [2.,1.,20.]
+#pLUT['DCB']['sigma_p0'] = [2.,1.,20.]
+pLUT['DCB']['sigma_p0'] = [1.,0.5,20.]
 pLUT['DCB']['sigma_p1'] = [0.0,-0.1,0.1]
 pLUT['DCB']['sigma_p2'] = [0.0,-0.001,0.001]
 pLUT['DCB']['n1_p0'] = [20.,1.00001,500]
@@ -24,17 +25,20 @@ pLUT['DCB']['n1_p2'] = [0.0,-0.001,0.001]
 pLUT['DCB']['n2_p0'] = [20.,1.00001,500]
 pLUT['DCB']['n2_p1'] = [0.0,-0.1,0.1]
 pLUT['DCB']['n2_p2'] = [0.0,-0.001,0.001]
-pLUT['DCB']['a1_p0'] = [1.,1.,10.]
+#pLUT['DCB']['a1_p0'] = [1.,1.,10.]
+pLUT['DCB']['a1_p0'] = [1.,0.5,10.]
 pLUT['DCB']['a1_p1'] = [0.0,-0.1,0.1]
 pLUT['DCB']['a1_p2'] = [0.0,-0.001,0.001]
-pLUT['DCB']['a2_p0'] = [1.,1.,20.]
+#pLUT['DCB']['a2_p0'] = [1.,1.,20.]
+pLUT['DCB']['a2_p0'] = [1.,0.5,10.]
 pLUT['DCB']['a2_p1'] = [0.0,-0.1,0.1]
 pLUT['DCB']['a2_p2'] = [0.0,-0.001,0.001]
 pLUT['Gaussian_wdcb'] = od()
 pLUT['Gaussian_wdcb']['dm_p0'] = [0.1,-1.5,1.5]
 pLUT['Gaussian_wdcb']['dm_p1'] = [0.01,-0.01,0.01]
 pLUT['Gaussian_wdcb']['dm_p2'] = [0.01,-0.01,0.01]
-pLUT['Gaussian_wdcb']['sigma_p0'] = [1.5,1.0,4.]
+#pLUT['Gaussian_wdcb']['sigma_p0'] = [1.5,1.0,4.]
+pLUT['Gaussian_wdcb']['sigma_p0'] = [1.,0.5,10.]
 pLUT['Gaussian_wdcb']['sigma_p1'] = [0.0,-0.1,0.1]
 pLUT['Gaussian_wdcb']['sigma_p2'] = [0.0,-0.001,0.001]
 pLUT['Frac'] = od()
@@ -353,10 +357,8 @@ class SimultaneousFit:
     # Loop over polynomials
     for k, poly in self.Polynomials.iteritems():
       _x, _y = [], []
-      #_mh = mgg_low
-      _mh = 100.
-      #while(_mh< mgg_high+.1):
-      while(_mh< 180.1):
+      _mh = mgg_low
+      while(_mh< mgg_high+.1):
         self.MH.setVal(_mh)
         _x.append(_mh)
         _y.append(poly.getVal())
