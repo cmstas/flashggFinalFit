@@ -134,9 +134,9 @@ copy_plot(){
 	cp /home/users/iareed/public_html/ttHH/index.php /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/Signal
 }
 
-model_bkg
-model_sig
-make_datacard
+#model_bkg
+#model_sig
+#make_datacard
 run_combine
 syst_plots
 copy_plot
