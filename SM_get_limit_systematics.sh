@@ -5,8 +5,9 @@ set -x
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 #source /vols/grid/cms/setup.sh
 
-#tag=SM_23Sep22_with_HHGGXX
-tag=SM_23Sep22_08Dec22
+tag=SM_23Sep22_with_HHGGXX
+#tag=SM_23Sep22_08Dec22
+#tag=SM_12Dec22_global_test_14Dec22
 #tag=BSM_13Oct22_M250_fixed_weights
 #tag=BSM_13Oct22_M300_fixed_weights
 #tag=BSM_13Oct22_M350_fixed_weights
@@ -17,16 +18,16 @@ source setup.sh
 
 model_bkg(){
 	pushd Trees2WS
-	 python trees2ws_data.py --inputConfig syst_config_ggtt.py --inputTreeFile $trees/Data/allData.root
+	 python trees2ws_data.py --inputConfig syst_config_tthh.py --inputTreeFile $trees/Data/allData.root
 	popd
 	
 	pushd Background
 	 	rm -rf outdir_$tag
-		sed -i "s/dummy/${tag}/g" config_ggtt.py 
+		sed -i "s/dummy/${tag}/g" config_tthh.py 
 
-	  python RunBackgroundScripts.py --inputConfig config_ggtt.py --mode fTestParallel
+	  python RunBackgroundScripts.py --inputConfig config_tthh.py --mode fTestParallel
 
-		sed -i "s/${tag}/dummy/g" config_ggtt.py
+		sed -i "s/${tag}/dummy/g" config_tthh.py
 	popd
 }
 
@@ -47,7 +48,7 @@ model_sig(){
 			rm -rf $trees/$year/ws_$proc
 
 			pushd Trees2WS
-				python trees2ws.py --inputConfig syst_config_ggtt.py --inputTreeFile $trees/$year/${proc}_125_13TeV.root --inputMass 125 --productionMode $proc --year $year --doSystematics
+				python trees2ws.py --inputConfig syst_config_tthh.py --inputTreeFile $trees/$year/${proc}_125_13TeV.root --inputMass 125 --productionMode $proc --year $year --doSystematics
 			popd
 
 			mv $trees/$year/ws_$proc/${proc}_125_13TeV_$proc.root $trees/ws_signal_$year/output_${proc}_M125_13TeV_pythia8_${proc}.root 
@@ -55,13 +56,13 @@ model_sig(){
 
 		pushd Signal	
 		    rm -rf outdir_${tag}_$year
-		    sed -i "s/dummy/${tag}/g" syst_config_ggtt_$year.py
+		    sed -i "s/dummy/${tag}/g" syst_config_tthh_$year.py
 
-                    python RunSignalScripts.py --inputConfig syst_config_ggtt_$year.py --mode fTest --modeOpts "--doPlots"
-		    python RunSignalScripts.py --inputConfig syst_config_ggtt_$year.py --mode calcPhotonSyst
-		    python RunSignalScripts.py --inputConfig syst_config_ggtt_$year.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit "
+                    python RunSignalScripts.py --inputConfig syst_config_tthh_$year.py --mode fTest --modeOpts "--doPlots"
+		    python RunSignalScripts.py --inputConfig syst_config_tthh_$year.py --mode calcPhotonSyst
+		    python RunSignalScripts.py --inputConfig syst_config_tthh_$year.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit "
 
-	            sed -i "s/${tag}/dummy/g" syst_config_ggtt_$year.py
+	            sed -i "s/${tag}/dummy/g" syst_config_tthh_$year.py
 	    	popd
 	done
 
@@ -140,9 +141,9 @@ copy_plot(){
 	cp /home/users/iareed/public_html/ttHH/index.php /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/Signal
 }
 
-model_bkg
-model_sig
-make_datacard
-run_combine
+#model_bkg
+#model_sig
+#make_datacard
+#run_combine
 syst_plots
 #copy_plot

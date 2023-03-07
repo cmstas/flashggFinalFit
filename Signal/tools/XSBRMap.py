@@ -13,13 +13,87 @@ globalXSBRMap = od()
 globalXSBRMap['ggtt_nonRes'] = od()
 globalXSBRMap['ggtt_nonRes']['decay'] = {'mode':'constant','factor':1}
 globalXSBRMap['ggtt_nonRes']['HH2ggtautau'] 					= {'mode':'constant','factor':1}
-globalXSBRMap['ggtt_nonRes']['HHggTauTau'] 						= {'mode':'constant','factor':1}
 globalXSBRMap['ggtt_nonRes']['HHggWW'] = {'mode':'constant','factor':1}
-globalXSBRMap['ggtt_nonRes']['ttHHggbb'] = {'mode':'constant','factor':1}
-globalXSBRMap['ggtt_nonRes']['ttHHggWW'] = {'mode':'constant','factor':1}
-globalXSBRMap['ggtt_nonRes']['ttHHggTauTau'] = {'mode':'constant','factor':1}
-globalXSBRMap['ggtt_nonRes']['HHggWWdileptonic'] 		= {'mode':'constant','factor':1}
-globalXSBRMap['ggtt_nonRes']['HHggWWsemileptonic'] 	= {'mode':'constant','factor':1}
+
+# ttHH SM mappings
+globalXSBRMap['ttHHggXX'] = od()
+globalXSBRMap['ttHHggXX']['decay'] = {'mode':'constant','factor':1}
+globalXSBRMap['ttHHggXX']['ttHHggbb'] = {'mode':'constant','factor':1}
+globalXSBRMap['ttHHggXX']['ttHHggWW'] = {'mode':'constant','factor':1}
+globalXSBRMap['ttHHggXX']['ttHHggTauTau'] = {'mode':'constant','factor':1}
+globalXSBRMap['ttHHggXX']['ggH'] = {'mode':'ggH'}
+globalXSBRMap['ttHHggXX']['ttH'] = {'mode':'ttH'}
+globalXSBRMap['ttHHggXX']['VBFH'] = {'mode':'qqH'}
+globalXSBRMap['ttHHggXX']['VH'] = {'mode':'VH'}
+globalXSBRMap['ttHHggXX']['HHGGbb'] = {'mode':'constant','factor':1}
+globalXSBRMap['ttHHggXX']['HHGGWWdileptonic'] = {'mode':'constant','factor':1}
+globalXSBRMap['ttHHggXX']['HHGGWWsemileptonic'] = {'mode':'constant','factor':1}
+globalXSBRMap['ttHHggXX']['HHGGTauTau'] = {'mode':'constant','factor':1}
+
+# 2HDM M250
+globalXSBRMap['2HDM_M250'] = od()
+globalXSBRMap['2HDM_M250']['decay'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M250']['2HDMbbM250'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M250']['2HDMWWM250'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M250']['2HDMTAUTAUM250'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M250']['ttHHggbb'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M250']['ttHHggWW'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M250']['ttHHggTauTau'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M250']['ggH'] = {'mode':'ggH'}
+globalXSBRMap['2HDM_M250']['ttH'] = {'mode':'ttH'}
+globalXSBRMap['2HDM_M250']['VBFH'] = {'mode':'qqH'}
+globalXSBRMap['2HDM_M250']['VH'] = {'mode':'VH'}
+globalXSBRMap['2HDM_M250']['HHGGbb'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M250']['HHGGWWdileptonic'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M250']['HHGGWWsemileptonic'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M250']['HHGGTauTau'] = {'mode':'constant','factor':1}
+
+# 2HDM M300
+globalXSBRMap['2HDM_M300'] = od()
+globalXSBRMap['2HDM_M300']['decay'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M300']['2HDMbbM300'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M300']['2HDMWWM300'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M300']['2HDMTAUTAUM300'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M300']['ttHHggbb'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M300']['ttHHggWW'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M300']['ttHHggTauTau'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M300']['ggH'] = {'mode':'ggH'}
+globalXSBRMap['2HDM_M300']['ttH'] = {'mode':'ttH'}
+globalXSBRMap['2HDM_M300']['VBFH'] = {'mode':'qqH'}
+globalXSBRMap['2HDM_M300']['VH'] = {'mode':'VH'}
+globalXSBRMap['2HDM_M300']['HHGGbb'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M300']['HHGGWWdileptonic'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M300']['HHGGWWsemileptonic'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M300']['HHGGTauTau'] = {'mode':'constant','factor':1}
+
+# 2HDM M350
+globalXSBRMap['2HDM_M350'] = od()
+globalXSBRMap['2HDM_M350']['decay'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M350']['2HDMbbM350'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M350']['2HDMWWM350'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M350']['2HDMTAUTAUM350'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M350']['ttHHggbb'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M350']['ttHHggWW'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M350']['ttHHggTauTau'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M350']['ggH'] = {'mode':'ggH'}
+globalXSBRMap['2HDM_M350']['ttH'] = {'mode':'ttH'}
+globalXSBRMap['2HDM_M350']['VBFH'] = {'mode':'qqH'}
+globalXSBRMap['2HDM_M350']['VH'] = {'mode':'VH'}
+globalXSBRMap['2HDM_M350']['HHGGbb'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M350']['HHGGWWdileptonic'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M350']['HHGGWWsemileptonic'] = {'mode':'constant','factor':1}
+globalXSBRMap['2HDM_M350']['HHGGTauTau'] = {'mode':'constant','factor':1}
+
+
+
+
+
+
+
+
+
+
+
 globalXSBRMap['ggtt_nonRes']['ggHH_kl_0_kt_1'] = {'mode':'constant','factor':1}
 globalXSBRMap['ggtt_nonRes']['ggHH_kl_1_kt_1'] = {'mode':'constant','factor':1}
 globalXSBRMap['ggtt_nonRes']['ggHH_kl_2p45_kt_1'] = {'mode':'constant','factor':1}
@@ -31,11 +105,6 @@ globalXSBRMap['ggtt_nonRes']['qqHH_CV_1_C2V_0_kl_1'] = {'mode':'constant','facto
 globalXSBRMap['ggtt_nonRes']['qqHH_CV_1_C2V_1_kl_0'] = {'mode':'constant','factor':1}
 globalXSBRMap['ggtt_nonRes']['qqHH_CV_1_C2V_1_kl_2'] = {'mode':'constant','factor':1}
 globalXSBRMap['ggtt_nonRes']['qqHH_CV_1_C2V_2_kl_1'] = {'mode':'constant','factor':1}
-globalXSBRMap['ggtt_nonRes']['VH'] = {'mode':'VH'}
-globalXSBRMap['ggtt_nonRes']['ggH'] = {'mode':'ggH'}
-globalXSBRMap['ggtt_nonRes']['ttH'] = {'mode':'ttH'}
-globalXSBRMap['ggtt_nonRes']['VBFH'] = {'mode':'qqH'}
-
 # For case of inclusive production mode then have no additional factor beyond V branching ratios
 globalXSBRMap['example'] = od()
 globalXSBRMap['example']['decay'] = {'mode':'hgg'}

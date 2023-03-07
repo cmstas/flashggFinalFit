@@ -7,13 +7,34 @@ models = {
 	#"ggtt_resBkg_syst":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
 	#--PO \"map=.*/HHggTauTau.*:r[1,0,2]\"",
 
- "ggtt_resBkg_syst":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
-  --PO \"map=.*/ttHHggbb.*:r[1,0,2]\" \
-  --PO \"map=.*/ttHHggWW.*:r[1,0,2]\" \
-  --PO \"map=.*/ttHHggTauTau.*:r[1,0,2]\"",
+# "ggtt_resBkg_syst":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+#  --pO \"map=.*/2HDMbbM250.*:r[1,0,2]\" \
+#  --pO \"map=.*/2HDMWWM250.*:r[1,0,2]\" \
+#  --PO \"map=.*/2HDMTAUTAUM250.*:r[1,0,2]\"",
+
+
 # "ggtt_resBkg_syst":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
 #  --PO \"map=.*/HHgg*.*:r[1,0,2]\"",
 
+ "ttHHggXX":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/ttHHggbb.*:r[1,0,2]\" \
+  --PO \"map=.*/ttHHggWW.*:r[1,0,2]\" \
+  --PO \"map=.*/ttHHggTauTau.*:r[1,0,2]\"",
+
+ "2HDM_M250":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/2HDMbbM250.*:r[1,0,2]\" \
+  --PO \"map=.*/2HDMWWM250.*:r[1,0,2]\" \
+  --PO \"map=.*/2HDMTAUTAUM250.*:r[1,0,2]\"",
+
+ "2HDM_M300":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/2HDMbbM300.*:r[1,0,2]\" \
+  --PO \"map=.*/2HDMWWM300.*:r[1,0,2]\" \
+  --PO \"map=.*/2HDMTAUTAUM300.*:r[1,0,2]\"",
+
+ "2HDM_M350":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/2HDMbbM350.*:r[1,0,2]\" \
+  --PO \"map=.*/2HDMWWM350.*:r[1,0,2]\" \
+  --PO \"map=.*/2HDMTAUTAUM350.*:r[1,0,2]\"",
 
   "mu":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
 --PO \"map=.*/ggH.*:r_ggH[1,0,2]\" \

@@ -50,6 +50,112 @@ globalReplacementMap['ggtt_nonRes']["catRVMap"]["SR1"] = "SR1"
 globalReplacementMap['ggtt_nonRes']["catRVMap"]["SR2"] = "SR2"
 
 
+
+# Example analysis which with cats Untagged_Tag0,VBF_Tag0
+globalReplacementMap['ttHHggXX'] = od()
+globalReplacementMap['ttHHggXX']['procWV'] = "ttHHggbb"
+globalReplacementMap['ttHHggXX']['catWV'] = "ttHHggbb_SR1"
+globalReplacementMap['ttHHggXX']['catWV'] = "ttHHggbb_SR2"
+# For RIGHT VERTEX SCENARIO:
+#  * default you should add is diagonal process from given category 
+#  * if few events in diagonal process then may need to change the category aswell (see catRVMap)
+#  * map must contain entry for all cats being processed (for replacement proc and cat)
+globalReplacementMap['ttHHggXX']['procRVMap'] = od()
+globalReplacementMap['ttHHggXX']["procRVMap"]["SR1"] = "ttHHggbb"
+globalReplacementMap['ttHHggXX']["procRVMap"]["SR2"] = "ttHHggbb"
+
+# Replacement category for RV fit
+globalReplacementMap['ttHHggXX']["catRVMap"] = od()
+globalReplacementMap['ttHHggXX']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['ttHHggXX']["catRVMap"]["SR2"] = "SR2"
+
+
+# Example analysis which with cats Untagged_Tag0,VBF_Tag0
+globalReplacementMap['2HDM_M250'] = od()
+globalReplacementMap['2HDM_M250']['procWV'] = "2HDMbbM250"
+globalReplacementMap['2HDM_M250']['catWV'] = "2HDMbbM250_SR1"
+globalReplacementMap['2HDM_M250']['catWV'] = "2HDMbbM250_SR2"
+# For RIGHT VERTEX SCENARIO:
+#  * default you should add is diagonal process from given category 
+#  * if few events in diagonal process then may need to change the category aswell (see catRVMap)
+#  * map must contain entry for all cats being processed (for replacement proc and cat)
+globalReplacementMap['2HDM_M250']['procRVMap'] = od()
+globalReplacementMap['2HDM_M250']["procRVMap"]["SR1"] = "2HDMbbM250"
+globalReplacementMap['2HDM_M250']["procRVMap"]["SR2"] = "2HDMbbM250"
+
+# Replacement category for RV fit
+globalReplacementMap['2HDM_M250']["catRVMap"] = od()
+globalReplacementMap['2HDM_M250']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['2HDM_M250']["catRVMap"]["SR2"] = "SR2"
+
+
+
+# Example analysis which with cats Untagged_Tag0,VBF_Tag0
+globalReplacementMap['2HDM_M300'] = od()
+globalReplacementMap['2HDM_M300']['procWV'] = "2HDMbbM300"
+globalReplacementMap['2HDM_M300']['catWV'] = "2HDMbbM300_SR1"
+globalReplacementMap['2HDM_M300']['catWV'] = "2HDMbbM300_SR2"
+# For RIGHT VERTEX SCENARIO:
+#  * default you should add is diagonal process from given category 
+#  * if few events in diagonal process then may need to change the category aswell (see catRVMap)
+#  * map must contain entry for all cats being processed (for replacement proc and cat)
+globalReplacementMap['2HDM_M300']['procRVMap'] = od()
+globalReplacementMap['2HDM_M300']["procRVMap"]["SR1"] = "2HDMbbM300"
+globalReplacementMap['2HDM_M300']["procRVMap"]["SR2"] = "2HDMbbM300"
+
+# Replacement category for RV fit
+globalReplacementMap['2HDM_M300']["catRVMap"] = od()
+globalReplacementMap['2HDM_M300']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['2HDM_M300']["catRVMap"]["SR2"] = "SR2"
+
+
+
+
+# Example analysis which with cats Untagged_Tag0,VBF_Tag0
+globalReplacementMap['2HDM_M350'] = od()
+globalReplacementMap['2HDM_M350']['procWV'] = "2HDMbbM350"
+globalReplacementMap['2HDM_M350']['catWV'] = "2HDMbbM350_SR1"
+globalReplacementMap['2HDM_M350']['catWV'] = "2HDMbbM350_SR2"
+# For RIGHT VERTEX SCENARIO:
+#  * default you should add is diagonal process from given category 
+#  * if few events in diagonal process then may need to change the category aswell (see catRVMap)
+#  * map must contain entry for all cats being processed (for replacement proc and cat)
+globalReplacementMap['2HDM_M350']['procRVMap'] = od()
+globalReplacementMap['2HDM_M350']["procRVMap"]["SR1"] = "2HDMbbM350"
+globalReplacementMap['2HDM_M350']["procRVMap"]["SR2"] = "2HDMbbM350"
+
+# Replacement category for RV fit
+globalReplacementMap['2HDM_M350']["catRVMap"] = od()
+globalReplacementMap['2HDM_M350']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['2HDM_M350']["catRVMap"]["SR2"] = "SR2"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # STXS analysis
 globalReplacementMap['STXS'] = od()
 # For WRONG VERTEX SCENARIO:

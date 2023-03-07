@@ -6,10 +6,9 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 #source /vols/grid/cms/setup.sh
 
 #tag=SM_23Sep22_with_HHGGXX
-tag=SM_23Sep22_08Dec22
 #tag=BSM_13Oct22_M250_fixed_weights
 #tag=BSM_13Oct22_M300_fixed_weights
-#tag=BSM_13Oct22_M350_fixed_weights
+tag=BSM_13Oct22_M350_12Dec22
 trees=/home/users/iareed/ttHHggbb/coupling_scan/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
 
 cmsenv
@@ -17,25 +16,25 @@ source setup.sh
 
 model_bkg(){
 	pushd Trees2WS
-	 python trees2ws_data.py --inputConfig syst_config_ggtt.py --inputTreeFile $trees/Data/allData.root
+	 python trees2ws_data.py --inputConfig syst_config_2HDM_M350.py --inputTreeFile $trees/Data/allData.root
 	popd
 	
 	pushd Background
 	 	rm -rf outdir_$tag
-		sed -i "s/dummy/${tag}/g" config_ggtt.py 
+		sed -i "s/dummy/${tag}/g" config_2HDM_M350.py 
 
-	  python RunBackgroundScripts.py --inputConfig config_ggtt.py --mode fTestParallel
+	  python RunBackgroundScripts.py --inputConfig config_2HDM_M350.py --mode fTestParallel
 
-		sed -i "s/${tag}/dummy/g" config_ggtt.py
+		sed -i "s/${tag}/dummy/g" config_2HDM_M350.py
 	popd
 }
 
 #Construct Signal Models (one per year)
 model_sig(){
-        procs=("ttHHggbb" "ttHHggWW" "ttHHggTauTau" "ggH" "ttH" "VBFH" "VH" "HHGGbb" "HHGGWWsemileptonic" "HHGGWWdileptonic" "HHGGTauTau")
+        #procs=("ttHHggbb" "ttHHggWW" "ttHHggTauTau" "ggH" "ttH" "VBFH" "VH" "HHGGbb" "HHGGWWsemileptonic" "HHGGWWdileptonic" "HHGGTauTau")
         #procs=("2HDMbbM250" "2HDMWWM250" "2HDMTAUTAUM250" "ttHHggbb" "ttHHggWW" "ttHHggTauTau" "ggH" "ttH" "VBFH" "VH" "HHGGbb" "HHGGWWsemileptonic" "HHGGWWdileptonic" "HHGGTauTau")
         #procs=("2HDMbbM300" "2HDMWWM300" "2HDMTAUTAUM300" "ttHHggbb" "ttHHggWW" "ttHHggTauTau" "ggH" "ttH" "VBFH" "VH" "HHGGbb" "HHGGWWsemileptonic" "HHGGWWdileptonic" "HHGGTauTau")
-        #procs=("2HDMbbM350" "2HDMWWM350" "2HDMTAUTAUM350" "ttHHggbb" "ttHHggWW" "ttHHggTauTau" "ggH" "ttH" "VBFH" "VH" "HHGGbb" "HHGGWWsemileptonic" "HHGGWWdileptonic" "HHGGTauTau")
+        procs=("2HDMbbM350" "2HDMWWM350" "2HDMTAUTAUM350" "ttHHggbb" "ttHHggWW" "ttHHggTauTau" "ggH" "ttH" "VBFH" "VH" "HHGGbb" "HHGGWWsemileptonic" "HHGGWWdileptonic" "HHGGTauTau")
         #procs=("ttHHggbb" "ttH") #Min set for debugging
 	for year in 2016 2017 2018
 	#for year in 2016   #Careful: I was running into errors when debugging with only one year
@@ -47,7 +46,7 @@ model_sig(){
 			rm -rf $trees/$year/ws_$proc
 
 			pushd Trees2WS
-				python trees2ws.py --inputConfig syst_config_ggtt.py --inputTreeFile $trees/$year/${proc}_125_13TeV.root --inputMass 125 --productionMode $proc --year $year --doSystematics
+				python trees2ws.py --inputConfig syst_config_2HDM_M350.py --inputTreeFile $trees/$year/${proc}_125_13TeV.root --inputMass 125 --productionMode $proc --year $year --doSystematics
 			popd
 
 			mv $trees/$year/ws_$proc/${proc}_125_13TeV_$proc.root $trees/ws_signal_$year/output_${proc}_M125_13TeV_pythia8_${proc}.root 
@@ -55,13 +54,13 @@ model_sig(){
 
 		pushd Signal	
 		    rm -rf outdir_${tag}_$year
-		    sed -i "s/dummy/${tag}/g" syst_config_ggtt_$year.py
+		    sed -i "s/dummy/${tag}/g" syst_config_2HDM_M350_$year.py
 
-                    python RunSignalScripts.py --inputConfig syst_config_ggtt_$year.py --mode fTest --modeOpts "--doPlots"
-		    python RunSignalScripts.py --inputConfig syst_config_ggtt_$year.py --mode calcPhotonSyst
-		    python RunSignalScripts.py --inputConfig syst_config_ggtt_$year.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit "
+                    python RunSignalScripts.py --inputConfig syst_config_2HDM_M350_$year.py --mode fTest --modeOpts "--doPlots"
+		    python RunSignalScripts.py --inputConfig syst_config_2HDM_M350_$year.py --mode calcPhotonSyst
+		    python RunSignalScripts.py --inputConfig syst_config_2HDM_M350_$year.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit "
 
-	            sed -i "s/${tag}/dummy/g" syst_config_ggtt_$year.py
+	            sed -i "s/${tag}/dummy/g" syst_config_2HDM_M350_$year.py
 	    	popd
 	done
 
@@ -97,11 +96,11 @@ run_combine(){
 		cp ../Background/outdir_$tag/CMS-HGG*.root ./Models/background/
 		cp ../Datacard/Datacard.txt Datacard.txt
 	
-		python RunText2Workspace.py --mode  ttHHggXX --dryRun
-		./t2w_jobs/t2w_ttHHggXX.sh
+		python RunText2Workspace.py --mode  2HDM_M350 --dryRun
+		./t2w_jobs/t2w_2HDM_M350.sh
 
-		combine --expectSignal 1 -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M AsymptoticLimits -m 125 -d Datacard_ttHHggXX.root -n _AsymptoticLimit_r --freezeParameters MH --run=blind > combine_results_${tag}.txt
-		combine --expectSignal 1 -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M AsymptoticLimits -m 125 -d Datacard_ttHHggXX.root -n _AsymptoticLimit_r --freezeParameters allConstrainedNuisances --run=blind > stat_only_${tag}.txt
+		combine --expectSignal 1 -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M AsymptoticLimits -m 125 -d Datacard_2HDM_M350.root -n _AsymptoticLimit_r --freezeParameters MH --run=blind > combine_results_${tag}.txt
+		combine --expectSignal 1 -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M AsymptoticLimits -m 125 -d Datacard_2HDM_M350.root -n _AsymptoticLimit_r --freezeParameters allConstrainedNuisances --run=blind > stat_only_${tag}.txt
 
                 # Likelyhood scan parts
 		#combine --expectSignal 1 -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M MultiDimFit --algo grid --points 100 -m 125 -d Datacard_ggtt_resBkg_syst.root -n _Scan_r --freezeParameters MH --rMin 0 --rMax 5
@@ -140,9 +139,9 @@ copy_plot(){
 	cp /home/users/iareed/public_html/ttHH/index.php /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/Signal
 }
 
-model_bkg
-model_sig
-make_datacard
+#model_bkg
+#model_sig
+#make_datacard
 run_combine
 syst_plots
-#copy_plot
+copy_plot
