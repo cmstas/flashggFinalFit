@@ -14,7 +14,7 @@ from toyTools import *
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class modelBuilder:
   # Constructor
-  def __init__(self,_name,_cat,_xvar,_data,_functionFamilies,_nBins,_blindingRegion,_minimizerMethod,_minimizerTolerance,verbose=False):
+  def __init__(self,_name,_cat,_xvar,_data,_functionFamilies,_nBins,_blindingRegion,_minimizerMethod,_minimizerTolerance,fitHistType="fixed",verbose=False):
     self.name = _name
     self.cat = _cat
     self.xvar = _xvar
@@ -36,6 +36,7 @@ class modelBuilder:
     self.maxTries = 3
     # Prepare datahist to perform fit to
     self.xvar.setBins(self.nBins)
+    self.fitHistType = fitHistType
     self.prepareDataHists()
     # Fit containers
     self.FitParameters = None # RooArgList of parameters which are being fitted
@@ -45,6 +46,7 @@ class modelBuilder:
     self.NLL = None
     self.FitResult = None
     self.bestfitPdf = None
+
   
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Function to save multipdf to output workspace
@@ -53,6 +55,18 @@ class modelBuilder:
     wsout.imp(self.multipdf,ROOT.RooFit.RecycleConflictNodes())
     wsout.imp(self.norm,ROOT.RooFit.RecycleConflictNodes())
     # Create datahist
+    # print(self.data)
+    # if self.data.numEntries() < self.xvar.getBins():
+    #   self.DataHistFinal = self.data
+    #   self.DataHistFinal.SetName("roohist_data_mass_%s"%self.cat)
+    #   self.DataHistFinal.SetTitle("data")
+    # else:
+    #   self.DataHistFinal = ROOT.RooDataHist("roohist_data_mass_%s"%self.cat,"data",ROOT.RooArgSet(self.xvar),self.data)
+    
+    # # self.DataHistFinal = self.data
+    # # self.DataHistFinal.SetName("roohist_data_mass_%s"%self.cat)
+    # # self.DataHistFinal.SetTitle("data")
+    
     self.DataHistFinal = ROOT.RooDataHist("roohist_data_mass_%s"%self.cat,"data",ROOT.RooArgSet(self.xvar),self.data)
     wsout.imp(self.DataHistFinal)
  
@@ -137,6 +151,20 @@ class modelBuilder:
   # Function to convert data to RooDataHist
   def prepareDataHists(self):
     self.DataHist = ROOT.RooDataHist("%s_hist"%self.data.GetName(),"%s_hist"%self.data.GetName(),ROOT.RooArgSet(self.xvar),self.data)
+    
+    if self.fitHistType == "variable":
+      # create new data hist just for fitting
+      xmin = np.power(self.xvar.getMin(), -2.0)
+      xmax = np.power(self.xvar.getMax(), -2.0)
+      bins = np.power(np.linspace(xmin, xmax, 112), -0.5)
+      self.xvarFit = self.xvar.Clone()
+      hist = ROOT.TH1F("hist","hist", len(bins)-1, array('f', bins))
+      self.data.fillHistogram(hist, ROOT.RooArgList(self.xvar))
+      self.DataHistFit = ROOT.RooDataHist("fitting_DataHist","fitting_DataHist",ROOT.RooArgList(self.xvarFit),hist)
+    elif self.fitHistType == "fixed":
+      self.DataHistFit = self.DataHist
+    else:
+      raise Exception("Expected fitHistType == 'variable' or 'fixed'")
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Function to get pdf normalisation: match with data in sidebands and extrapolate for pdf in signal region
@@ -188,7 +216,7 @@ class modelBuilder:
     x0 = self.extractX0()
     xbounds = self.extractXBounds()
 
-    if _mode == 'NLL': self.NLL = self.getNLL()
+    if _mode == 'NLL': self.NLL = self.getNLL(_verbose=False)
     elif _mode == "chi2": self.chi2 = self.getChi2()
     else: 
       print " --> [ERROR] Fitting mode (%s) not supported. Use NLL or chi2"%_mode
@@ -199,7 +227,7 @@ class modelBuilder:
 
     # Run fit
     if _verbose: print " --> (%s) Running fit"%_pdf.GetName()
-    if _mode == 'NLL': self.FitResult = minimize(NLL,x0,args=self,bounds=xbounds,method=self.minimizerMethod,tol=self.minimizerTolerance,options={'maxiter':10000})
+    if _mode == 'NLL': self.FitResult = minimize(NLL,x0,args=(self,False,True),bounds=xbounds,method=self.minimizerMethod,tol=self.minimizerTolerance,options={'maxiter':10000})
     else: self.FitResult = minimize(Chi2,x0,args=self,bounds=xbounds,method=self.minimizerMethod,tol=self.minimizerTolerance,options={'maxiter':10000})
 
     # Extract final fit result
@@ -285,7 +313,7 @@ class modelBuilder:
     for i in range(0,len(self.FitParameters)): print "    * %-20s = %.6f   [%.6f,%.6f]"%(self.FitParameters[i].GetName(),self.FitParameters[i].getVal(),self.FitParameters[i].getMin(),self.FitParameters[i].getMax())
     print "    ~~~~~~~~~~~~~~~~"
     if _mode == "NLL":
-      print "    * NLL = %.6f, n(dof) = %g"%(self.getNLL(),int(self.Ndof))
+      print "    * NLL = %.6f, n(dof) = %g"%(self.getNLL(_verbose=False),int(self.Ndof))
       #print "    ~~~~~~~~~~~~~~~~"
       #print "    * [VERBOSE] NLL = %.6f"%(self.getNLL(_verbose=True))
     elif _mode == "chi2":
@@ -336,7 +364,7 @@ class modelBuilder:
 
     # Loop over function families
     for ff in functionFamilies:
-      prevNLL, prob = 0., 0.
+      prevNLL, prob = -1., -1.
       order, prevOrder = 1, 1
 
       # Loop over orders in function until pval stopping criterion is reached
@@ -373,14 +401,19 @@ class modelBuilder:
           #  print " --> [WARNING] fit did NOT converge successfully for pdf: %s"%self.pdfs[(ff,order)]['name']
           #  print "     * Assumes NLL > 1e10 --> will not attempt higher orders"
           
-          # Calculate dChi2 between this order and previous          
-          if order > 1:
+          # Calculate dChi2 between this order and previous       
+          print(prevNLL, prob)
+  
+          if prevNLL != -1.:
+            print("hello")
             dchi2 = 2.*(prevNLL-NLL) if prevNLL>NLL else 0.
             prob = self.getProbabilityFTest(dchi2,order-prevOrder)
             #prob_toys = self.getProbabilityFTestFromToys(self.pdfs[(ff,order)],self.pdfs[(ff,prevOrder)],dchi2,order-prevOrder)
           else:
             prob = 0
             #prob_toys = 0
+
+          print(prevNLL, prob)
 
           if prob < _pvalFTest: self.pdfs[(ff,order)]['ftest'] = True
           else: self.pdfs[(ff,order)]['ftest'] = False

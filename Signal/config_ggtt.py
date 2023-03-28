@@ -1,7 +1,5 @@
 # Config file: options for signal fitting
 
-_year = '2018'
-
 signalScriptCfg = {
   
   # Setup
@@ -12,7 +10,7 @@ signalScriptCfg = {
   'cats':'auto', # if auto: inferred automatically from (0) workspace
   'ext':'ggtt_resonant_<m>',
   'analysis':'ggtt_resonant_<m>', # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)
-  'year':'%s'%_year, # Use 'combined' if merging all years: not recommended
+  'year':'<year>', # Use 'combined' if merging all years: not recommended
   'massPoints':'<mh>',
 
   #Photon shape systematics  
@@ -22,7 +20,7 @@ signalScriptCfg = {
   'smears':'',
 
   # Job submission options
-  'batch':'local', # ['condor','SGE','IC','local']
+  'batch':'IC', # ['condor','SGE','IC','local']
   'queue':'hep.q'
   #'batch':'condor', # ['condor','SGE','IC','local']
   #'queue':'espresso',

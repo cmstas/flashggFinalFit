@@ -24,7 +24,7 @@ print(opt.modeOpts)
 print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ RUNNING BACKGROUND SCRIPTS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 def leave():
   print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ RUNNING BACKGROUND SCRIPTS (END) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-  sys.exit(1)
+  sys.exit(0)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Extract options from config file
@@ -33,9 +33,12 @@ if opt.inputConfig != '':
   if os.path.exists( opt.inputConfig ):
 
     #copy file to have common name and then import cfg options (dict)
-    os.system("cp %s config.py"%opt.inputConfig)
-    from config import backgroundScriptCfg
-    _cfg = backgroundScriptCfg
+    #os.system("cp %s config.py"%opt.inputConfig)
+    #from config import backgroundScriptCfg
+    #_cfg = backgroundScriptCfg
+    import imp
+    config_module = imp.load_source("config_module", opt.inputConfig)
+    _cfg = config_module.backgroundScriptCfg
 
     #Extract options
     options['inputWSFile']     = _cfg['inputWSFile']
@@ -53,7 +56,7 @@ if opt.inputConfig != '':
     options['printOnly']               = opt.printOnly
 
     # Delete copy of file
-    os.system("rm config.py")
+    #os.system("rm config.py")
 
   else:
     print "[ERROR] %s config file does not exist. Leaving..."%opt.inputConfig
@@ -72,6 +75,8 @@ if options['mode'] not in ['fTest']:
 # If cat == auto: extract list of categories from datafile
 if options['cats'] == 'auto':
   options['cats'] = extractListOfCatsFromData(options['inputWSFile'])
+  #options['cats'] = options['cats'].split(",")[-1]
+  #print(options['cats'])
 options['nCats'] = len(options['cats'].split(","))
 
 # Print info to user
