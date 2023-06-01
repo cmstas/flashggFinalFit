@@ -27,9 +27,14 @@ def plotPdfMap(model,pdfs,plotBlindingRegion,_outdir='./',_cat='',_pdfNBins=1600
     hists[k].SetTitle("")
     pdfiter += 1
 
+    hists[k].Print()
+    for i in range(1600):
+      print(hists[k].GetBinContent(i))
+
   # Create data histogram
   if _dataNBins == None:
     _dataNBins = model.xvar.getBins()
+  print("DataBins", _dataNBins)
   hists['data'] = model.xvar.createHistogram("h_data",ROOT.RooFit.Binning(_dataNBins))
   model.DataHist.fillHistogram(hists['data'],ROOT.RooArgList(model.xvar))
 
@@ -62,13 +67,19 @@ def plotPdfMap(model,pdfs,plotBlindingRegion,_outdir='./',_cat='',_pdfNBins=1600
     min_vals = []
     for k,v in pdfs.iteritems():
       min_vals.append(hists[k].GetMinimum())
+      
     hists['data'].SetMinimum(max(min_vals))
+    hists['data'].SetMinimum(1e-6)
+    pass
   else:
-    hists['data'].SetMinimum(0)
+    #hists['data'].SetMinimum(0)
+    pass
   hists['data'].Draw("PE")
   for k,v in pdfs.iteritems():
     # Scale pdf histograms
     hists[k].Scale(v['norm']*(float(_pdfNBins)/_dataNBins))
+    hists[k].SetMinimum(1e-6)
+
     hists[k].Draw("Same HIST")
 
   # Add legend

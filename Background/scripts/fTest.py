@@ -41,6 +41,7 @@ def get_options():
   parser.add_option("--fitFullRange", dest='fitFullRange', default=False, action="store_true", help="Fit background pdfs over full range, including the blinding region")
   parser.add_option("--maxOrder", dest='maxOrder', default=6, type='int', help="Max order of functions")
   parser.add_option("--pvalFTest", dest='pvalFTest', default=0.05, type='float', help="p-value threshold to include higher order function in envelope")
+  #parser.add_option("--pvalFTest", dest='pvalFTest', default=0.65, type='float', help="p-value threshold to include higher order function in envelope")
   parser.add_option("--gofCriteria", dest='gofCriteria', default=0.01, type='float', help="goodness-of-fit threshold to include function in envelope")
   parser.add_option('--doPlots', dest='doPlots', default=False, action="store_true", help="Produce bkg fitting plots")
   #parser.add_option('--nBins', dest='nBins', default=80, type='int', help="Number of bins for fit")
@@ -95,10 +96,13 @@ print(nBinsOutput, nBins)
 if xvar.getMax() > 180: # if high mass
   functionFamilies['HighMassDijet'] = od()
   functionFamilies['HighMassDijet']['name'] = ['HighMassDijet','hmdijet']
-  del functionFamilies['Bernstein']
   fitHistType = "variable"
 else:
   fitHistType = "fixed"
+
+# if high mass or low stats, remove Bernstein
+if (xvar.getMax() > 180) or (data.numEntries() < 100):
+  del functionFamilies['Bernstein']
 
 model = modelBuilder("model_%s_%s"%(opt.cat,opt.year),opt.cat,xvarFit,data,functionFamilies,nBins,blindingRegion,opt.minimizerMethod,opt.minimizerTolerance,fitHistType=fitHistType)
 if opt.fitFullRange: model.setBlind(False)

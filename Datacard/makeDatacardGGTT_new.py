@@ -54,44 +54,54 @@ def attemptLoadSystematics(json_location):
   else:
     return None
 
+def getValFromDict(sys_dict, sys_name):
+  possible_sys = sys_dict.keys()
+  if sys_name in possible_sys:
+    val = [sys_dict[sys_name], sys_dict[sys_name]]
+  else:
+    val = [sys_dict[sys_name+"_left"], sys_dict[sys_name+"_right"]]
+  return val
+
 def findFactorySystematic(sys_name, proc, cat, year, sig_systematics, res_bkg_systematics, args):
   if "ggtt" in proc:
     if sig_systematics != None:
-      val = sig_systematics[str(year)][str(cat[-1])]["%d_%d"%(args.MX, args.MY)][sys_name]
+      sys_dict = sig_systematics[str(year)][str(cat[-1])]["%d_%d"%(args.MX, args.MY)]
+      val = getValFromDict(sys_dict, sys_name)
     else:
-      val = 1
+      val = [1,1]
   else:
     if (res_bkg_systematics != None) and ("Interpolation" not in sys_name):
       slimmed_proc = "_".join(proc.split("_")[:-2]) #take away the year_hgg suffix
-      val = res_bkg_systematics[str(year)][str(cat[-1])]["%d_%d"%(args.MX, args.MY)][slimmed_proc][sys_name]
+      sys_dict = res_bkg_systematics[str(year)][str(cat[-1])]["%d_%d"%(args.MX, args.MY)][slimmed_proc]
+      val = getValFromDict(sys_dict, sys_name)        
     else:
-      val = 1
+      val = [1,1]
 
-  if val == 1:
-    return '-'
+  val = ["%.4f"%val[0], "%.4f"%val[1]]
+  if val[0] == val[1] == "1.0000":
+    val = "-"
+  elif abs(float(val[0]) - 1) == abs(float(val[1]) - 1):
+    val = val[0]
   else:
-    val = "%.4f"%val
-    if val == "1.0000":
-      return '-'
-    else:
-      return val
+    val = "%s/%s"%(val[0], val[1])
+
+  return val
 
 def addMigrationSystematics(df):
   """Add interpolation migration systematics to list of systematics"""
   template = {'name':'','title':'','type':'factory','prior':'lnN','correlateAcrossYears':0}
 
-  nCats = len(df.cat.unique())
-  for i in range(nCats-1):
-    for direction in ["left", "right"]:
-      template_copy = copy.deepcopy(template)
-      template_copy["name"] = template_copy["title"] = "Interpolation_migration_%d_%d_%s"%(i, i+1, direction)
-      systematics_ggtt.experimental_systematics.append(template_copy)
+  nCats = len([cat for cat in df.cat.unique() if "cr" not in cat])
+  for i in range(nCats-1):    
+    template_copy = copy.deepcopy(template)
+    template_copy["name"] = template_copy["title"] = "Interpolation_migration_%d_%d"%(i, i+1)
+    systematics_ggtt.experimental_systematics.append(template_copy)
 
 def grabSystematics(df, args):
   sig_systematics = attemptLoadSystematics(args.sig_syst)
   res_bkg_systematics = attemptLoadSystematics(args.res_bkg_syst)
 
-  #addMigrationSystematics(df)
+  addMigrationSystematics(df)
 
   years = df.year.unique()
 
@@ -126,7 +136,11 @@ def grabSystematics(df, args):
       if (proc == "bkg_mass") or (proc == "data_obs") or ("ggtt" in proc) or (proc == "dy_merged_hgg"):
         val = '-'
       elif syst["type"] == "constant":
-        val = syst["value"]
+        nc = {"ggH":"ggH", "qqH":"VBF", "VH":"VH", "ttH":"ttH"} # name conversion
+        if (syst["name"] == "BR_hgg") or (nc[syst["name"].split("_")[-1]] in proc):
+          val = syst["value"]
+        else:
+          val = '-'
       else:
         raise Exception()
 
@@ -178,7 +192,10 @@ def getBackgroundYield(f, cat, my):
   bkg_yields = []
   for i in range(10):
     w.cat("pdfindex_%s_combined_13TeV"%cat).setIndex(i)
-    bkg_yields.append(prod.getVal())
+    prodVal = prod.getVal()
+    if prodVal == 0:
+      prodVal = (mggh-mggl) / (xvar.getMax()-xvar.getMin())
+    bkg_yields.append(prodVal)
   print(bkg_yields)
   
   f.Close()
@@ -244,13 +261,17 @@ def doPruning(df, args):
     if df[df.cat==cat].iloc[0]["prune"] == 1:
       continue
 
-    tot_yield = df[df.cat==cat]["sig_yield"].sum()
+    #tot_yield = df[df.cat==cat]["sig_yield"].sum()
+    tot_yield = sum([row["sig_yield"] for i, row in df[df.cat==cat].iterrows() if "ggtt" in row.proc])
+    print("Total ggtt yield at xs=1fb: %.2f"%tot_yield)
+
     for proc in df[df.cat==cat].proc.unique():
       df_cat_proc = df[(df.cat==cat)&(df.proc==proc)]
       #print(df_cat_proc)
       assert len(df_cat_proc) == 1
-      if (proc != "bkg_mass") & (proc != "data_obs") & (proc != "dy_merged_hgg") & (df_cat_proc.iloc[0]["sig_yield"] < 0.1*args.pruneThreshold*tot_yield):
-        print("Pruning %s from %s"%(proc,cat))
+      #if (proc != "bkg_mass") & (proc != "data_obs") & (proc != "dy_merged_hgg") & (df_cat_proc.iloc[0]["sig_yield"] < 0.1*args.pruneThreshold*tot_yield):
+      if (proc != "bkg_mass") & (proc != "data_obs") & (proc != "dy_merged_hgg") & (df_cat_proc.iloc[0]["sig_yield"] < 0.01):
+        print("Pruning %s from %s, yield = %.2f"%(proc,cat,df_cat_proc.iloc[0]["sig_yield"]))
         df.loc[(df.cat==cat)&(df.proc==proc), "prune"] = 1
 
   return df

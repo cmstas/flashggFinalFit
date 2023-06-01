@@ -56,18 +56,18 @@ class modelBuilder:
     wsout.imp(self.norm,ROOT.RooFit.RecycleConflictNodes())
     # Create datahist
     # print(self.data)
-    # if self.data.numEntries() < self.xvar.getBins():
-    #   self.DataHistFinal = self.data
-    #   self.DataHistFinal.SetName("roohist_data_mass_%s"%self.cat)
-    #   self.DataHistFinal.SetTitle("data")
-    # else:
-    #   self.DataHistFinal = ROOT.RooDataHist("roohist_data_mass_%s"%self.cat,"data",ROOT.RooArgSet(self.xvar),self.data)
+    if self.data.numEntries() < self.xvar.getBins():
+      self.DataHistFinal = self.data
+      self.DataHistFinal.SetName("roohist_data_mass_%s"%self.cat)
+      self.DataHistFinal.SetTitle("data")
+    else:
+      self.DataHistFinal = ROOT.RooDataHist("roohist_data_mass_%s"%self.cat,"data",ROOT.RooArgSet(self.xvar),self.data)
     
-    # # self.DataHistFinal = self.data
-    # # self.DataHistFinal.SetName("roohist_data_mass_%s"%self.cat)
-    # # self.DataHistFinal.SetTitle("data")
+    # self.DataHistFinal = self.data
+    # self.DataHistFinal.SetName("roohist_data_mass_%s"%self.cat)
+    # self.DataHistFinal.SetTitle("data")
     
-    self.DataHistFinal = ROOT.RooDataHist("roohist_data_mass_%s"%self.cat,"data",ROOT.RooArgSet(self.xvar),self.data)
+    #self.DataHistFinal = ROOT.RooDataHist("roohist_data_mass_%s"%self.cat,"data",ROOT.RooArgSet(self.xvar),self.data)
     wsout.imp(self.DataHistFinal)
  
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

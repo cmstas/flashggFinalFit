@@ -23,10 +23,10 @@ def main(f_in, cat, f_out):
     # create data roohist
     #inputWS.Print()
     data = inputWS.data("Data_%s_%s"%(sqrts__,cat))
-    DataHist = ROOT.RooDataHist("roohist_data_mass_%s"%cat,"data",ROOT.RooArgSet(xvar),data)
+    DataHistFit = ROOT.RooDataHist("datahistfit","datahistfit",ROOT.RooArgSet(xvar),data)
     
     frame = xvar.frame()
-    DataHist.plotOn(frame)
+    DataHistFit.plotOn(frame)
 
     # bkg model
     pname="model_%s_combined_exp1_p0"%cat
@@ -45,17 +45,17 @@ def main(f_in, cat, f_out):
 
     gauss = ROOT.RooGaussian("bkg_gauss_"+suffix, "bkg_gauss"+suffix, xvar, mean, sigma)
     gauss_model = ROOT.RooAddPdf("gauss_model", "gauss_model", bkg, gauss, bkg_frac)
-    gauss_model.fitTo(DataHist)
-    gauss_model.plotOn(frame)
+    gauss_model.fitTo(DataHistFit)
+    gauss_model.plotOn(frame, ROOT.RooFit.LineColor(ROOT.kBlue))
     gauss_model.Print("t")
-    gauss_chi2 = gauss_model.createChi2(DataHist).getVal()
+    gauss_chi2 = gauss_model.createChi2(DataHistFit).getVal()
     print(gauss_chi2, xvar.getBins())
     gauss_ndof = int(xvar.getBins() - (1 + 1 + 2))
     gauss_gof_pval = ROOT.TMath.Prob(gauss_chi2,gauss_ndof)
     print(gauss_gof_pval)
 
-    #if gauss_gof_pval < 0.01:       
-    if True:
+    if gauss_gof_pval < 0.01:       
+    #if True:
       n1 = ROOT.RooRealVar("n1"+suffix, "n1"+suffix, 2.,0.1,50.)
       n2 = ROOT.RooRealVar("n2"+suffix, "n2"+suffix, 2.,0.1,50.)
       a1 = ROOT.RooRealVar("a1"+suffix, "a1"+suffix, 1.,0.5,5.0)
@@ -63,16 +63,19 @@ def main(f_in, cat, f_out):
 
       dcb = ROOT.RooDoubleCBFast("bkg_dcb"+suffix, "bkg_dcb"+suffix, xvar, mean, sigma, a1, n1, a2, n2)
       dcb_model = ROOT.RooAddPdf("dcb_model", "dcb_model", bkg, dcb, bkg_frac)
-      dcb_model.fitTo(DataHist)
-      dcb_model.plotOn(frame)
+      dcb_model.fitTo(DataHistFit)
+      dcb_model.plotOn(frame, ROOT.RooFit.LineColor(ROOT.kRed))
       dcb_model.Print("t")
-      dcb_chi2 = dcb_model.createChi2(DataHist).getVal()
+      dcb_chi2 = dcb_model.createChi2(DataHistFit).getVal()
       print(dcb_chi2, xvar.getBins())
       dcb_ndof = int(xvar.getBins() - (1 + 1 + 4))
       dcb_gof_pval = ROOT.TMath.Prob(dcb_chi2,dcb_ndof)
       print(dcb_gof_pval)
 
-      dy = dcb
+      if dcb_gof_pval > gauss_gof_pval:
+        dy = dcb
+      else:
+        dy = gauss
     else:
       dy = gauss
 
@@ -83,6 +86,8 @@ def main(f_in, cat, f_out):
 
     c = ROOT.TCanvas("canvas", "canvas", 600, 600)
     frame.Draw()
+    if not os.path.exists("plots"):
+      os.mkdir("plots")
     c.SaveAs("plots/dy_%s.pdf"%cat)
 
     dy.SetTitle("bkg"+suffix)
@@ -91,6 +96,9 @@ def main(f_in, cat, f_out):
     # create and save workspace
     w_control_regions = ROOT.RooWorkspace("w_control_regions", "w_control_regions")
 
+    xvar.setBins(nBinsOutput)
+    DataHist = ROOT.RooDataHist("roohist_data_mass_%s"%cat,"data",ROOT.RooArgSet(xvar),data)
+
     imp = getattr(w_control_regions, "import")
 
     imp(DataHist)
@@ -98,6 +106,8 @@ def main(f_in, cat, f_out):
     imp(bkg_norm)
     imp(dy)
     #imp(dy_norm)
+    #w_control_regions.var("CMS_hgg_mass").setBins(nBinsOutput)
+    w_control_regions.var("CMS_hgg_mass").Print()
     w_control_regions.writeToFile(f_out)
 
 if __name__=="__main__":

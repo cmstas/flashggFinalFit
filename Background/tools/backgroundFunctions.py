@@ -25,11 +25,11 @@ def testPdf(pdf, model):
 
 functionFamilies = od()
 
-# # Bernstein polynomial
+# Bernstein polynomial
 functionFamilies['Bernstein'] = od()
 functionFamilies['Bernstein']['name'] = ['Bernstein','bern']
 
-# # Exponential
+# Exponential
 functionFamilies['Exponential'] = od()
 functionFamilies['Exponential']['name'] = ['Exponential','exp']
 
@@ -40,6 +40,10 @@ functionFamilies['PowerLaw']['name'] = ['PowerLaw','pow']
 # Laurent series
 functionFamilies['Laurent'] = od()
 functionFamilies['Laurent']['name'] = ['Laurent','lau']
+
+# ExpPoly 
+functionFamilies["ExpPoly"] = od()
+functionFamilies['ExpPoly']['name'] = ['ExpPoly','exppoly']
 
 #High Mass Functions
 #Pow
@@ -58,8 +62,8 @@ functionFamilies['Laurent']['name'] = ['Laurent','lau']
 # functionFamilies['HighMassModdijet'] = od()
 # functionFamilies['HighMassModdijet']['name'] = ['HighMassModdijet','hmmoddijet']
 
-#functionFamilies['HighMassDijet'] = od()
-#functionFamilies['HighMassDijet']['name'] = ['HighMassDijet','hmdijet']
+# functionFamilies['HighMassDijet'] = od()
+# functionFamilies['HighMassDijet']['name'] = ['HighMassDijet','hmdijet']
 #del functionFamilies['HighMassDijet']
 
 # Define function families
@@ -186,6 +190,29 @@ def getPdf(model,prefix,funcType,order):
     testPdf(pdf, model)
     return pdf
 
+  elif funcType == "ExpPoly":
+    if order == 1: return False # remove bernstein-1
+    if order > 3: return False
+
+    expr = "(@1*(@0/100))"
+    for i in range(1, order):
+      x_power = "*".join(["(@0/100)"]*(i+1))
+      expr += "+(@%d*%s)"%((i+1),x_power)
+
+    paramList = ROOT.RooArgList()
+    paramList.add(model.xvar)
+    for i in range(order):
+      pname = "%s_p%g"%(prefix,i)
+      p = ROOT.RooRealVar(pname,pname,0.1*(i+1),0.1,10.)
+      model.params[pname] = p
+      paramList.add(p)
+
+    poly_name = "%s_exppolypoly"%prefix
+    poly = ROOT.RooFormulaVar(poly_name,poly_name,expr,paramList)
+    poly.Print()
+    model.formulas[poly_name] = poly
+    return ROOT.RooExponential(prefix,prefix,poly,ROOT.RooFit.RooConst(-1.0))
+
   # elif funcType == "HighMassExppow":
   #   if order < 3: return False
 
@@ -292,7 +319,7 @@ def getPdf(model,prefix,funcType,order):
   #   return ROOT.RooFormulaVar(prefix,prefix,"@0**(@1+@2*log(@0))*@3**@4",ROOT.RooArgList(model.xvar,a,b,f,c))
 
   elif funcType == "HighMassDijet":
-    if order < 1: return False #starts with 1 d.o.f
+    if order < 1: return False #starts with 2 d.o.f
 
     coeffs = []
     for i in range(order):

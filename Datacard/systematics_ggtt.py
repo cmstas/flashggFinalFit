@@ -29,6 +29,10 @@ theory_systematics = [
   {'name':'pdf_Higgs_qqH','title':'pdf_Higgs_qqH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'1.021'},
   {'name':'pdf_Higgs_VH','title':'pdf_Higgs_VH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'1.017'},
   {'name':'pdf_Higgs_ttH','title':'pdf_Higgs_ttH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'1.030'},
+  {'name':'alphaS_ggH','title':'alphaS_ggH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'1.026'},
+  {'name':'alphaS_qqH','title':'alphaS_qqH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'1.005'},
+  {'name':'alphaS_VH','title':'alphaS_VH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'1.009'},
+  {'name':'alphaS_ttH','title':'alphaS_ttH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'1.020'}
                ]
 # PDF weight
 #for i in range(1,60): theory_systematics.append( {'name':'pdfWeight_%g'%i, 'title':'CMS_hgg_pdfWeight_%g'%i, 'type':'factory','prior':'lnN','correlateAcrossYears':1,'tiers':['shape']} )
@@ -60,7 +64,7 @@ experimental_systematics = [
                 {'name':'muon_id_sfSYS_SelectedMuon','title':'CMS_muon_iso_sfSTAT','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'muon_iso_sfSTAT_SelectedMuon','title':'CMS_muon_iso_sfSTAT','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'muon_iso_sfSYS_SelectedMuon','title':'CMS_muon_iso_sfSYS','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                #{'name':'photon_id_sf_Diphoton_Photon','title':'CMS_photon_id_sf','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'photon_id_sf_Diphoton_Photon','title':'CMS_photon_id_sf','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'photon_presel_sf_Diphoton_Photon','title':'CMS_hgg_presel_sf','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'tau_idDeepTauVSe_sf_AnalysisTau','title':'CMS_tau_idDeepTauVSe_sf','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'tau_idDeepTauVSjet_sf_AnalysisTau','title':'CMS_tau_idDeepTauVSjet_sf','type':'factory','prior':'lnN','correlateAcrossYears':0},
