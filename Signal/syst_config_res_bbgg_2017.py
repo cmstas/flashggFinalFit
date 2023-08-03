@@ -1,6 +1,6 @@
 # Config file: options for signal fitting
 
-_tag='21Sep2022_MY90'
+_tag='dummy'
 _year = '2017'
 
 signalScriptCfg = {

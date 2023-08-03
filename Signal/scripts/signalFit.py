@@ -327,4 +327,4 @@ if opt.doPlots:
     plotPdfComponents(ssfWV,_outdir="%s/outdir_%s/signalFit/Plots"%(swd__,opt.ext),_extension="WV_",_proc=procWVFit,_cat=catRVFit) 
   # Plot interpolation
   plotInterpolation(fm,_outdir="%s/outdir_%s/signalFit/Plots"%(swd__,opt.ext)) 
-  plotSplines(fm,_outdir="%s/outdir_%s/signalFit/Plots"%(swd__,opt.ext),_nominalMass=MHNominal) 
+  #plotSplines(fm,_outdir="%s/outdir_%s/signalFit/Plots"%(swd__,opt.ext),_nominalMass=MHNominal) 

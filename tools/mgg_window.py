@@ -1,5 +1,5 @@
 
-mgg_res = 90
+mgg_res = mass_value
 mgg_low = 65.
 mgg_high =120.
 mgg_veto_low =  mgg_res - 10

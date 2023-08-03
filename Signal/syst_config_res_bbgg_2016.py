@@ -12,7 +12,7 @@ signalScriptCfg = {
   'ext':'%s_%s'%(_tag,_year),
   'analysis':'bbgg_res', # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)
   'year':'%s'%_year, # Use 'combined' if merging all years: not recommended
-  'massPoints':'mass_value',
+  'massPoints':'90',
 
   #Photon shape systematics  
   'scales':'_scale', # separate nuisance per year
