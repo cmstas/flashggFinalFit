@@ -72,7 +72,7 @@ experimental_systematics = [
                 {'name':'weight_puWeight','title' :'weight_puWeight','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_photon_id_sf_Diphoton_Photon','title' :'weight_photon_id_sf_Diphoton_Photon','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_photon_presel_sf_Diphoton_Photon','title' :'weight_photon_presel_sf_Diphoton_Photon','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                #{'name':'weight_L1_prefiring_sf','title' :'CMS_hgg_L1_prefiringSF','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'weight_L1_prefiring_sf','title' :'CMS_hgg_L1_prefiringSF','type':'factory','prior':'lnN','correlateAcrossYears':0},
 
                 {'name':'weight_btag_deepjet_sf_SelectedJet_jes','title':'CMS_hgg_btag_deepjet_sf_jes','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_btag_deepjet_sf_SelectedJet_cferr1','title':'CMS_hgg_btag_deepjet_sf_cferr1','type':'factory','prior':'lnN','correlateAcrossYears':0},

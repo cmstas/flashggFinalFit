@@ -6,7 +6,7 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 #source /vols/grid/cms/setup.sh
 
 #tag=SM_23Sep22_with_HHGGXX_new_dir
-tag=SM_23Sep22_fixed_lf_and_hf
+tag=SM_23Sep22_fixed_L1
 #trees=/home/users/iareed/ttHHggbb/coupling_scan/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
 trees=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
 
