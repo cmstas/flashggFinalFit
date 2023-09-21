@@ -20,29 +20,27 @@
 # Specify as list in dict: e.g. 'tiers'=['inc','inorm','norm','ishape','shape']
 
 theory_systematics = [
-    # Normalisation uncertainties: enter interpretations
-    {'name':'BR_hgg','title':'BR_hgg','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':"0.98/1.021"},
-    {'name':'ggHH_xsec','title':'ggHH_xsec','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':"theory_uncertainties/thu_gghh.json"},
+                # Normalisation uncertainties: enter interpretations
+                {'name':'BR_hgg','title':'BR_hgg','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':"0.98/1.021"},
+                {'name':'ggHH_xsec','title':'ggHH_xsec','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':"theory_uncertainties/thu_gghh.json"},
 
-    {'name':'QCDscale_ggH','title':'QCDscale_ggH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_ggh.json'},
-    {'name':'QCDscale_qqH','title':'QCDscale_qqH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_qqh.json'},
-    {'name':'QCDscale_VH','title':'QCDscale_VH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_vh.json'},
-    {'name':'QCDscale_ttH','title':'QCDscale_ttH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tth.json'},
+                {'name':'QCDscale_ggH','title':'QCDscale_ggH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_ggh.json'},
+                {'name':'QCDscale_qqH','title':'QCDscale_qqH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_qqh.json'},
+                {'name':'QCDscale_VH','title':'QCDscale_VH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_vh.json'},
+                {'name':'QCDscale_ttH','title':'QCDscale_ttH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tth.json'},
+							
+		{'name':'pdf_Higgs_ggH','title':'pdf_Higgs_ggH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_ggh.json'},
+		{'name':'pdf_Higgs_qqH','title':'pdf_Higgs_qqH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_qqh.json'},
+		{'name':'pdf_Higgs_VH','title':'pdf_Higgs_VH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_vh.json'},
+		{'name':'pdf_Higgs_ttH','title':'pdf_Higgs_ttH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tth.json'},
+		
+		
+		{'name':'alphaS_ggH','title':'alphaS_ggH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_ggh.json'},
+		{'name':'alphaS_qqH','title':'alphaS_qqH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_qqh.json'},
+		{'name':'alphaS_VH','title':'alphaS_VH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_vh.json'},
+		{'name':'alphaS_ttH','title':'alphaS_ttH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tth.json'},
 
-    {'name':'QCDscale_ttHH','title':'QCDscale_ttHH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tthh.json'},
-
-    {'name':'pdf_Higgs_ggH','title':'pdf_Higgs_ggH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_ggh.json'},
-    {'name':'pdf_Higgs_qqH','title':'pdf_Higgs_qqH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_qqh.json'},
-    {'name':'pdf_Higgs_VH','title':'pdf_Higgs_VH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_vh.json'},
-    {'name':'pdf_Higgs_ttH','title':'pdf_Higgs_ttH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tth.json'},
-
-    {'name':'alphaS_ggH','title':'alphaS_ggH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_ggh.json'},
-    {'name':'alphaS_qqH','title':'alphaS_qqH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_qqh.json'},
-    {'name':'alphaS_VH','title':'alphaS_VH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_vh.json'},
-    {'name':'alphaS_ttH','title':'alphaS_ttH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tth.json'},
-
-    {'name':'alphaS_pdf_ttHH','title':'alphaS+pdf_ttHH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tthh.json'},
-
+                {'name':'alphaS_pdf_ttHH','title':'alphaS+pdf_ttHH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tthh.json'},
 ]
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -71,24 +69,21 @@ experimental_systematics = [
                 {'name':'Muon_pt','title':'Muon_pt','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'Tau_pt','title' :'Tau_pt','type':'factory','prior':'lnN','correlateAcrossYears':0},
 
-
-
-
-                # Missing from inital runs
-                {'name':'weight_L1_prefiring_sf','title' :'weight_L1_prefiring_sf','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_puWeight','title' :'weight_puWeight','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_photon_id_sf_Diphoton_Photon','title' :'weight_photon_id_sf_Diphoton_Photon','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_photon_presel_sf_Diphoton_Photon','title' :'weight_photon_presel_sf_Diphoton_Photon','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'weight_L1_prefiring_sf','title' :'CMS_hgg_L1_prefiringSF','type':'factory','prior':'lnN','correlateAcrossYears':0},
 
                 {'name':'weight_btag_deepjet_sf_SelectedJet_jes','title':'CMS_hgg_btag_deepjet_sf_jes','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'weight_btag_deepjet_sf_SelectedJet_lf','title':'CMS_hgg_btag_deepjet_sf_lf','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'weight_btag_deepjet_sf_SelectedJet_hf','title':'CMS_hgg_btag_deepjet_sf_hf','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'weight_btag_deepjet_sf_SelectedJet_cferr1','title':'CMS_hgg_btag_deepjet_sf_cferr1','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'weight_btag_deepjet_sf_SelectedJet_cferr2','title':'CMS_hgg_btag_deepjet_sf_cferr2','type':'factory','prior':'lnN','correlateAcrossYears':0},
+
+                {'name':'weight_btag_deepjet_sf_SelectedJet_LF','title':'CMS_hgg_btag_deepjet_sf_lf','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'weight_btag_deepjet_sf_SelectedJet_HF','title':'CMS_hgg_btag_deepjet_sf_hf','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_btag_deepjet_sf_SelectedJet_lfstats1','title':'CMS_hgg_btag_deepjet_sf_lfstats1','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_btag_deepjet_sf_SelectedJet_lfstats2','title':'CMS_hgg_btag_deepjet_sf_lfstats2','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_btag_deepjet_sf_SelectedJet_hfstats1','title':'CMS_hgg_btag_deepjet_sf_hfstats1','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_btag_deepjet_sf_SelectedJet_hfstats2','title':'CMS_hgg_btag_deepjet_sf_hfstats2','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'weight_btag_deepjet_sf_SelectedJet_cferr1','title':'CMS_hgg_btag_deepjet_sf_cferr1','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'weight_btag_deepjet_sf_SelectedJet_cferr2','title':'CMS_hgg_btag_deepjet_sf_cferr2','type':'factory','prior':'lnN','correlateAcrossYears':0},
 
 ]
 
