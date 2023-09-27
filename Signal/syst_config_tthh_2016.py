@@ -6,7 +6,7 @@ _year = '2016'
 signalScriptCfg = {
   
   # Setup
-  'inputWSDir':'/home/users/iareed/ttHHggbb/coupling_scan/CMSSW_10_2_13/src/flashggFinalFit/files_systs/%s/ws_signal_%s/'%(_tag,_year),
+  'inputWSDir':'/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/%s/ws_signal_%s/'%(_tag,_year),
   'procs':'auto', # if auto: inferred automatically from filenames
   'cats':'auto', # if auto: inferred automatically from (0) workspace
   'ext':'%s_%s'%(_tag,_year),
