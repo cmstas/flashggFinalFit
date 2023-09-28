@@ -5,31 +5,27 @@ set -x
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 #source /vols/grid/cms/setup.sh
 
-#tag=SM_23Sep22_with_HHGGXX
-#tag=SM_23Sep22_08Dec22
 tag=SM_22Sep23_fixed_dijet_dummies
-#tag=SM_12Dec22_global_test_14Dec22
-#tag=BSM_13Oct22_M250_fixed_weights
-#tag=BSM_13Oct22_M300_fixed_weights
-#tag=BSM_13Oct22_M350_fixed_weights
-#trees=/home/users/iareed/ttHHggbb/coupling_scan/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
+analysis=ttHHggXX
 trees=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
 
 cmsenv
 source setup.sh
 
 model_bkg(){
+        #syst_config_ttHH_ggXX.py will only need to be changed once per analysis
 	pushd Trees2WS
-	 python trees2ws_data.py --inputConfig syst_config_tthh.py --inputTreeFile $trees/Data/allData.root
+	 python trees2ws_data.py --inputConfig syst_config_ttHH_ggXX.py --inputTreeFile $trees/Data/allData.root
 	popd
 	
+        #config_ttHH_ggxx.py should not need to be changed, though a better name might make sense
 	pushd Background
 	 	rm -rf outdir_$tag
-		sed -i "s/dummy/${tag}/g" config_tthh.py 
+		sed -i "s/dummy/${tag}/g" config_ttHH_ggXX.py 
 
-	  python RunBackgroundScripts.py --inputConfig config_tthh.py --mode fTestParallel
+	  python RunBackgroundScripts.py --inputConfig config_ttHH_ggXX.py --mode fTestParallel
 
-		sed -i "s/${tag}/dummy/g" config_tthh.py
+		sed -i "s/${tag}/dummy/g" config_ttHH_ggXX.py
 	popd
 }
 
@@ -39,9 +35,8 @@ model_sig(){
         #procs=("2HDMbbM250" "2HDMWWM250" "2HDMTAUTAUM250" "ttHHggbb" "ttHHggWW" "ttHHggTauTau" "ggH" "ttH" "VBFH" "VH" "HHGGbb" "HHGGWWsemileptonic" "HHGGWWdileptonic" "HHGGTauTau")
         #procs=("2HDMbbM300" "2HDMWWM300" "2HDMTAUTAUM300" "ttHHggbb" "ttHHggWW" "ttHHggTauTau" "ggH" "ttH" "VBFH" "VH" "HHGGbb" "HHGGWWsemileptonic" "HHGGWWdileptonic" "HHGGTauTau")
         #procs=("2HDMbbM350" "2HDMWWM350" "2HDMTAUTAUM350" "ttHHggbb" "ttHHggWW" "ttHHggTauTau" "ggH" "ttH" "VBFH" "VH" "HHGGbb" "HHGGWWsemileptonic" "HHGGWWdileptonic" "HHGGTauTau")
-        #procs=("ttHHggbb" "ttH") #Min set for debugging
+        #procs=("ttHHggbb" "ttH") #Debugging needs at least 1 signal and 1 resonant background
 	for year in 2016 2017 2018
-	#for year in 2016   #Careful: I was running into errors when debugging with only one year
 	do
 		rm -rf $trees/ws_signal_$year
 		mkdir -p $trees/ws_signal_$year
@@ -49,22 +44,30 @@ model_sig(){
 		do
 			rm -rf $trees/$year/ws_$proc
 
+                        # You should use the same config here as in the background modeling section
 			pushd Trees2WS
-				python trees2ws.py --inputConfig syst_config_tthh.py --inputTreeFile $trees/$year/${proc}_125_13TeV.root --inputMass 125 --productionMode $proc --year $year --doSystematics
+				python trees2ws.py --inputConfig syst_config_ttHH_ggXX.py --inputTreeFile $trees/$year/${proc}_125_13TeV.root --inputMass 125 --productionMode $proc --year $year --doSystematics
 			popd
 
 			mv $trees/$year/ws_$proc/${proc}_125_13TeV_$proc.root $trees/ws_signal_$year/output_${proc}_M125_13TeV_pythia8_${proc}.root 
 		done
 
+                # Configs here are on a per mapping basis
+                #TODO: Have mapping updated on the fly too, not just the tag and year
+                # Mappings defined here Signal/tools/replacementMap.py and Signal/tools/XSBRMap.py
 		pushd Signal	
 		    rm -rf outdir_${tag}_$year
-		    sed -i "s/dummy/${tag}/g" syst_config_tthh_$year.py
+		    sed -i "s/dummy_tag/${tag}/g" syst_config_ttHH_ggXX.py
+		    sed -i "s/dummy_year/$year/g" syst_config_ttHH_ggXX.py
+		    sed -i "s/dummy_analysis/$analysis/g" syst_config_ttHH_ggXX.py
 
-                    python RunSignalScripts.py --inputConfig syst_config_tthh_$year.py --mode fTest --modeOpts "--doPlots"
-		    python RunSignalScripts.py --inputConfig syst_config_tthh_$year.py --mode calcPhotonSyst
-		    python RunSignalScripts.py --inputConfig syst_config_tthh_$year.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit "
+                    python RunSignalScripts.py --inputConfig syst_config_ttHH_ggXX.py --mode fTest --modeOpts "--doPlots"
+		    python RunSignalScripts.py --inputConfig syst_config_ttHH_ggXX.py --mode calcPhotonSyst
+		    python RunSignalScripts.py --inputConfig syst_config_ttHH_ggXX.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit "
 
-	            sed -i "s/${tag}/dummy/g" syst_config_tthh_$year.py
+	            sed -i "s/${tag}/dummy_tag/g" syst_config_ttHH_ggXX.py
+	            sed -i "s/$year/dummy_year/g" syst_config_ttHH_ggXX.py
+	            sed -i "s/$analysis/dummy_analysis/g" syst_config_ttHH_ggXX.py
 	    	popd
 	done
 
@@ -99,13 +102,13 @@ model_sig(){
                 python RunPlotter.py --procs HHGGWWdileptonic --cats SR2 --years 2016,2017,2018 --ext packaged
                 python RunPlotter.py --procs HHGGTauTau --cats SR1 --years 2016,2017,2018 --ext packaged
                 python RunPlotter.py --procs HHGGTauTau --cats SR2 --years 2016,2017,2018 --ext packaged
-	
-
 
 	popd
 }
 
 make_datacard(){
+        #Make usre desired systematics are specified here Datacard/systematics.py
+        #TODO: Check theory_uncertainties are updated for 2HDM and Tprime
 	pushd Datacard
 	 rm -rf yields_$tag
          rm Datacard.txt
@@ -179,8 +182,8 @@ copy_plot(){
 }
 
 #model_bkg
-#model_sig
+model_sig
 #make_datacard
-run_combine
-syst_plots
-copy_plot
+#run_combine
+#syst_plots
+#copy_plot

@@ -50,110 +50,245 @@ globalReplacementMap['ggtt_nonRes']["catRVMap"]["SR1"] = "SR1"
 globalReplacementMap['ggtt_nonRes']["catRVMap"]["SR2"] = "SR2"
 
 
-
-# Example analysis which with cats Untagged_Tag0,VBF_Tag0
+#ttHHggXX SM
 globalReplacementMap['ttHHggXX'] = od()
 globalReplacementMap['ttHHggXX']['procWV'] = "ttHHggbb"
 globalReplacementMap['ttHHggXX']['catWV'] = "ttHHggbb_SR1"
 globalReplacementMap['ttHHggXX']['catWV'] = "ttHHggbb_SR2"
-# For RIGHT VERTEX SCENARIO:
-#  * default you should add is diagonal process from given category 
-#  * if few events in diagonal process then may need to change the category aswell (see catRVMap)
-#  * map must contain entry for all cats being processed (for replacement proc and cat)
 globalReplacementMap['ttHHggXX']['procRVMap'] = od()
 globalReplacementMap['ttHHggXX']["procRVMap"]["SR1"] = "ttHHggbb"
 globalReplacementMap['ttHHggXX']["procRVMap"]["SR2"] = "ttHHggbb"
-
-# Replacement category for RV fit
 globalReplacementMap['ttHHggXX']["catRVMap"] = od()
 globalReplacementMap['ttHHggXX']["catRVMap"]["SR1"] = "SR1"
 globalReplacementMap['ttHHggXX']["catRVMap"]["SR2"] = "SR2"
 
-
-# Example analysis which with cats Untagged_Tag0,VBF_Tag0
+#ttHHggXX 2HDM M250
 globalReplacementMap['2HDM_M250'] = od()
 globalReplacementMap['2HDM_M250']['procWV'] = "2HDMbbM250"
 globalReplacementMap['2HDM_M250']['catWV'] = "2HDMbbM250_SR1"
 globalReplacementMap['2HDM_M250']['catWV'] = "2HDMbbM250_SR2"
-# For RIGHT VERTEX SCENARIO:
-#  * default you should add is diagonal process from given category 
-#  * if few events in diagonal process then may need to change the category aswell (see catRVMap)
-#  * map must contain entry for all cats being processed (for replacement proc and cat)
 globalReplacementMap['2HDM_M250']['procRVMap'] = od()
 globalReplacementMap['2HDM_M250']["procRVMap"]["SR1"] = "2HDMbbM250"
 globalReplacementMap['2HDM_M250']["procRVMap"]["SR2"] = "2HDMbbM250"
-
-# Replacement category for RV fit
 globalReplacementMap['2HDM_M250']["catRVMap"] = od()
 globalReplacementMap['2HDM_M250']["catRVMap"]["SR1"] = "SR1"
 globalReplacementMap['2HDM_M250']["catRVMap"]["SR2"] = "SR2"
 
-
-
-# Example analysis which with cats Untagged_Tag0,VBF_Tag0
+#ttHHggXX 2HDM M300
 globalReplacementMap['2HDM_M300'] = od()
 globalReplacementMap['2HDM_M300']['procWV'] = "2HDMbbM300"
 globalReplacementMap['2HDM_M300']['catWV'] = "2HDMbbM300_SR1"
 globalReplacementMap['2HDM_M300']['catWV'] = "2HDMbbM300_SR2"
-# For RIGHT VERTEX SCENARIO:
-#  * default you should add is diagonal process from given category 
-#  * if few events in diagonal process then may need to change the category aswell (see catRVMap)
-#  * map must contain entry for all cats being processed (for replacement proc and cat)
 globalReplacementMap['2HDM_M300']['procRVMap'] = od()
 globalReplacementMap['2HDM_M300']["procRVMap"]["SR1"] = "2HDMbbM300"
 globalReplacementMap['2HDM_M300']["procRVMap"]["SR2"] = "2HDMbbM300"
-
-# Replacement category for RV fit
 globalReplacementMap['2HDM_M300']["catRVMap"] = od()
 globalReplacementMap['2HDM_M300']["catRVMap"]["SR1"] = "SR1"
 globalReplacementMap['2HDM_M300']["catRVMap"]["SR2"] = "SR2"
 
-
-
-
-# Example analysis which with cats Untagged_Tag0,VBF_Tag0
+#ttHHggXX 2HDM M350
 globalReplacementMap['2HDM_M350'] = od()
 globalReplacementMap['2HDM_M350']['procWV'] = "2HDMbbM350"
 globalReplacementMap['2HDM_M350']['catWV'] = "2HDMbbM350_SR1"
 globalReplacementMap['2HDM_M350']['catWV'] = "2HDMbbM350_SR2"
-# For RIGHT VERTEX SCENARIO:
-#  * default you should add is diagonal process from given category 
-#  * if few events in diagonal process then may need to change the category aswell (see catRVMap)
-#  * map must contain entry for all cats being processed (for replacement proc and cat)
 globalReplacementMap['2HDM_M350']['procRVMap'] = od()
 globalReplacementMap['2HDM_M350']["procRVMap"]["SR1"] = "2HDMbbM350"
 globalReplacementMap['2HDM_M350']["procRVMap"]["SR2"] = "2HDMbbM350"
-
-# Replacement category for RV fit
 globalReplacementMap['2HDM_M350']["catRVMap"] = od()
 globalReplacementMap['2HDM_M350']["catRVMap"]["SR1"] = "SR1"
 globalReplacementMap['2HDM_M350']["catRVMap"]["SR2"] = "SR2"
 
+#ttHHggXX Tprime M500 
+globalReplacementMap['Tprime_M500'] = od()
+globalReplacementMap['Tprime_M500']['procWV'] = "Tprime_M500"
+globalReplacementMap['Tprime_M500']['catWV'] = "Tprime_M500_SR1"
+globalReplacementMap['Tprime_M500']['catWV'] = "Tprime_M500_SR2"
+globalReplacementMap['Tprime_M500']['procRVMap'] = od()
+globalReplacementMap['Tprime_M500']["procRVMap"]["SR1"] = "Tprime_M500"
+globalReplacementMap['Tprime_M500']["procRVMap"]["SR2"] = "Tprime_M500"
+globalReplacementMap['Tprime_M500']["catRVMap"] = od()
+globalReplacementMap['Tprime_M500']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['Tprime_M500']["catRVMap"]["SR2"] = "SR2"
 
+#ttHHggXX Tprime M550 
+globalReplacementMap['Tprime_M550'] = od()
+globalReplacementMap['Tprime_M550']['procWV'] = "Tprime_M550"
+globalReplacementMap['Tprime_M550']['catWV'] = "Tprime_M550_SR1"
+globalReplacementMap['Tprime_M550']['catWV'] = "Tprime_M550_SR2"
+globalReplacementMap['Tprime_M550']['procRVMap'] = od()
+globalReplacementMap['Tprime_M550']["procRVMap"]["SR1"] = "Tprime_M550"
+globalReplacementMap['Tprime_M550']["procRVMap"]["SR2"] = "Tprime_M550"
+globalReplacementMap['Tprime_M550']["catRVMap"] = od()
+globalReplacementMap['Tprime_M550']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['Tprime_M550']["catRVMap"]["SR2"] = "SR2"
 
+#ttHHggXX Tprime M600 
+globalReplacementMap['Tprime_M600'] = od()
+globalReplacementMap['Tprime_M600']['procWV'] = "Tprime_M600"
+globalReplacementMap['Tprime_M600']['catWV'] = "Tprime_M600_SR1"
+globalReplacementMap['Tprime_M600']['catWV'] = "Tprime_M600_SR2"
+globalReplacementMap['Tprime_M600']['procRVMap'] = od()
+globalReplacementMap['Tprime_M600']["procRVMap"]["SR1"] = "Tprime_M600"
+globalReplacementMap['Tprime_M600']["procRVMap"]["SR2"] = "Tprime_M600"
+globalReplacementMap['Tprime_M600']["catRVMap"] = od()
+globalReplacementMap['Tprime_M600']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['Tprime_M600']["catRVMap"]["SR2"] = "SR2"
 
+#ttHHggXX Tprime M650 
+globalReplacementMap['Tprime_M650'] = od()
+globalReplacementMap['Tprime_M650']['procWV'] = "Tprime_M650"
+globalReplacementMap['Tprime_M650']['catWV'] = "Tprime_M650_SR1"
+globalReplacementMap['Tprime_M650']['catWV'] = "Tprime_M650_SR2"
+globalReplacementMap['Tprime_M650']['procRVMap'] = od()
+globalReplacementMap['Tprime_M650']["procRVMap"]["SR1"] = "Tprime_M650"
+globalReplacementMap['Tprime_M650']["procRVMap"]["SR2"] = "Tprime_M650"
+globalReplacementMap['Tprime_M650']["catRVMap"] = od()
+globalReplacementMap['Tprime_M650']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['Tprime_M650']["catRVMap"]["SR2"] = "SR2"
 
+#ttHHggXX Tprime M700 
+globalReplacementMap['Tprime_M700'] = od()
+globalReplacementMap['Tprime_M700']['procWV'] = "Tprime_M700"
+globalReplacementMap['Tprime_M700']['catWV'] = "Tprime_M700_SR1"
+globalReplacementMap['Tprime_M700']['catWV'] = "Tprime_M700_SR2"
+globalReplacementMap['Tprime_M700']['procRVMap'] = od()
+globalReplacementMap['Tprime_M700']["procRVMap"]["SR1"] = "Tprime_M700"
+globalReplacementMap['Tprime_M700']["procRVMap"]["SR2"] = "Tprime_M700"
+globalReplacementMap['Tprime_M700']["catRVMap"] = od()
+globalReplacementMap['Tprime_M700']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['Tprime_M700']["catRVMap"]["SR2"] = "SR2"
 
+#ttHHggXX Tprime M750 
+globalReplacementMap['Tprime_M750'] = od()
+globalReplacementMap['Tprime_M750']['procWV'] = "Tprime_M750"
+globalReplacementMap['Tprime_M750']['catWV'] = "Tprime_M750_SR1"
+globalReplacementMap['Tprime_M750']['catWV'] = "Tprime_M750_SR2"
+globalReplacementMap['Tprime_M750']['procRVMap'] = od()
+globalReplacementMap['Tprime_M750']["procRVMap"]["SR1"] = "Tprime_M750"
+globalReplacementMap['Tprime_M750']["procRVMap"]["SR2"] = "Tprime_M750"
+globalReplacementMap['Tprime_M750']["catRVMap"] = od()
+globalReplacementMap['Tprime_M750']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['Tprime_M750']["catRVMap"]["SR2"] = "SR2"
 
+#ttHHggXX Tprime M800 
+globalReplacementMap['Tprime_M800'] = od()
+globalReplacementMap['Tprime_M800']['procWV'] = "Tprime_M800"
+globalReplacementMap['Tprime_M800']['catWV'] = "Tprime_M800_SR1"
+globalReplacementMap['Tprime_M800']['catWV'] = "Tprime_M800_SR2"
+globalReplacementMap['Tprime_M800']['procRVMap'] = od()
+globalReplacementMap['Tprime_M800']["procRVMap"]["SR1"] = "Tprime_M800"
+globalReplacementMap['Tprime_M800']["procRVMap"]["SR2"] = "Tprime_M800"
+globalReplacementMap['Tprime_M800']["catRVMap"] = od()
+globalReplacementMap['Tprime_M800']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['Tprime_M800']["catRVMap"]["SR2"] = "SR2"
 
+#ttHHggXX Tprime M850 
+globalReplacementMap['Tprime_M850'] = od()
+globalReplacementMap['Tprime_M850']['procWV'] = "Tprime_M850"
+globalReplacementMap['Tprime_M850']['catWV'] = "Tprime_M850_SR1"
+globalReplacementMap['Tprime_M850']['catWV'] = "Tprime_M850_SR2"
+globalReplacementMap['Tprime_M850']['procRVMap'] = od()
+globalReplacementMap['Tprime_M850']["procRVMap"]["SR1"] = "Tprime_M850"
+globalReplacementMap['Tprime_M850']["procRVMap"]["SR2"] = "Tprime_M850"
+globalReplacementMap['Tprime_M850']["catRVMap"] = od()
+globalReplacementMap['Tprime_M850']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['Tprime_M850']["catRVMap"]["SR2"] = "SR2"
 
+#ttHHggXX Tprime M900 
+globalReplacementMap['Tprime_M900'] = od()
+globalReplacementMap['Tprime_M900']['procWV'] = "Tprime_M900"
+globalReplacementMap['Tprime_M900']['catWV'] = "Tprime_M900_SR1"
+globalReplacementMap['Tprime_M900']['catWV'] = "Tprime_M900_SR2"
+globalReplacementMap['Tprime_M900']['procRVMap'] = od()
+globalReplacementMap['Tprime_M900']["procRVMap"]["SR1"] = "Tprime_M900"
+globalReplacementMap['Tprime_M900']["procRVMap"]["SR2"] = "Tprime_M900"
+globalReplacementMap['Tprime_M900']["catRVMap"] = od()
+globalReplacementMap['Tprime_M900']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['Tprime_M900']["catRVMap"]["SR2"] = "SR2"
 
+#ttHHggXX Tprime M950 
+globalReplacementMap['Tprime_M950'] = od()
+globalReplacementMap['Tprime_M950']['procWV'] = "Tprime_M950"
+globalReplacementMap['Tprime_M950']['catWV'] = "Tprime_M950_SR1"
+globalReplacementMap['Tprime_M950']['catWV'] = "Tprime_M950_SR2"
+globalReplacementMap['Tprime_M950']['procRVMap'] = od()
+globalReplacementMap['Tprime_M950']["procRVMap"]["SR1"] = "Tprime_M950"
+globalReplacementMap['Tprime_M950']["procRVMap"]["SR2"] = "Tprime_M950"
+globalReplacementMap['Tprime_M950']["catRVMap"] = od()
+globalReplacementMap['Tprime_M950']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['Tprime_M950']["catRVMap"]["SR2"] = "SR2"
 
+#ttHHggXX Tprime M1000 
+globalReplacementMap['Tprime_M1000'] = od()
+globalReplacementMap['Tprime_M1000']['procWV'] = "Tprime_M1000"
+globalReplacementMap['Tprime_M1000']['catWV'] = "Tprime_M1000_SR1"
+globalReplacementMap['Tprime_M1000']['catWV'] = "Tprime_M1000_SR2"
+globalReplacementMap['Tprime_M1000']['procRVMap'] = od()
+globalReplacementMap['Tprime_M1000']["procRVMap"]["SR1"] = "Tprime_M1000"
+globalReplacementMap['Tprime_M1000']["procRVMap"]["SR2"] = "Tprime_M1000"
+globalReplacementMap['Tprime_M1000']["catRVMap"] = od()
+globalReplacementMap['Tprime_M1000']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['Tprime_M1000']["catRVMap"]["SR2"] = "SR2"
 
+#ttHHggXX Tprime M1100 
+globalReplacementMap['Tprime_M1100'] = od()
+globalReplacementMap['Tprime_M1100']['procWV'] = "Tprime_M1100"
+globalReplacementMap['Tprime_M1100']['catWV'] = "Tprime_M1100_SR1"
+globalReplacementMap['Tprime_M1100']['catWV'] = "Tprime_M1100_SR2"
+globalReplacementMap['Tprime_M1100']['procRVMap'] = od()
+globalReplacementMap['Tprime_M1100']["procRVMap"]["SR1"] = "Tprime_M1100"
+globalReplacementMap['Tprime_M1100']["procRVMap"]["SR2"] = "Tprime_M1100"
+globalReplacementMap['Tprime_M1100']["catRVMap"] = od()
+globalReplacementMap['Tprime_M1100']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['Tprime_M1100']["catRVMap"]["SR2"] = "SR2"
 
+#ttHHggXX Tprime M1200 
+globalReplacementMap['Tprime_M1200'] = od()
+globalReplacementMap['Tprime_M1200']['procWV'] = "Tprime_M1200"
+globalReplacementMap['Tprime_M1200']['catWV'] = "Tprime_M1200_SR1"
+globalReplacementMap['Tprime_M1200']['catWV'] = "Tprime_M1200_SR2"
+globalReplacementMap['Tprime_M1200']['procRVMap'] = od()
+globalReplacementMap['Tprime_M1200']["procRVMap"]["SR1"] = "Tprime_M1200"
+globalReplacementMap['Tprime_M1200']["procRVMap"]["SR2"] = "Tprime_M1200"
+globalReplacementMap['Tprime_M1200']["catRVMap"] = od()
+globalReplacementMap['Tprime_M1200']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['Tprime_M1200']["catRVMap"]["SR2"] = "SR2"
 
+#ttHHggXX Tprime M1300 
+globalReplacementMap['Tprime_M1300'] = od()
+globalReplacementMap['Tprime_M1300']['procWV'] = "Tprime_M1300"
+globalReplacementMap['Tprime_M1300']['catWV'] = "Tprime_M1300_SR1"
+globalReplacementMap['Tprime_M1300']['catWV'] = "Tprime_M1300_SR2"
+globalReplacementMap['Tprime_M1300']['procRVMap'] = od()
+globalReplacementMap['Tprime_M1300']["procRVMap"]["SR1"] = "Tprime_M1300"
+globalReplacementMap['Tprime_M1300']["procRVMap"]["SR2"] = "Tprime_M1300"
+globalReplacementMap['Tprime_M1300']["catRVMap"] = od()
+globalReplacementMap['Tprime_M1300']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['Tprime_M1300']["catRVMap"]["SR2"] = "SR2"
 
+#ttHHggXX Tprime M1400 
+globalReplacementMap['Tprime_M1400'] = od()
+globalReplacementMap['Tprime_M1400']['procWV'] = "Tprime_M1400"
+globalReplacementMap['Tprime_M1400']['catWV'] = "Tprime_M1400_SR1"
+globalReplacementMap['Tprime_M1400']['catWV'] = "Tprime_M1400_SR2"
+globalReplacementMap['Tprime_M1400']['procRVMap'] = od()
+globalReplacementMap['Tprime_M1400']["procRVMap"]["SR1"] = "Tprime_M1400"
+globalReplacementMap['Tprime_M1400']["procRVMap"]["SR2"] = "Tprime_M1400"
+globalReplacementMap['Tprime_M1400']["catRVMap"] = od()
+globalReplacementMap['Tprime_M1400']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['Tprime_M1400']["catRVMap"]["SR2"] = "SR2"
 
-
-
-
-
-
-
-
-
-
-
+#ttHHggXX Tprime M1500 
+globalReplacementMap['Tprime_M1500'] = od()
+globalReplacementMap['Tprime_M1500']['procWV'] = "Tprime_M1500"
+globalReplacementMap['Tprime_M1500']['catWV'] = "Tprime_M1500_SR1"
+globalReplacementMap['Tprime_M1500']['catWV'] = "Tprime_M1500_SR2"
+globalReplacementMap['Tprime_M1500']['procRVMap'] = od()
+globalReplacementMap['Tprime_M1500']["procRVMap"]["SR1"] = "Tprime_M1500"
+globalReplacementMap['Tprime_M1500']["procRVMap"]["SR2"] = "Tprime_M1500"
+globalReplacementMap['Tprime_M1500']["catRVMap"] = od()
+globalReplacementMap['Tprime_M1500']["catRVMap"]["SR1"] = "SR1"
+globalReplacementMap['Tprime_M1500']["catRVMap"]["SR2"] = "SR2"
 
 
 # STXS analysis
