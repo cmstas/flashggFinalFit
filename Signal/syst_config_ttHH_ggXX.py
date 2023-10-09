@@ -2,7 +2,7 @@
 
 _tag='dummy_tag'
 _year = 'dummy_year'
-_analysis = 'dummy_analysis'
+_interpretation = 'dummy_interpretation'
 
 signalScriptCfg = {
   
@@ -11,7 +11,7 @@ signalScriptCfg = {
   'procs':'auto', # if auto: inferred automatically from filenames
   'cats':'auto', # if auto: inferred automatically from (0) workspace
   'ext':'%s_%s'%(_tag,_year),
-  'analysis':'%s'%(_analysis), # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)
+  'analysis':'%s'%(_interpretation), # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)
   #'analysis':'ttHH_gg_XX', # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)
   'year':'%s'%_year, # Use 'combined' if merging all years: not recommended
   'massPoints':'125',

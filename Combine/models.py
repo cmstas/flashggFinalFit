@@ -20,6 +20,14 @@ models = {
   --PO \"map=.*/ttHHggbb.*:r[1,0,2]\" \
   --PO \"map=.*/ttHHggWW.*:r[1,0,2]\" \
   --PO \"map=.*/ttHHggTauTau.*:r[1,0,2]\"",
+  #--PO \"map=.*/ggH.*:r_singleH[1,1,1]\" \
+  #--PO \"map=.*/ttH.*:r_singleH[1,1,1]\" \
+  #--PO \"map=.*/VBFH.*:r_singleH[1,1,1]\" \
+  #--PO \"map=.*/VH.*:r_singleH[1,1,1]\" \
+  #--PO \"map=.*/HHGGbb.*:r_singleH[1,1,1]\" \
+  #--PO \"map=.*/HHGGWWsemileptonic.*:r_singleH[1,1,1]\" \
+  #--PO \"map=.*/HHGGWWdileptonic*:r_singleH[1,1,1]\" \
+  #--PO \"map=.*/HHGGTauTau.*:r_singleH[1,1,1]\"",
 
  "2HDM_M250":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
   --PO \"map=.*/2HDMbbM250.*:r[1,0,2]\" \
@@ -35,6 +43,86 @@ models = {
   --PO \"map=.*/2HDMbbM350.*:r[1,0,2]\" \
   --PO \"map=.*/2HDMWWM350.*:r[1,0,2]\" \
   --PO \"map=.*/2HDMTAUTAUM350.*:r[1,0,2]\"",
+
+ "Tprime_M500":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/TprimeBBM500.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeWWM500.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeTAUTAUM500.*:r[1,0,2]\"",
+
+ "Tprime_M550":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/TprimeBBM550.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeWWM550.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeTAUTAUM550.*:r[1,0,2]\"",
+
+ "Tprime_M600":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/TprimeBBM600.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeWWM600.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeTAUTAUM600.*:r[1,0,2]\"",
+
+ "Tprime_M650":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/TprimeBBM650.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeWWM650.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeTAUTAUM650.*:r[1,0,2]\"",
+
+ "Tprime_M700":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/TprimeBBM700.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeWWM700.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeTAUTAUM700.*:r[1,0,2]\"",
+
+ "Tprime_M750":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/TprimeBBM750.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeWWM750.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeTAUTAUM750.*:r[1,0,2]\"",
+
+ "Tprime_M800":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/TprimeBBM800.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeWWM800.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeTAUTAUM800.*:r[1,0,2]\"",
+
+ "Tprime_M850":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/TprimeBBM850.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeWWM850.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeTAUTAUM850.*:r[1,0,2]\"",
+
+ "Tprime_M900":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/TprimeBBM900.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeWWM900.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeTAUTAUM900.*:r[1,0,2]\"",
+
+ "Tprime_M950":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/TprimeBBM950.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeWWM950.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeTAUTAUM950.*:r[1,0,2]\"",
+
+ "Tprime_M1000":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/TprimeBBM1000.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeWWM1000.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeTAUTAUM1000.*:r[1,0,2]\"",
+
+ "Tprime_M1100":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/TprimeBBM1100.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeWWM1100.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeTAUTAUM1100.*:r[1,0,2]\"",
+
+ "Tprime_M1200":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/TprimeBBM1200.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeWWM1200.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeTAUTAUM1200.*:r[1,0,2]\"",
+
+ "Tprime_M1300":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/TprimeBBM1300.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeWWM1300.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeTAUTAUM1300.*:r[1,0,2]\"",
+
+ "Tprime_M1400":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/TprimeBBM1400.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeWWM1400.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeTAUTAUM1400.*:r[1,0,2]\"",
+
+ "Tprime_M1500":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/TprimeBBM1500.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeWWM1500.*:r[1,0,2]\" \
+  --PO \"map=.*/TprimeTAUTAUM1500.*:r[1,0,2]\"",
 
   "mu":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
 --PO \"map=.*/ggH.*:r_ggH[1,0,2]\" \

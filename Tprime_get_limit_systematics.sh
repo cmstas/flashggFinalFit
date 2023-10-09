@@ -3,10 +3,18 @@
 set -x
 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
-#source /vols/grid/cms/setup.sh 
+#source /vols/grid/cms/setup.sh
 
-tag=SM_22Sep23_fixed_dijet_dummies
-interpretation=ttHHggXX
+#Location of input files, also used for naming of output
+#TODO: Get output naming split from tag to allow multiple runs from the same input files
+mass_point=M500
+tag=Tprime_${mass_point}_22Sep23_fixed_dijet_dummies
+
+
+#Identify which interpretation is being done in the analysis, needed a different name for clarity
+interpretation=Tprime_${mass_point}
+
+#Path to all input locations
 trees=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
 
 cmsenv
@@ -31,8 +39,8 @@ model_bkg(){
 
 #Construct Signal Models (one per year)
 model_sig(){
-        procs=("ttHHggbb" "ttHHggWW" "ttHHggTauTau")
-        #procs=("ttHHggbb" "ttHHggWW" "ttHHggTauTau" "ggH" "ttH" "VBFH" "VH" "HHGGbb" "HHGGWWsemileptonic" "HHGGWWdileptonic" "HHGGTauTau")
+        procs=("TprimeBB${mass_point}" "ggH" )
+        #procs=("TprimeBB${mass_point}" "TprimeWW${mass_point}" "TprimeTAUTAU${mass_point}" "ttHHggbb" "ttHHggWW" "ttHHggTauTau" "ggH" "ttH" "VBFH" "VH" "HHGGbb" "HHGGWWsemileptonic" "HHGGWWdileptonic" "HHGGTauTau")
 	for year in 2016 2017 2018
 	do
 		rm -rf $trees/ws_signal_$year
@@ -68,46 +76,53 @@ model_sig(){
 	    	popd
 	done
 
-	pushd Signal	
-		rm -rf outdir_packaged
-                rm -rf outdir_${tag}_packaged
-
-		python RunPackager.py --cats SR1 --exts ${tag}_2016,${tag}_2017,${tag}_2018 --batch local --massPoints 125 --mergeYears
-		python RunPlotter.py --procs all --cats SR1 --years 2016,2017,2018 --ext packaged
-		python RunPackager.py --cats SR2 --exts ${tag}_2016,${tag}_2017,${tag}_2018 --batch local --massPoints 125 --mergeYears
-		python RunPlotter.py --procs all --cats SR2 --years 2016,2017,2018 --ext packaged
-
-                #python RunPlotter.py --procs ttHHggbb --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttHHggbb --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttHHggWW --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttHHggWW --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttHHggTauTau --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttHHggTauTau --cats SR2 --years 2016,2017,2018 --ext packaged
-                #    
-                #python RunPlotter.py --procs VH --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs VH --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttH --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttH --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ggH --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ggH --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs VBFH --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs VBFH --cats SR2 --years 2016,2017,2018 --ext packaged
-
-                #python RunPlotter.py --procs HHGGbb --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGbb --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGWWsemileptonic --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGWWsemileptonic --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGWWdileptonic --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGWWdileptonic --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGTauTau --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGTauTau --cats SR2 --years 2016,2017,2018 --ext packaged
-
-                cp -a outdir_packaged outdir_${tag}_packaged
-	popd
+#	pushd Signal	
+#		rm -rf outdir_packaged
+#                rm -rf outdir_${tag}_packaged
+#
+#		python RunPackager.py --cats SR1 --exts ${tag}_2016,${tag}_2017,${tag}_2018 --batch local --massPoints 125 --mergeYears
+#		python RunPlotter.py --procs all --cats SR1 --years 2016,2017,2018 --ext packaged
+#		python RunPackager.py --cats SR2 --exts ${tag}_2016,${tag}_2017,${tag}_2018 --batch local --massPoints 125 --mergeYears
+#		python RunPlotter.py --procs all --cats SR2 --years 2016,2017,2018 --ext packaged
+#
+#                python RunPlotter.py --procs TprimeBB${mass_point} --cats SR1 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs TprimeBB${mass_point} --cats SR2 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs TprimeWW${mass_point} --cats SR1 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs TprimeWW${mass_point} --cats SR2 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs TprimeTAUTAU${mass_point} --cats SR1 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs TprimeTAUTAU${mass_point} --cats SR2 --years 2016,2017,2018 --ext packaged
+#
+#                python RunPlotter.py --procs ttHHggbb --cats SR1 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs ttHHggbb --cats SR2 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs ttHHggWW --cats SR1 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs ttHHggWW --cats SR2 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs ttHHggTauTau --cats SR1 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs ttHHggTauTau --cats SR2 --years 2016,2017,2018 --ext packaged
+#                    
+#                python RunPlotter.py --procs VH --cats SR1 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs VH --cats SR2 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs ttH --cats SR1 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs ttH --cats SR2 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs ggH --cats SR1 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs ggH --cats SR2 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs VBFH --cats SR1 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs VBFH --cats SR2 --years 2016,2017,2018 --ext packaged
+#
+#                python RunPlotter.py --procs HHGGbb --cats SR1 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs HHGGbb --cats SR2 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs HHGGWWsemileptonic --cats SR1 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs HHGGWWsemileptonic --cats SR2 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs HHGGWWdileptonic --cats SR1 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs HHGGWWdileptonic --cats SR2 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs HHGGTauTau --cats SR1 --years 2016,2017,2018 --ext packaged
+#                python RunPlotter.py --procs HHGGTauTau --cats SR2 --years 2016,2017,2018 --ext packaged
+#
+#                cp -a outdir_packaged outdir_${tag}_packaged
+#	popd
 }
 
 make_datacard(){
-        #Make sure desired systematics are specified here Datacard/systematics.py
+        #Make usre desired systematics are specified here Datacard/systematics.py
         #TODO: Check theory_uncertainties are updated for 2HDM and Tprime
 	pushd Datacard
 	 rm -rf yields_$tag
@@ -130,8 +145,8 @@ run_combine(){
 		cp ../Signal/outdir_${tag}_packaged/CMS-HGG*.root ./Models/signal/
 		cp ../Background/outdir_$tag/CMS-HGG*.root ./Models/background/
 		cp ../Datacard/Datacard_${tag}.txt Datacard.txt
-	
-		python RunText2Workspace.py --mode $interpretation --dryRun
+		
+                python RunText2Workspace.py --mode $interpretation --dryRun
 		./t2w_jobs/t2w_${interpretation}.sh
 
 #		combine --expectSignal 1 -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M AsymptoticLimits -m 125 -d Datacard_ttHHggXX.root -n _AsymptoticLimit_r --freezeParameters MH --run=blind > combine_results_${tag}.txt
@@ -188,7 +203,7 @@ copy_plot(){
 
 #model_bkg
 model_sig
-make_datacard
-run_combine
+#make_datacard
+#run_combine
 #syst_plots
 #copy_plot
