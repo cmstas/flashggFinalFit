@@ -411,9 +411,9 @@ def main(args):
         break
     if args.do_dy_bkg:
       f.write("\ndy_bkg_scaler rateParam * *dy* 1\nnuisance edit freeze dy_bkg_scaler")
-      f.write("\ndy_corr group = "+" ".join(["CMS_hgg_nuisance_"+syst["name"] for syst in dy_systematics if "cat" not in syst["name"]]))
+      #f.write("\ndy_corr group = "+" ".join(["CMS_hgg_nuisance_"+syst["name"] for syst in dy_systematics if "cat" not in syst["name"]]))
       #f.write("\nnuisance edit freeze dy_corr")
-      f.write("\ndy_uncorr group = "+" ".join(["CMS_hgg_nuisance_"+syst["name"] for syst in dy_systematics if "cat" in syst["name"]]))
+      #f.write("\ndy_uncorr group = "+" ".join(["CMS_hgg_nuisance_"+syst["name"] for syst in dy_systematics if "cat" in syst["name"]]))
       #f.write("\nnuisance edit freeze dy_uncorr")
       #f.write("\nnuisance edit freeze *nuisance*dy")
       #for syst in dy_systematics:
@@ -460,9 +460,9 @@ if __name__=="__main__":
   parser.add_argument('--MX', type=float, required=True)
   parser.add_argument('--MY', type=float, required=True)
 
-  parser.add_argument('--sig-model-dir', type=str, default="../SignalModelInterpolation/outdir", required=False)
-  parser.add_argument('--res-bkg-model-dir', type=str, default="../SignalModelInterpolation/res_bkg_outdir", required=False)
-  #parser.add_argument('--dy-bkg-model-dir', type=str, default="../SignalModelInterpolation/dy_bkg_outdir", required=False)
+  parser.add_argument('--sig-model-dir', type=str, default="/home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/outdir", required=False)
+  parser.add_argument('--res-bkg-model-dir', type=str, default="/home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/res_bkg_outdir", required=False)
+  parser.add_argument('--dy-bkg-model-dir', type=str, default="../SignalModelInterpolation/dy_bkg_outdir", required=False)
   parser.add_argument('--doABCD', action="store_true")
 
   parser.add_argument('--prune', action="store_true")
