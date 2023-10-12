@@ -139,9 +139,13 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hDr,hBr,hSr,cat,options,dB=None,reduce
       gr_2sig.SetPoint(gr_i,xval,properties['median'])
       gr_1sig_r.SetPoint(gr_i,xval,properties['median']-bkgval)
       gr_2sig_r.SetPoint(gr_i,xval,properties['median']-bkgval)
+      #gr_1sig.SetPointError(gr_i,xerr,xerr,properties['down1sigma'],properties['up1sigma'])
       gr_1sig.SetPointError(gr_i,xerr,xerr,properties['median']-properties['down1sigma'],properties['up1sigma']-properties['median'])
+      #gr_2sig.SetPointError(gr_i,xerr,xerr,properties['down2sigma'],properties['up2sigma'])
       gr_2sig.SetPointError(gr_i,xerr,xerr,properties['median']-properties['down2sigma'],properties['up2sigma']-properties['median'])
+      #gr_1sig_r.SetPointError(gr_i,xerr,xerr,properties['median'],properties['up1sigma'])
       gr_1sig_r.SetPointError(gr_i,xerr,xerr,properties['median']-properties['down1sigma'],properties['up1sigma']-properties['median'])
+      #gr_2sig_r.SetPointError(gr_i,xerr,xerr,properties['down2sigma'],properties['up2sigma'])
       gr_2sig_r.SetPointError(gr_i,xerr,xerr,properties['median']-properties['down2sigma'],properties['up2sigma']-properties['median'])
       gr_i += 1
     gr_1sig.SetFillColor(ROOT.kGreen)

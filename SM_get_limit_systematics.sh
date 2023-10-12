@@ -31,8 +31,8 @@ model_bkg(){
 
 #Construct Signal Models (one per year)
 model_sig(){
-        procs=("ttHHggbb" "ttHHggWW" "ttHHggTauTau")
-        #procs=("ttHHggbb" "ttHHggWW" "ttHHggTauTau" "ggH" "ttH" "VBFH" "VH" "HHGGbb" "HHGGWWsemileptonic" "HHGGWWdileptonic" "HHGGTauTau")
+        #procs=("ttHHggbb" "ttHHggWW" "ttHHggTauTau")
+        procs=("ttHHggbb" "ttHHggWW" "ttHHggTauTau" "ggH" "ttH" "VBFH" "VH" "HHGGbb" "HHGGWWsemileptonic" "HHGGWWdileptonic" "HHGGTauTau")
 	for year in 2016 2017 2018
 	do
 		rm -rf $trees/ws_signal_$year
@@ -187,7 +187,7 @@ copy_plot(){
 }
 
 #model_bkg
-model_sig
+#model_sig
 make_datacard
 run_combine
 #syst_plots
