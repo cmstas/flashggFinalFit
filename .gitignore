@@ -36,4 +36,7 @@ AutoDict_*
 
 # Output dirs in signal and bkg
 Signal/outdir_*
+Signal/old_configs
 Background/outdir_*
+Datacard/yields_*/
+Plots/SplusBModels*
