@@ -10,7 +10,7 @@ import argparse
 import json
 import os
 
-DO_SYST = True
+DO_SYST = False
 
 def loadJson(path):
   with open(path, "r") as f:
@@ -175,6 +175,7 @@ def main(args):
 
   for year in years:
     for cat in cats:
+      print(systematics)
       out_path = os.path.join(args.outdir, "sig_%s_cat%s.root"%(year, cat))
       makeWorkspace(models, systematics, year, cat, out_path, args.mgg_range)
 

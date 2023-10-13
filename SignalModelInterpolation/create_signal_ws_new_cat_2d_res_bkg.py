@@ -10,7 +10,7 @@ import argparse
 import json
 import os
 
-DO_SYST = True
+DO_SYST = False
 
 def loadJson(path):
   with open(path, "r") as f:
@@ -155,8 +155,9 @@ def main(args):
 
   with open("rearranged_model.json", "w") as f:
     json.dump(models, f, indent=4, sort_keys=True)
-  with open("rearranged_systematics.json", "w") as f:
-    json.dump(systematics, f, indent=4, sort_keys=True)
+  if DO_SYST:
+    with open("rearranged_systematics.json", "w") as f:
+      json.dump(systematics, f, indent=4, sort_keys=True)
 
   procs = sorted(models.keys())
   years = sorted(models[procs[0]].keys())
@@ -170,8 +171,8 @@ def main(args):
     for year in years:
       for cat in cats:
         out_path = os.path.join(args.outdir, "%s_%s_cat%s.root"%(proc, year, cat))
-        makeWorkspace(models[proc], systematics[proc], year, cat, out_path, args.mgg_range, proc)
-
+#        makeWorkspace(models[proc], systematics[proc], year, cat, out_path, args.mgg_range, proc)
+        makeWorkspace(models[proc], systematics, year, cat, out_path, args.mgg_range, proc)
 if __name__=="__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument('--indir', '-i', type=str, required=True)
