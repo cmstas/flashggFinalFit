@@ -92,7 +92,7 @@ for year in $bkg_years ; do
       #qsub -q hep.q -l h_rt=300 get_limit_hadd_tree2ws.sh $trees $proc_template $year $m $mggl $mggh
     done
 done
-
+exit 1
 wait_batch get_limit_hadd_tree2ws
 
 #ls -lh /home/hep/mdk16/PhD/ggtt/ResonantGGTT/Outputs/Y_gg_Low_Mass/LimitVsMinNum/10/outputTrees/combined/*/ws/data_combined/*
