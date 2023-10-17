@@ -85,15 +85,14 @@ for year in $bkg_years ; do
     done
 done
 
-for year in $bkg_years ; do
-    for m in $masses ; do
-      echo ${PWD}
-      ./get_limit_hadd_tree2ws.sh $trees $proc_template $year $m $mggl $mggh
-      #qsub -q hep.q -l h_rt=300 get_limit_hadd_tree2ws.sh $trees $proc_template $year $m $mggl $mggh
-    done
-done
-exit 1
-wait_batch get_limit_hadd_tree2ws
+#for year in $bkg_years ; do
+#    for m in $masses ; do
+#      echo ${PWD}
+#      ./get_limit_hadd_tree2ws.sh $trees $proc_template $year $m $mggl $mggh
+#      #qsub -q hep.q -l h_rt=300 get_limit_hadd_tree2ws.sh $trees $proc_template $year $m $mggl $mggh
+#    done
+#done
+#wait_batch get_limit_hadd_tree2ws
 
 #ls -lh /home/hep/mdk16/PhD/ggtt/ResonantGGTT/Outputs/Y_gg_Low_Mass/LimitVsMinNum/10/outputTrees/combined/*/ws/data_combined/*
 
@@ -103,8 +102,9 @@ pushd Background
       proc=${proc_template}${m}
       cp config_ggtt_batch.py config_ggtt_batch_${year}_${m}.py
       sed -i "s;<trees/year/m/ws/signal_year>;${trees}/${year}/${m}/ws/data_${year};g" config_ggtt_batch_${year}_${m}.py
-      sed -i "s;<signal_year>_<m>;${year}_${m};g" config_ggtt_batch_${year}_${m}.py
-      sed -i "s;<signal_year>;${year};g" config_ggtt_batch_${year}_${m}.py
+      sed -i "s;<m>;${m};g" config_ggtt_batch_${year}_${m}.py
+      #sed -i "s;<signal_year>_<m>;${year}_${m};g" config_ggtt_batch_${year}_${m}.py
+      #sed -i "s;<signal_year>;${year};g" config_ggtt_batch_${year}_${m}.py
       
       mh=$(get_mh $m)
       if (( $mh < 83 )); then
@@ -172,13 +172,13 @@ pushd Background
 popd
 
 pushd SignalModelInterpolation
-  #python create_signal_ws_new_cat_2d.py -i $sig_model -o outdir --mgg-range $mggl $mggh
-  #python create_signal_ws_new_cat_2d_res_bkg.py -i $res_bkg_model -o res_bkg_outdir
-   if [[ -n $do_dy_bkg ]]; then 
-     python create_signal_ws_new_cat_2d_dy_bkg.py -i $dy_bkg_model -o dy_bkg_outdir
-   fi
+  python create_signal_ws_new_cat_2d.py -i $sig_model -o outdir --mgg-range $mggl $mggh
+  python create_signal_ws_new_cat_2d_res_bkg.py -i $res_bkg_model -o res_bkg_outdir
+  # if [[ -n $do_dy_bkg ]]; then 
+  #   python create_signal_ws_new_cat_2d_dy_bkg.py -i $dy_bkg_model -o dy_bkg_outdir
+  # fi
 popd
-exit 1
+
 pushd Datacard
   for m in $masses ; do
     if [[ -n $do_dy_bkg ]]; then 

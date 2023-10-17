@@ -117,7 +117,7 @@ for k in model.pdfs: print "%s --> Success: %s, Evals = %g, NLL = %.3f"%(k,model
 
 #pdf_null = model.pdfs[('Exponential',1)]
 #pdf_test = model.pdfs[('Exponential',1)]
-#model.getProbabilityFTestFromToys(pdf_null,pdf_test,_outDir="/home/hep/mdk16/PhD/ggtt/finalfits_try2/CMSSW_10_2_13/src/flashggFinalFit/Background/fTest_with_toys",nToys=10)
+#model.getProbabilityFTestFromToys(pdf_null,pdf_test,_outDir="home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Background/fTest_with_toys",nToys=10)
 
 #sys.exit(1)
 
@@ -134,11 +134,11 @@ else: model.buildNorm( norm, _extension="_%s_%s"%(opt.year,sqrts__))
 
 # Plotting
 print "\n --> Plotting envelope"
-tryMake("/home/hep/mdk16/PhD/ggtt/finalfits_try2/CMSSW_10_2_13/src/flashggFinalFit/Background/plots")
-tryMake("/home/hep/mdk16/PhD/ggtt/finalfits_try2/CMSSW_10_2_13/src/flashggFinalFit/Background/plots/%s"%opt.year)
-plotPdfMap(model,model.envelopePdfs,opt.plotBlindingRegion,_outdir="/home/hep/mdk16/PhD/ggtt/finalfits_try2/CMSSW_10_2_13/src/flashggFinalFit/Background/plots/%s"%opt.year,_cat=opt.cat)
+tryMake("/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Background/plots")
+tryMake("/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Background/plots/%s"%opt.year)
+plotPdfMap(model,model.envelopePdfs,opt.plotBlindingRegion,_outdir="/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Background/plots/%s"%opt.year,_cat=opt.cat)
 if model.xvar.getMax() > 180: #if high mass
-  plotPdfMap(model,model.envelopePdfs,opt.plotBlindingRegion,_outdir="/home/hep/mdk16/PhD/ggtt/finalfits_try2/CMSSW_10_2_13/src/flashggFinalFit/Background/plots/%s"%opt.year,_cat=opt.cat,setLogY=True)
+  plotPdfMap(model,model.envelopePdfs,opt.plotBlindingRegion,_outdir="/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Background/plots/%s"%opt.year,_cat=opt.cat,setLogY=True)
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
