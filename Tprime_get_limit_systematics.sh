@@ -7,9 +7,8 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 
 #Location of input files, also used for naming of output
 #TODO: Get output naming split from tag to allow multiple runs from the same input files
-mass_point=M600
+mass_point=M700
 tag=Tprime_${mass_point}_22Sep23_fixed_dijet_dummies
-
 
 #Identify which interpretation is being done in the analysis, needed a different name for clarity
 interpretation=Tprime_${mass_point}
@@ -40,6 +39,7 @@ model_bkg(){
 #Construct Signal Models (one per year)
 model_sig(){
         #procs=("TprimeBB${mass_point}" "ggH" )
+        #procs=("TprimeBB${mass_point}" "ttHHggbb" "ggH")
         procs=("TprimeBB${mass_point}" "TprimeWW${mass_point}" "TprimeTAUTAU${mass_point}" "ttHHggbb" "ttHHggWW" "ttHHggTauTau" "ggH" "ttH" "VBFH" "VH" "HHGGbb" "HHGGWWsemileptonic" "HHGGWWdileptonic" "HHGGTauTau")
 	for year in 2016 2017 2018
 	do
@@ -201,7 +201,7 @@ copy_plot(){
 	cp /home/users/iareed/public_html/ttHH/index.php /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/Signal
 }
 
-#model_bkg
+model_bkg
 model_sig
 make_datacard
 #run_combine
