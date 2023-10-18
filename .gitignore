@@ -40,3 +40,4 @@ Signal/old_configs
 Background/outdir_*
 Datacard/yields_*/
 Plots/SplusBModels*
+Background/*mx*my*.py
