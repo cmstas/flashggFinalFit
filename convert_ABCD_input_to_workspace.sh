@@ -8,7 +8,7 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 #source /vols/grid/cms/setup.sh
 source setup.sh
 
-trees=/home/users/iareed/XToYggHbb_looper/cpp/Data_and_DY_04Oct23/tagged_for_FggFF/outputTrees
+trees=/home/users/iareed/XToYggHbb_looper/cpp/Data_and_DY_04Oct23/data_only_tag/outputTrees
 sig_model=/home/hep/mdk16/PhD/ggtt/ResonantGGTT/Outputs/Y_gg_Low_Mass/Interpolation
 res_bkg_model=/home/hep/mdk16/PhD/ggtt/ResonantGGTT/Outputs/Y_gg_Low_Mass/ResonantBkg
 #dy_bkg_model=/home/hep/mdk16/PhD/ggtt/ResonantGGTT/RelicDYEstimation
@@ -43,8 +43,8 @@ get_my() {
 # lumiMap="lumiMap = {'2016':36.31, '2017':41.48, '2018':59.83, 'combined':137.65, 'merged':137.65}"
 
 #low mass Y->gg settings
-mggl=65
-mggh=150
+mggl=55
+mggh=1000
 plot_blinding_region="68,135"
 get_mh () {
   echo $(get_my $1)
@@ -72,26 +72,26 @@ for year in $bkg_years ; do
 done
 echo "Detected mass points:" $masses
 
-for year in $bkg_years ; do
-  pushd ${trees}/${year}
-    for m in $masses ; do
-      let nCats=$(echo Data*${m}* | wc -w)
-      let nCR=$(echo Data*${m}*cr_* | wc -w)
-      echo "Detected $nCR control regions"
-      let nCats=${nCats}-${nCR} 
-      echo "Detected ${nCats} categories"
-      popd
-      break 2
-    done
-done
-
 #for year in $bkg_years ; do
+#  pushd ${trees}/${year}
 #    for m in $masses ; do
-#      echo ${PWD}
-#      ./get_limit_hadd_tree2ws.sh $trees $proc_template $year $m $mggl $mggh
-#      #qsub -q hep.q -l h_rt=300 get_limit_hadd_tree2ws.sh $trees $proc_template $year $m $mggl $mggh
+#      let nCats=$(echo Data*${m}* | wc -w)
+#      let nCR=$(echo Data*${m}*cr_* | wc -w)
+#      echo "Detected $nCR control regions"
+#      let nCats=${nCats}-${nCR} 
+#      echo "Detected ${nCats} categories"
+#      popd
+#      break 2
 #    done
 #done
+
+for year in $bkg_years ; do
+    for m in $masses ; do
+      echo ${PWD}
+      ./get_limit_hadd_tree2ws.sh $trees $proc_template $year $m $mggl $mggh
+      #qsub -q hep.q -l h_rt=300 get_limit_hadd_tree2ws.sh $trees $proc_template $year $m $mggl $mggh
+    done
+done
 #wait_batch get_limit_hadd_tree2ws
 
 #ls -lh /home/hep/mdk16/PhD/ggtt/ResonantGGTT/Outputs/Y_gg_Low_Mass/LimitVsMinNum/10/outputTrees/combined/*/ws/data_combined/*

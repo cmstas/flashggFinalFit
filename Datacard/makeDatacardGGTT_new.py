@@ -340,6 +340,7 @@ def main(args):
 
   new_rows = []
   for cat in df.cat.unique():
+    print(cat)
     new_rows.append(["bkg_mass", cat, "merged", 1, "./Models/background/CMS-HGG_multipdf_%s_combined.root"%cat, "", "multipdf:CMS_hgg_%s_combined_13TeV_bkgshape"%cat, 0])
     new_rows.append(["data_obs", cat, "merged", -1, "./Models/background/CMS-HGG_multipdf_%s_combined.root"%cat, "", "multipdf:roohist_data_mass_%s"%cat, 0])
   
@@ -428,7 +429,7 @@ def main(args):
           continue
         catnum = int(cat.split("cat")[1])
         df_row = df[(df.proc=="data_obs")&(df.cat==cat+"cr")].iloc[0]
-        df_row.current_modelWSFile = bkg_workspace_file = "../Background/outdir_ggtt_resonant_combined_mx%dmy%d/fTest/output/CMS-HGG_ws_%s_combined.root"%(args.MX, args.MY, df_row["cat"])
+        df_row.current_modelWSFile = bkg_workspace_file = "../Background/outdir_ABCD_mx%dmy%d/fTest/output/CMS-HGG_ws_%s.root"%(args.MX, args.MY, df_row["cat"])
         cr_yield = getNEvents(df_row.current_modelWSFile, df_row.model)
 
         if catnum == nCats - 1:
@@ -460,8 +461,8 @@ if __name__=="__main__":
   parser.add_argument('--MX', type=float, required=True)
   parser.add_argument('--MY', type=float, required=True)
 
-  parser.add_argument('--sig-model-dir', type=str, default="/home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/outdir", required=False)
-  parser.add_argument('--res-bkg-model-dir', type=str, default="/home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/res_bkg_outdir", required=False)
+  parser.add_argument('--sig-model-dir', type=str, default="/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/outdir", required=False)
+  parser.add_argument('--res-bkg-model-dir', type=str, default="/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/res_bkg_outdir", required=False)
   parser.add_argument('--dy-bkg-model-dir', type=str, default="../SignalModelInterpolation/dy_bkg_outdir", required=False)
   parser.add_argument('--doABCD', action="store_true")
 
