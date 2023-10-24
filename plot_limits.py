@@ -22,9 +22,9 @@ BR_H_BB = 5.84e-1
 BR_HH_GGTT = 2 * BR_H_GG * BR_H_TT
 BR_HH_GGBB = 2 * BR_H_GG * BR_H_BB
 
-NMSSM_max_allowed_Y_gg = pd.DataFrame({"MX":   [1000,  1000,  1000,  1000,  240,   280,   320,   450,   450,   450,   550,   550,   600,   600,   600,   650,   650,   700,   700,   700,   700,   750,   750,   750,   800,   800,   800,   800,   900,   900,   900,   900,   900,   950,   950],
-                                       "MY":   [70,    250,   550,   800,   70,    100,   70,    70,    125,   300,   90,    400,   70,    100,   300,   250,   500,   70,    190,   450,   550,   70,    500,   600,   70,    170,   400,   650,   70,    80,    190,   650,   700,   70,    500], 
-                                       "limit":[0.0559,0.1305,0.1922,0.4891,0.7906,0.8094,0.3141,0.1508,0.3344,0.7500,0.1289,0.6969,0.0871,0.1262,0.3438,0.2656,0.6969,0.0699,0.1953,0.3734,0.7312,0.0645,0.3750,0.7719,0.0633,0.1414,0.2227,0.7469,0.1063,0.0621,0.1266,0.3562,0.4969,0.0535,0.1914]})
+#NMSSM_max_allowed_Y_gg = pd.DataFrame({"MX":   [650, 650,  650, 650, 650],
+#                                       "MY":   [70,    250,   550,   800,   70,    100,   70,    70,    125,   300,   90,    400,   70,    100,   300,   250,   500,   70,    190,   450,   550,   70,    500,   600,   70,    170,   400,   650,   70,    80,    190,   650,   700,   70,    500], 
+#                                       "limit":[0.0559,0.1305,0.1922,0.4891,0.7906,0.8094,0.3141,0.1508,0.3344,0.7500,0.1289,0.6969,0.0871,0.1262,0.3438,0.2656,0.6969,0.0699,0.1953,0.3734,0.7312,0.0645,0.3750,0.7719,0.0633,0.1414,0.2227,0.7469,0.1063,0.0621,0.1266,0.3562,0.4969,0.0535,0.1914]})
 
 
 def getLimits(results_path):
@@ -222,10 +222,10 @@ def plotLimits2D(masses, limits, ylabel, savename):
   mx_edges = np.array([mx[0] - (mx[1]-mx[0])/2] + list(mx[:-1] + (mx[1:] - mx[:-1])/2) + [mx[-1] + (mx[-1]-mx[-2])/2])
   my_edges = np.array([my[0] - (my[1]-my[0])/2] + list(my[:-1] + (my[1:] - my[:-1])/2) + [my[-1] + (my[-1]-my[-2])/2])
 
-  spline = spi.interp2d(NMSSM_max_allowed_Y_gg.MX, NMSSM_max_allowed_Y_gg.MY, NMSSM_max_allowed_Y_gg.limit, kind='linear', fill_value=0)
-  max_allowed_values = [spline(m[0], m[1])[0] for m in masses]
-  for i, m in enumerate(masses):
-    print(m, max_allowed_values[i])
+  #spline = spi.interp2d(NMSSM_max_allowed_Y_gg.MX, NMSSM_max_allowed_Y_gg.MY, NMSSM_max_allowed_Y_gg.limit, kind='linear', fill_value=0)
+  #max_allowed_values = [spline(m[0], m[1])[0] for m in masses]
+  #for i, m in enumerate(masses):
+  #  print(m, max_allowed_values[i])
   
   #plt.hist2d(masses[:,0], masses[:,1], [mx_edges, my_edges], weights=limits[2], norm=matplotlib.colors.LogNorm())
   mx_edge_centers = (mx_edges[:-1]+mx_edges[1:])/2
@@ -256,7 +256,8 @@ def plotLimits2D(masses, limits, ylabel, savename):
   plt.legend(frameon=True)
   plt.savefig(savename+"_exclude.png")
   plt.savefig(savename+"_exclude.pdf")
-  s = limits[2] < max_allowed_values
+  #s = limits[2] < max_allowed_values
+  s = limits[2]
   plt.scatter(masses[s,0], masses[s,1], marker='x', color="r", label="Limit below maximally allowed in NMSSM") 
   plt.savefig(savename+"_exclude_points.png")
   plt.savefig(savename+"_exclude_points.pdf")
