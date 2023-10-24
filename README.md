@@ -59,6 +59,6 @@ In some files, the paths are set to absolute paths, need to run . change_path.sh
 
 ## Plotting the results
 ```
- python plot_limits.py flashggFinalFit/Outputs/CollectedPlots/Combine/Results/combine_results_summary.txt limit_output 
+ python plot_limits.py Outputs/CollectedPlots/Combine/Results/combine_results_summary.txt limit_output 
 ```
 The plot_limit.py file can plot the 2D limits and 1D band limits, also having the limit results. the "limit_output" is the place for output folder
