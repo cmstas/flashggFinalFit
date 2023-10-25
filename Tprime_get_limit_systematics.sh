@@ -4,21 +4,11 @@ set -x
 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 #source /vols/grid/cms/setup.sh
-
-#Location of input files, also used for naming of output
-#TODO: Get output naming split from tag to allow multiple runs from the same input files
-mass_point=M700
-tag=Tprime_${mass_point}_22Sep23_fixed_dijet_dummies
-
-#Identify which interpretation is being done in the analysis, needed a different name for clarity
-interpretation=Tprime_${mass_point}
-
-#Path to all input locations
-trees=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
-
 cmsenv
 source setup.sh
 
+#Location of input files, also used for naming of output
+#TODO: Get output naming split from tag to allow multiple runs from the same input files
 model_bkg(){
         #syst_config_ttHH_ggXX.py will only need to be changed once per analysis
 	pushd Trees2WS
@@ -201,9 +191,22 @@ copy_plot(){
 	cp /home/users/iareed/public_html/ttHH/index.php /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/Signal
 }
 
-model_bkg
-model_sig
-make_datacard
-#run_combine
-#syst_plots
-#copy_plot
+for mass in 500 550 600 650 700 750 800 850 900 950 1000 1100
+do
+    mass_point=M${mass}
+    tag=Tprime_${mass_point}_22Sep23_fixed_dijet_dummies
+
+    #Identify which interpretation is being done in the analysis, needed a different name for clarity
+    interpretation=Tprime_${mass_point}
+
+    #Path to all input locations
+    trees=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
+
+    #model_bkg
+    #model_sig
+    make_datacard
+    #run_combine
+    #syst_plots
+    #copy_plot
+done
+
