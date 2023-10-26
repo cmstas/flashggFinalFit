@@ -7,7 +7,7 @@ backgroundScriptCfg = {
   #'inputWSDir':'/home/hep/mdk16/PhD/ggtt/ParamNN/outputTrees/ws/data_2018/',
   'inputWSFile':'<trees/year/m/ws/signal_year>/allData.root',
   'cats':'auto', # auto: automatically inferred from input ws
-  'ext':'ABCD_<m>', # extension to add to output directory
+  'ext':'ggtt_resonant_combined_<m>', # extension to add to output directory
   'year':'combined', # Use combined when merging all years in category (for plots)
 
   # Job submission options

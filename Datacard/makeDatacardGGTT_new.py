@@ -461,8 +461,8 @@ if __name__=="__main__":
   parser.add_argument('--MX', type=float, required=True)
   parser.add_argument('--MY', type=float, required=True)
 
-  parser.add_argument('--sig-model-dir', type=str, default="/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/outdir", required=False)
-  parser.add_argument('--res-bkg-model-dir', type=str, default="/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/res_bkg_outdir", required=False)
+  parser.add_argument('--sig-model-dir', type=str, default="/home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/outdir", required=False)
+  parser.add_argument('--res-bkg-model-dir', type=str, default="/home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/res_bkg_outdir", required=False)
   parser.add_argument('--dy-bkg-model-dir', type=str, default="../SignalModelInterpolation/dy_bkg_outdir", required=False)
   parser.add_argument('--doABCD', action="store_true")
 
