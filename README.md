@@ -55,7 +55,7 @@ Each of the relevant folders are documented with specific `README.md` files. Som
 Everything can be done using fast script "test_*_part.sh". The process is divided by six parts. Run the scripts locally one by one. Developers may need to change the execution path in the repository. Can use the "search_string.py" script to search for files including absolute paths. After the six jobs are finished sequently, use "plot_limit.py" to make limit plots.
 
 ## change absolute paths
-In some files, the paths are set to absolute paths, need to run . change_path.sh to substitute the working dir to your own directory. Four directories need to be given on the head of the change_path.sh . Working directory, after trained combined trees from the pNN, input folder for signal model and input folder for resonant bkg model.
+In some files, the paths are set to absolute paths, need to run . change_path.sh to substitute the working dir to your own directory. Four directories need to be given on the head of the change_path.sh . Working directory, after trained combined trees from the pNN, input folder for signal model and input folder for resonant bkg model. Also, the path in "setup.sh" need to be changed.
 
 ## Plotting the results
 ```
