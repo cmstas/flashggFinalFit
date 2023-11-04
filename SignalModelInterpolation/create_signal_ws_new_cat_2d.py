@@ -10,7 +10,7 @@ import argparse
 import json
 import os
 
-DO_SYST = True
+DO_SYST = False
 
 def loadJson(path):
   with open(path, "r") as f:

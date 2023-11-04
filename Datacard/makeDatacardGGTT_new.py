@@ -28,11 +28,14 @@ def renameCat(cat, args):
 
 def getProcesses(model_dir, args):
   files = os.listdir(model_dir)
-
+  print(model_dir)
   all_processes = []
   for f in files:
     #files are formatted like proc_year_cat.root
     fname = f
+    print(fname)
+    if (fname=="Graviton") or (fname=="trained"):
+        continue
     parts = f.split(".root")[0].split("_")
     year = parts[-2]
     proc = renameProc("_".join(parts[:-2]), year, args)
@@ -45,6 +48,7 @@ def getProcesses(model_dir, args):
       model = "wsig_13TeV:"+"sig_%s_%s_%s"%(year, parts[-1], basic_proc)
     
     all_processes.append([f, model, proc, cat, year])
+  print(all_processes)
   return all_processes
 
 def attemptLoadSystematics(json_location):
@@ -429,7 +433,7 @@ def main(args):
           continue
         catnum = int(cat.split("cat")[1])
         df_row = df[(df.proc=="data_obs")&(df.cat==cat+"cr")].iloc[0]
-        df_row.current_modelWSFile = bkg_workspace_file = "../Background/outdir_ABCD_mx%dmy%d/fTest/output/CMS-HGG_ws_%s.root"%(args.MX, args.MY, df_row["cat"])
+        df_row.current_modelWSFile = bkg_workspace_file = "../Background/outdir_ggtt_resonant_combined_mx%dmy%d/fTest/output/CMS-HGG_ws_%s_combined.root"%(args.MX, args.MY, df_row["cat"])
         cr_yield = getNEvents(df_row.current_modelWSFile, df_row.model)
 
         if catnum == nCats - 1:
@@ -461,8 +465,9 @@ if __name__=="__main__":
   parser.add_argument('--MX', type=float, required=True)
   parser.add_argument('--MY', type=float, required=True)
 
-  parser.add_argument('--sig-model-dir', type=str, default="/home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/outdir", required=False)
-  parser.add_argument('--res-bkg-model-dir', type=str, default="/home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/res_bkg_outdir", required=False)
+  parser.add_argument('--sig-model-dir', type=str, default="/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/outdir", required=False)
+  #parser.add_argument('--res-bkg-model-dir', type=str, default="/home/users/yagu/XYH/XtoYH_pNN/Outputs_forIan", required=False)
+  parser.add_argument('--res-bkg-model-dir', type=str, default="/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/res_bkg_outdir", required=False)
   parser.add_argument('--dy-bkg-model-dir', type=str, default="../SignalModelInterpolation/dy_bkg_outdir", required=False)
   parser.add_argument('--doABCD', action="store_true")
 

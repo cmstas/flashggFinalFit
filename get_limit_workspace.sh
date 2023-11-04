@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-set -e
-
-cd /home/hep/mdk16/PhD/ggtt/finalfits_try2/CMSSW_10_2_13/src/flashggFinalFit
-
-source /cvmfs/cms.cern.ch/cmsset_default.sh
-source /vols/grid/cms/setup.sh
-source setup.sh
+#set -e
+#
+#cd /home/hep/mdk16/PhD/ggtt/finalfits_try2/CMSSW_10_2_13/src/flashggFinalFit
+#
+#source /cvmfs/cms.cern.ch/cmsset_default.sh
+#source /vols/grid/cms/setup.sh
+#source setup.sh
 
 mh=125
 

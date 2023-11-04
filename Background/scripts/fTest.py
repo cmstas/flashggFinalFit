@@ -54,8 +54,10 @@ def get_options():
 
 if opt.cat[-2:] == "cr":
   foutDir = "%s/outdir_%s/fTest/output"%(bwd__,opt.ext)
+  print(foutDir)
   if not os.path.isdir(foutDir): os.system("mkdir %s"%foutDir)
   foutName = "%s/outdir_%s/fTest/output/CMS-HGG_ws_%s.root"%(bwd__,opt.ext,opt.cat)
+  print(foutName)
   control_regions.main(opt.inputWSFile, opt.cat, foutName)
   exit()
 
