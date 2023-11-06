@@ -20,8 +20,6 @@ m="mx${mx}my${my}"
 mo="mx${mx}my${my}mh${mh}"
 
 pushd Combine
-  if [[ $m != *"mx280my70"* ]]; then
-    python RunText2Workspace.py --mode  ggtt_resonant --dryRun --ext _ggtt_resonant_${m} --common_opts "-m ${mh} higgsMassRange=${mggl},${mggh} --channel-masks" --batch local
-    ./t2w_jobs/t2w_ggtt_resonant_ggtt_resonant_${m}.sh
-  fi
+  python RunText2Workspace.py --mode  ggtt_resonant --dryRun --ext _ggtt_resonant_${m} --common_opts "-m ${mh} higgsMassRange=${mggl},${mggh} --channel-masks" --batch local
+  ./t2w_jobs/t2w_ggtt_resonant_ggtt_resonant_${m}.sh
 #popd
