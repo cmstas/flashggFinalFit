@@ -129,9 +129,7 @@ pushd Combine
 
   for mh_scan in $mh_to_scan ; do
     echo $mh_scan
-  if [[ $m != *"mx280my70"* ]]; then 
     . ../get_limit_combine.sh $mggl $mggh $(get_mx $m) $(get_my $m) $mh_scan
-  fi
     #qsub -q hep.q -l h_rt=7200 ../get_limit_combine.sh $mggl $mggh $(get_mx $m) $(get_my $m) $mh_scan
     #qsub -q hep.q -l h_rt=1800 -pe hep.pe 8 ../get_limit_combine.sh $mggl $mggh $(get_mx $m) $(get_my $m) $mh_scan
   done
