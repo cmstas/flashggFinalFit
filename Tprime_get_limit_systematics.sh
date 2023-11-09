@@ -75,37 +75,37 @@ model_sig(){
 		python RunPackager.py --cats SR2 --exts ${tag}_2016,${tag}_2017,${tag}_2018 --batch local --massPoints 125 --mergeYears
 		python RunPlotter.py --procs all --cats SR2 --years 2016,2017,2018 --ext packaged
 
-                #python RunPlotter.py --procs TprimeBB${mass_point} --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs TprimeBB${mass_point} --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs TprimeWW${mass_point} --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs TprimeWW${mass_point} --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs TprimeTAUTAU${mass_point} --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs TprimeTAUTAU${mass_point} --cats SR2 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs TprimeBB${mass_point} --cats SR1 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs TprimeBB${mass_point} --cats SR2 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs TprimeWW${mass_point} --cats SR1 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs TprimeWW${mass_point} --cats SR2 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs TprimeTAUTAU${mass_point} --cats SR1 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs TprimeTAUTAU${mass_point} --cats SR2 --years 2016,2017,2018 --ext packaged
 
-                #python RunPlotter.py --procs ttHHggbb --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttHHggbb --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttHHggWW --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttHHggWW --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttHHggTauTau --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttHHggTauTau --cats SR2 --years 2016,2017,2018 --ext packaged
-                #    
-                #python RunPlotter.py --procs VH --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs VH --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttH --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttH --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ggH --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ggH --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs VBFH --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs VBFH --cats SR2 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs ttHHggbb --cats SR1 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs ttHHggbb --cats SR2 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs ttHHggWW --cats SR1 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs ttHHggWW --cats SR2 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs ttHHggTauTau --cats SR1 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs ttHHggTauTau --cats SR2 --years 2016,2017,2018 --ext packaged
+                    
+                python RunPlotter.py --procs VH --cats SR1 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs VH --cats SR2 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs ttH --cats SR1 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs ttH --cats SR2 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs ggH --cats SR1 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs ggH --cats SR2 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs VBFH --cats SR1 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs VBFH --cats SR2 --years 2016,2017,2018 --ext packaged
 
-                #python RunPlotter.py --procs HHGGbb --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGbb --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGWWsemileptonic --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGWWsemileptonic --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGWWdileptonic --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGWWdileptonic --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGTauTau --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGTauTau --cats SR2 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs HHGGbb --cats SR1 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs HHGGbb --cats SR2 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs HHGGWWsemileptonic --cats SR1 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs HHGGWWsemileptonic --cats SR2 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs HHGGWWdileptonic --cats SR1 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs HHGGWWdileptonic --cats SR2 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs HHGGTauTau --cats SR1 --years 2016,2017,2018 --ext packaged
+                python RunPlotter.py --procs HHGGTauTau --cats SR2 --years 2016,2017,2018 --ext packaged
 
                 cp -a outdir_packaged outdir_${tag}_packaged
 	popd
@@ -187,7 +187,7 @@ copy_plot(){
 
 	cp /home/users/iareed/public_html/ttHH/index.php /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/Data
 	cp Background/outdir_$tag/bkgfTest-Data/* /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/Data
-	cp Signal/outdir_packaged/Plots/* /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/Signal
+	cp Signal/outdir_${tag}_packaged/Plots/* /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/Signal
 	cp /home/users/iareed/public_html/ttHH/index.php /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/Signal
 }
 
@@ -203,10 +203,10 @@ do
     trees=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
 
     #model_bkg
-    #model_sig
-    make_datacard
+    model_sig
+    #make_datacard
     #run_combine
     #syst_plots
-    #copy_plot
+    copy_plot
 done
 
