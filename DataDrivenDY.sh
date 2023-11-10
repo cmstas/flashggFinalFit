@@ -205,7 +205,7 @@ make_datacard(){
 pushd Datacard
   for m in $masses ; do
     #TODO Make this actually loop compatible
-    python makeDatacardGGTT_new.py --output "Datacard_ggtt_resonant_mx280my90.txt" --MH 125.0 --MX 280.0 --MY 90.0 --doABCD --do-res-bkg
+    python makeDatacardGGTT_new.py --output "Datacard_ggtt_resonant_mx280my90.txt" --MH 90.0 --MX 280.0 --MY 90.0 --doABCD --do-res-bkg
     #if [[ -n $do_dy_bkg ]]; then 
     #  ../get_limit_datacard.sh $sig_model $res_bkg_model $m $(get_mh $m) $(get_mx $m) $(get_my $m) $do_dy_bkg
     #  #qsub -q hep.q -l h_rt=1200 ../get_limit_datacard.sh $sig_model $res_bkg_model $m $(get_mh $m) $(get_mx $m) $(get_my $m) $do_dy_bkg
@@ -234,22 +234,22 @@ run_combine(){
     # Move signal files
      #cp /home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/outdir/* ./Models/signal/
     #path to current signal files, produced manually from using test_first_part.sh using /home/users/yagu/XYH/XtoYH_pNN/Interpolation_forIan/model.json
-     #cp ../SignalModelInterpolation/outdir/* ./Models/signal/
+     cp ../SignalModelInterpolation/outdir/* ./Models/signal/
 
     # Move resonant background files
      #cp /home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/res_bkg_outdir/* ./Models/res_bkg/
     #path to current signal files, produced manually from using test_third_part.sh
-     #cp ../SignalModelInterpolation/res_bkg_outdir/* ./Models/res_bkg/
+     cp ../SignalModelInterpolation/res_bkg_outdir/* ./Models/res_bkg/
 
     #  if [[ -n $do_dy_bkg ]]; then 
     #     cp ../SignalModelInterpolation/dy_bkg_outdir/* ./Models/dy_bkg/
     #  fi
      #set +e
     # Move nominal nonresonant background
-     #cp /home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit_new/Background/outdir_ggtt_resonant_mx280my90/fTest/output/* ./Models/background/
+     cp /home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit_new/Background/outdir_ggtt_resonant_mx280my90/fTest/output/* ./Models/background/
 
     # Move inverted nonresonant background
-     #cp ../Background/outdir_ggtt_resonant_*/fTest/output/CMS-HGG*.root ./Models/background/
+     cp ../Background/outdir_ggtt_resonant_*/fTest/output/CMS-HGG*.root ./Models/background/
      #set -e
 
     # Move datacard

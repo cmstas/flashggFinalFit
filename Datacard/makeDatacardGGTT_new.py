@@ -414,15 +414,15 @@ def main(args):
       if "M125" in proc: #only write lines when the resonant background is there
         f.write("\nres_bkg_scaler rateParam * *M125* 1\nnuisance edit freeze res_bkg_scaler")
         break
-    #if args.do_dy_bkg:
-    #  f.write("\ndy_bkg_scaler rateParam * *dy* 1\nnuisance edit freeze dy_bkg_scaler")
-    #  #f.write("\ndy_corr group = "+" ".join(["CMS_hgg_nuisance_"+syst["name"] for syst in dy_systematics if "cat" not in syst["name"]]))
-    #  #f.write("\nnuisance edit freeze dy_corr")
-    #  #f.write("\ndy_uncorr group = "+" ".join(["CMS_hgg_nuisance_"+syst["name"] for syst in dy_systematics if "cat" in syst["name"]]))
-    #  #f.write("\nnuisance edit freeze dy_uncorr")
-    #  #f.write("\nnuisance edit freeze *nuisance*dy")
-    #  #for syst in dy_systematics:
-    #  #  f.write("\nnuisance edit freeze %s"%("CMS_hgg_nuisance_"+syst["name"]))
+    if args.do_dy_bkg:
+      f.write("\ndy_bkg_scaler rateParam * *dy* 1\nnuisance edit freeze dy_bkg_scaler")
+      #f.write("\ndy_corr group = "+" ".join(["CMS_hgg_nuisance_"+syst["name"] for syst in dy_systematics if "cat" not in syst["name"]]))
+      #f.write("\nnuisance edit freeze dy_corr")
+      #f.write("\ndy_uncorr group = "+" ".join(["CMS_hgg_nuisance_"+syst["name"] for syst in dy_systematics if "cat" in syst["name"]]))
+      #f.write("\nnuisance edit freeze dy_uncorr")
+      #f.write("\nnuisance edit freeze *nuisance*dy")
+      #for syst in dy_systematics:
+      #  f.write("\nnuisance edit freeze %s"%("CMS_hgg_nuisance_"+syst["name"]))
 
     if args.doABCD:
       nCats = len(df.cat.unique())/2
@@ -445,9 +445,9 @@ def main(args):
           f.write("\nABCD_B%d rateParam %scr dy_merged_hgg %d [0,10000]"%(catnum, cat, cr_yield))
           to_add_to_group.append("ABCD_B%d"%catnum)
           f.write("\nABCD_D%d rateParam %s dy_merged_hgg (@0*(@1/@2)) ABCD_C,ABCD_B%d,ABCD_A"%(catnum, cat, catnum))
-        #f.write("\ndy_bkg_scaler rateParam %s dy_merged_hgg 1"%cat)
+        f.write("\ndy_bkg_scaler rateParam %s dy_merged_hgg 1"%cat)
 
-      #f.write("\nnuisance edit freeze dy_bkg_scaler")
+      f.write("\nnuisance edit freeze dy_bkg_scaler")
       f.write("\nABCD group = "+" ".join(to_add_to_group))
 
       #f.write("\nABCD_veto_eff rateParam !(*cat) dy_merged_hgg 1 0,1")
