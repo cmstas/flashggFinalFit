@@ -252,7 +252,7 @@ globalReplacementMap['Tprime_M1200']["procRVMap"]["SR1"] = "TprimeBBM1200"
 globalReplacementMap['Tprime_M1200']["procRVMap"]["SR2"] = "TprimeBBM1200"
 globalReplacementMap['Tprime_M1200']["catRVMap"] = od()
 globalReplacementMap['Tprime_M1200']["catRVMap"]["SR1"] = "SR1"
-globalReplacementMap['Tprime_M1200']["catRVMap"]["SR2"] = "SR2"
+globalReplacementMap['Tprime_M1200']["catRVMap"]["SR2"] = "SR1"
 
 #ttHHggXX Tprime M1300 
 globalReplacementMap['Tprime_M1300'] = od()
@@ -264,7 +264,7 @@ globalReplacementMap['Tprime_M1300']["procRVMap"]["SR1"] = "TprimeBBM1300"
 globalReplacementMap['Tprime_M1300']["procRVMap"]["SR2"] = "TprimeBBM1300"
 globalReplacementMap['Tprime_M1300']["catRVMap"] = od()
 globalReplacementMap['Tprime_M1300']["catRVMap"]["SR1"] = "SR1"
-globalReplacementMap['Tprime_M1300']["catRVMap"]["SR2"] = "SR2"
+globalReplacementMap['Tprime_M1300']["catRVMap"]["SR2"] = "SR1"
 
 #ttHHggXX Tprime M1400 
 globalReplacementMap['Tprime_M1400'] = od()
@@ -276,7 +276,7 @@ globalReplacementMap['Tprime_M1400']["procRVMap"]["SR1"] = "TprimeBBM1400"
 globalReplacementMap['Tprime_M1400']["procRVMap"]["SR2"] = "TprimeBBM1400"
 globalReplacementMap['Tprime_M1400']["catRVMap"] = od()
 globalReplacementMap['Tprime_M1400']["catRVMap"]["SR1"] = "SR1"
-globalReplacementMap['Tprime_M1400']["catRVMap"]["SR2"] = "SR2"
+globalReplacementMap['Tprime_M1400']["catRVMap"]["SR2"] = "SR1"
 
 #ttHHggXX Tprime M1500 
 globalReplacementMap['Tprime_M1500'] = od()
@@ -288,7 +288,7 @@ globalReplacementMap['Tprime_M1500']["procRVMap"]["SR1"] = "TprimeBBM1500"
 globalReplacementMap['Tprime_M1500']["procRVMap"]["SR2"] = "TprimeBBM1500"
 globalReplacementMap['Tprime_M1500']["catRVMap"] = od()
 globalReplacementMap['Tprime_M1500']["catRVMap"]["SR1"] = "SR1"
-globalReplacementMap['Tprime_M1500']["catRVMap"]["SR2"] = "SR2"
+globalReplacementMap['Tprime_M1500']["catRVMap"]["SR2"] = "SR1"
 
 
 # STXS analysis

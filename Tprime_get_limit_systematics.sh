@@ -191,10 +191,13 @@ copy_plot(){
 	cp /home/users/iareed/public_html/ttHH/index.php /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/Signal
 }
 
-for mass in 500 550 600 650 700 750 800 850 900 950 1000 1100
+#for mass in 500 550 600 650 700 750 800 850 900 950 1000 1100 1200 1300 1400 1500
+for mass in 1300 # 1400 1500
+#for mass in 1200 
 do
     mass_point=M${mass}
-    tag=Tprime_${mass_point}_22Sep23_fixed_dijet_dummies
+    tag=Tprime_${mass_point}_22Sep23_no_double_BB
+    #tag=Tprime_${mass_point}_22Sep23_fixed_dijet_dummies
 
     #Identify which interpretation is being done in the analysis, needed a different name for clarity
     interpretation=Tprime_${mass_point}
@@ -203,10 +206,10 @@ do
     trees=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
 
     #model_bkg
-    model_sig
+    #model_sig
     #make_datacard
-    #run_combine
-    #syst_plots
+    run_combine
+    syst_plots
     copy_plot
 done
 
