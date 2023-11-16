@@ -234,12 +234,12 @@ run_combine(){
     # Move signal files
      #cp /home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/outdir/* ./Models/signal/
     #path to current signal files, produced manually from using test_first_part.sh using /home/users/yagu/XYH/XtoYH_pNN/Interpolation_forIan/model.json
-     cp ../SignalModelInterpolation/outdir/* ./Models/signal/
+     cp /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/outdir/* ./Models/signal/
 
     # Move resonant background files
      #cp /home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/res_bkg_outdir/* ./Models/res_bkg/
     #path to current signal files, produced manually from using test_third_part.sh
-     cp ../SignalModelInterpolation/res_bkg_outdir/* ./Models/res_bkg/
+     cp /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/res_bkg_outdir/* ./Models/res_bkg/
 
     #  if [[ -n $do_dy_bkg ]]; then 
     #     cp ../SignalModelInterpolation/dy_bkg_outdir/* ./Models/dy_bkg/
@@ -249,7 +249,7 @@ run_combine(){
      cp /home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit_new/Background/outdir_ggtt_resonant_mx280my90/fTest/output/* ./Models/background/
 
     # Move inverted nonresonant background
-     cp ../Background/outdir_ggtt_resonant_*/fTest/output/CMS-HGG*.root ./Models/background/
+     cp /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Background/outdir_ggtt_resonant_*/fTest/output/CMS-HGG*.root ./Models/background/
      #set -e
 
     # Move datacard
