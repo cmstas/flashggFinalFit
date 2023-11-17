@@ -5,7 +5,7 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 source setup.sh
 
 #Path to dir with inverted selection dataset
-trees=/home/users/iareed/XToYggHbb_looper/cpp/Data_04Oct23/tag_for_fggff_mx280/outputTrees
+trees=/home/users/iareed/XToYggHbb_looper/cpp/Data_and_DY_04Oct23/Manos_tag/outputTrees
 
 #Path to dir with nominal signal models
 sig_model=/home/hep/mdk16/PhD/ggtt/ResonantGGTT/Outputs/Y_gg_Low_Mass/Interpolation
@@ -50,7 +50,7 @@ get_my() {
 # lumiMap="lumiMap = {'2016':36.31, '2017':41.48, '2018':59.83, 'combined':137.65, 'merged':137.65}"
 
 #low mass Y->gg settings
-mggl=55
+mggl=65
 mggh=1000
 plot_blinding_region="68,135"
 get_mh () {
@@ -310,5 +310,5 @@ count_cats_and_crs
 #make_workspaces
 #model_background
 #make_datacard
-run_combine
+#run_combine
 #move_plots
