@@ -163,8 +163,9 @@ def getNorm(current_modelWSFile, model, args):
   w.var("MX").setVal(args.MX)
   w.var("MY").setVal(args.MY)
 
-  #w.Print()
-  #print("%s_norm"%model.split(":")[1])
+  print("MH studies")
+  w.Print()
+  print("%s_norm"%model.split(":")[1])
 
   norm = w.function("%s_norm"%model.split(":")[1]).getVal()
   f.Close()
@@ -345,8 +346,8 @@ def main(args):
   new_rows = []
   for cat in df.cat.unique():
     print(cat)
-    new_rows.append(["bkg_mass", cat, "merged", 1, "./Models/background/CMS-HGG_multipdf_%s_combined.root"%cat, "", "multipdf:CMS_hgg_%s_combined_13TeV_bkgshape"%cat, 0])
-    new_rows.append(["data_obs", cat, "merged", -1, "./Models/background/CMS-HGG_multipdf_%s_combined.root"%cat, "", "multipdf:roohist_data_mass_%s"%cat, 0])
+    new_rows.append(["bkg_mass", cat, "merged", 1, "./Models/background/CMS-HGG_multipdf_%s.root"%cat, "", "multipdf:CMS_hgg_%s_combined_13TeV_bkgshape"%cat, 0])
+    new_rows.append(["data_obs", cat, "merged", -1, "./Models/background/CMS-HGG_multipdf_%s.root"%cat, "", "multipdf:roohist_data_mass_%s"%cat, 0])
   
     if args.doABCD:
       new_rows.append(["bkg_mass", cat+"cr", "merged", 1, "./Models/background/CMS-HGG_ws_%s_combined.root"%(cat+"cr"), "", "w_control_regions:CMS_hgg_%s_combined_13TeV_bkgshape"%(cat+"cr"), 0])
@@ -437,12 +438,12 @@ def main(args):
         cr_yield = getNEvents(df_row.current_modelWSFile, df_row.model)
 
         if catnum == nCats - 1:
-          f.write("\nABCD_A rateParam %scr dy_merged_hgg %d [0,1000000]"%(cat, cr_yield))
+          f.write("\nABCD_A rateParam %scr dy_merged_hgg %d [0,3000000]"%(cat, cr_yield))
           to_add_to_group.append("ABCD_A")
-          f.write("\nABCD_C rateParam %s dy_merged_hgg 350 [0,1000]"%cat)
+          f.write("\nABCD_C rateParam %s dy_merged_hgg 5800 [0,10000]"%cat)
           to_add_to_group.append("ABCD_C")
         else:
-          f.write("\nABCD_B%d rateParam %scr dy_merged_hgg %d [0,10000]"%(catnum, cat, cr_yield))
+          f.write("\nABCD_B%d rateParam %scr dy_merged_hgg %d [0,20000]"%(catnum, cat, cr_yield))
           to_add_to_group.append("ABCD_B%d"%catnum)
           f.write("\nABCD_D%d rateParam %s dy_merged_hgg (@0*(@1/@2)) ABCD_C,ABCD_B%d,ABCD_A"%(catnum, cat, catnum))
         f.write("\ndy_bkg_scaler rateParam %s dy_merged_hgg 1"%cat)
@@ -465,9 +466,9 @@ if __name__=="__main__":
   parser.add_argument('--MX', type=float, required=True)
   parser.add_argument('--MY', type=float, required=True)
 
-  parser.add_argument('--sig-model-dir', type=str, default="/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/outdir", required=False)
+  parser.add_argument('--sig-model-dir', type=str, default="/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/signal", required=False)
   #parser.add_argument('--res-bkg-model-dir', type=str, default="/home/users/yagu/XYH/XtoYH_pNN/Outputs_forIan", required=False)
-  parser.add_argument('--res-bkg-model-dir', type=str, default="/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/res_bkg_outdir", required=False)
+  parser.add_argument('--res-bkg-model-dir', type=str, default="/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/res_bkg", required=False)
   parser.add_argument('--dy-bkg-model-dir', type=str, default="../SignalModelInterpolation/dy_bkg_outdir", required=False)
   parser.add_argument('--doABCD', action="store_true")
 

@@ -59,7 +59,7 @@ get_mh () {
 do_scan=1
 step_sf=1
 lumiMap="lumiMap = {'2016':36.31, '2017':41.48, '2018':54.67, 'combined':132.46, 'merged':132.46}"
-do_dy_bkg=1
+do_dy_bkg=0
 
 #high mass Y->gg settings
 # mggl=100
@@ -77,7 +77,7 @@ sed -i "/lumiMap/s/.*/${lumiMap}/" tools/commonObjects.py
 echo "Finding mass points in: " ${trees}/${bkg_years}
 for year in $bkg_years ; do
   #masses=$(python detect_mass_points.py ${trees}/${year}/)
-  masses="mx280my90" #hard coded for now while debugging
+  masses="mx240my90" #hard coded for now while debugging
 done
 echo "Detected mass points:" $masses
 
@@ -205,7 +205,7 @@ make_datacard(){
 pushd Datacard
   for m in $masses ; do
     #TODO Make this actually loop compatible
-    python makeDatacardGGTT_new.py --output "Datacard_ggtt_resonant_mx280my90.txt" --MH 90.0 --MX 280.0 --MY 90.0 --doABCD --do-res-bkg
+    python makeDatacardGGTT_new.py --output "Datacard_ggtt_resonant_mx240my90.txt" --MH 90.0 --MX 240.0 --MY 90.0 --doABCD --do-res-bkg
     #if [[ -n $do_dy_bkg ]]; then 
     #  ../get_limit_datacard.sh $sig_model $res_bkg_model $m $(get_mh $m) $(get_mx $m) $(get_my $m) $do_dy_bkg
     #  #qsub -q hep.q -l h_rt=1200 ../get_limit_datacard.sh $sig_model $res_bkg_model $m $(get_mh $m) $(get_mx $m) $(get_my $m) $do_dy_bkg
@@ -234,26 +234,27 @@ run_combine(){
     # Move signal files
      #cp /home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/outdir/* ./Models/signal/
     #path to current signal files, produced manually from using test_first_part.sh using /home/users/yagu/XYH/XtoYH_pNN/Interpolation_forIan/model.json
-     cp /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/outdir/* ./Models/signal/
+     cp /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/signal/* ./Models/signal/
 
     # Move resonant background files
      #cp /home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/res_bkg_outdir/* ./Models/res_bkg/
     #path to current signal files, produced manually from using test_third_part.sh
-     cp /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/res_bkg_outdir/* ./Models/res_bkg/
+     cp /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/res_bkg/* ./Models/res_bkg/
 
     #  if [[ -n $do_dy_bkg ]]; then 
     #     cp ../SignalModelInterpolation/dy_bkg_outdir/* ./Models/dy_bkg/
     #  fi
      #set +e
     # Move nominal nonresonant background
-     cp /home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit_new/Background/outdir_ggtt_resonant_mx280my90/fTest/output/* ./Models/background/
+     cp /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/SignalModelInterpolation/background/* ./Models/background/
+     #cp /home/users/yagu/XYH/FinalFit/CMSSW_10_2_13/src/flashggFinalFit_new/Background/outdir_ggtt_resonant_mx280my90/fTest/output/* ./Models/background/
 
     # Move inverted nonresonant background
      cp /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Background/outdir_ggtt_resonant_*/fTest/output/CMS-HGG*.root ./Models/background/
      #set -e
 
     # Move datacard
-     cp ../Datacard/Datacard_ggtt_resonant_mx280my90.txt .
+     cp ../Datacard/Datacard_ggtt_resonant_mx240my90.txt .
 
      for m in $masses ; do
       ../get_limit_workspace.sh $mggl $mggh $(get_mx $m) $(get_my $m) $(get_mh $m)
@@ -310,5 +311,5 @@ count_cats_and_crs
 #make_workspaces
 #model_background
 #make_datacard
-#run_combine
+run_combine
 #move_plots
