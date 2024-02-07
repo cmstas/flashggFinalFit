@@ -41,3 +41,4 @@ Background/outdir_*
 Datacard/yields_*/
 Plots/SplusBModels*
 Background/*mx*my*.py
+Combine/t2w_jobs/*.sh
