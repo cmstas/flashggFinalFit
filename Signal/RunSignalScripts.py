@@ -98,7 +98,7 @@ options['nCats'] = len(options['cats'].split(","))
 
 # Extract low and high MH values
 mps = []
-for mp in options['massPoints'].split(","): mps.append(int(mp))
+for mp in options['massPoints'].split(","): mps.append(float(mp))
 options['massLow'], options['massHigh'] = '%s'%min(mps), '%s'%max(mps)
 
 # print info to user

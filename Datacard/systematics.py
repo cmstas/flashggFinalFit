@@ -42,7 +42,8 @@ theory_systematics = [
 		{'name':'alphaS_VH','title':'alphaS_VH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_vh.json'},
 		{'name':'alphaS_ttH','title':'alphaS_ttH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tth.json'},
 
-                {'name':'alphaS_pdf_ttHH','title':'alphaS+pdf_ttHH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tthh.json'},
+                {'name':'alphaS_pdf_ttHH','title':'alphaS_pdf_ttHH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tthh.json'},
+                {'name':'QCDscale_ttHH','title':'QCDscale_ttHH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tthh.json'},
 ]
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -53,7 +54,7 @@ theory_systematics = [
 
 experimental_systematics = [
                 # Updated luminosity partial-correlation scheme: 13/5/21 (recommended simplified nuisances)
-                {'name':'lumi_13TeV_Uncorrelated','title':'lumi_13TeV_Uncorrelated','type':'constant','prior':'lnN','correlateAcrossYears':0,'value':{'2016':'1.010','2017':'1.020','2018':'1.015'}},
+                {'name':'lumi_13TeV_Uncorrelated','title':'lumi_13TeV','type':'constant','prior':'lnN','correlateAcrossYears':0,'value':{'2016':'1.010','2017':'1.020','2018':'1.015'}},
                 {'name':'lumi_13TeV_Correlated','title':'lumi_13TeV_Correlated','type':'constant','prior':'lnN','correlateAcrossYears':-1,'value':{'2016':'1.006','2017':'1.009','2018':'1.020'}},
                 {'name':'lumi_13TeV_Correlated_1718','title':'lumi_13TeV_Correlated_1718','type':'constant','prior':'lnN','correlateAcrossYears':-1,'value':{'2016':'-','2017':'1.006','2018':'1.002'}},
                 {'name':'weight_electron_veto_sf_Diphoton_Photon','title':'CMS_hgg_electronVetoSF','type':'factory','prior':'lnN','correlateAcrossYears':0},
@@ -63,17 +64,17 @@ experimental_systematics = [
                 {'name':'weight_muon_iso_sfSTAT_SelectedMuon','title':'CMS_hgg_MuonISOSF_STAT','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_muon_iso_sfSYS_SelectedMuon','title':'CMS_hgg_MuonISOSF_SYS','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_trigger_sf','title':'CMS_hgg_TriggerSF','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'JER','title':'JER','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'JES','title':'JES','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'MET_JER','title':'MET_JER','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'MET_JES','title':'MET_JES','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'MET_Unclustered','title':'MET_Unclustered','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'Muon_pt','title':'Muon_pt','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'Tau_pt','title' :'Tau_pt','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'JER','title':'CMS_JER','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'JES','title':'CMS_JES','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'MET_JER','title':'CMS_MET_JER','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'MET_JES','title':'CMS_MET_JES','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'MET_Unclustered','title':'CMS_MET_Unclustered','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'Muon_pt','title':'CMS_Muon_pt','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'Tau_pt','title' :'CMS_Tau_pt','type':'factory','prior':'lnN','correlateAcrossYears':0},
 
-                {'name':'weight_puWeight','title' :'weight_puWeight','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'weight_photon_id_sf_Diphoton_Photon','title' :'weight_photon_id_sf_Diphoton_Photon','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'weight_photon_presel_sf_Diphoton_Photon','title' :'weight_photon_presel_sf_Diphoton_Photon','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'weight_puWeight','title' :'CMS_weight_puWeight','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'weight_photon_id_sf_Diphoton_Photon','title' :'CMS_weight_photon_id_sf_Diphoton_Photon','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'weight_photon_presel_sf_Diphoton_Photon','title' :'CMS_weight_photon_presel_sf_Diphoton_Photon','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_L1_prefiring_sf','title' :'CMS_hgg_L1_prefiringSF','type':'factory','prior':'lnN','correlateAcrossYears':0},
 
                 {'name':'weight_btag_deepjet_sf_SelectedJet_jes','title':'CMS_hgg_btag_deepjet_sf_jes','type':'factory','prior':'lnN','correlateAcrossYears':0},

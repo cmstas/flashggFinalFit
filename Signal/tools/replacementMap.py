@@ -52,12 +52,12 @@ globalReplacementMap['ggtt_nonRes']["catRVMap"]["SR2"] = "SR2"
 
 #ttHHggXX SM
 globalReplacementMap['ttHHggXX'] = od()
-globalReplacementMap['ttHHggXX']['procWV'] = "ttHHggbb"
-globalReplacementMap['ttHHggXX']['catWV'] = "ttHHggbb_SR1"
-globalReplacementMap['ttHHggXX']['catWV'] = "ttHHggbb_SR2"
+globalReplacementMap['ttHHggXX']['procWV'] = "ttHH_ggbb"
+globalReplacementMap['ttHHggXX']['catWV'] = "ttHH_ggbb_SR1"
+globalReplacementMap['ttHHggXX']['catWV'] = "ttHH_ggbb_SR2"
 globalReplacementMap['ttHHggXX']['procRVMap'] = od()
-globalReplacementMap['ttHHggXX']["procRVMap"]["SR1"] = "ttHHggbb"
-globalReplacementMap['ttHHggXX']["procRVMap"]["SR2"] = "ttHHggbb"
+globalReplacementMap['ttHHggXX']["procRVMap"]["SR1"] = "ttHH_ggbb"
+globalReplacementMap['ttHHggXX']["procRVMap"]["SR2"] = "ttHH_ggbb"
 globalReplacementMap['ttHHggXX']["catRVMap"] = od()
 globalReplacementMap['ttHHggXX']["catRVMap"]["SR1"] = "SR1"
 globalReplacementMap['ttHHggXX']["catRVMap"]["SR2"] = "SR2"

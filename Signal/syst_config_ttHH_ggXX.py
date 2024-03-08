@@ -14,7 +14,7 @@ signalScriptCfg = {
   'analysis':'%s'%(_interpretation), # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)
   #'analysis':'ttHH_gg_XX', # To specify which replacement dataset mapping (defined in ./python/replacementMap.py)
   'year':'%s'%_year, # Use 'combined' if merging all years: not recommended
-  'massPoints':'125',
+  'massPoints':'125.38',
 
   #Photon shape systematics  
   'scales':'_scale', # separate nuisance per year

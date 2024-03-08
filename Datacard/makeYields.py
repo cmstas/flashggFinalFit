@@ -28,7 +28,7 @@ def get_options():
   parser.add_option('--cat', dest='cat', default='', help='Analysis category')
   parser.add_option('--procs', dest='procs', default='auto', help='Comma separated list of signal processes. auto = automatically inferred from input workspaces')
   parser.add_option('--ext', dest='ext', default='', help='Extension for saving') 
-  parser.add_option('--mass', dest='mass', default='125', help='Input workspace mass')
+  parser.add_option('--mass', dest='mass', default='125.38', help='Input workspace mass')
   parser.add_option('--mergeYears', dest='mergeYears', default=False, action="store_true", help="Merge category across years")
   parser.add_option('--skipBkg', dest='skipBkg', default=False, action="store_true", help="Only add signal processes to datacard")
   parser.add_option('--bkgScaler', dest='bkgScaler', default=1., type="float", help="Add overall scale factor for background")
@@ -90,7 +90,7 @@ for year in years:
     # Mapping to STXS definition here
     _procOriginal = proc
     _proc = "%s_%s_%s"%(procToDatacardName(proc),year,decayMode)
-    _proc_s0 = procToData(proc.split("_")[0])
+    _proc_s0 = procToData(proc.split("_201")[0])
 
     # Define category: add year tag if not merging
     if opt.mergeYears: _cat = opt.cat

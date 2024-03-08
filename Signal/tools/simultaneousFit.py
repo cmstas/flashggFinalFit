@@ -137,7 +137,7 @@ def nChi2Addition(X,ssf,verbose=False):
   K = 0 # number of non empty bins
   C = len(X)-1 # number of fit params (-1 for MH)
   for mp,d in ssf.DataHists.iteritems():
-    ssf.MH.setVal(int(mp))
+    ssf.MH.setVal(float(mp))
     chi2, k  = calcChi2(ssf.xvar,ssf.Pdfs['final'],d,_verbose=verbose)
     chi2sum += chi2
     K += k

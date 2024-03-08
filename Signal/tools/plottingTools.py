@@ -76,7 +76,7 @@ def plotFTest(ssfs,_opt=1,_outdir='./',_extension='',_proc='',_cat='',_mass='125
   hmax, hmin = 0, 0
   # Loop over nGauss fits
   for k,ssf in ssfs.iteritems():
-    ssf.MH.setVal(int(_mass))
+    ssf.MH.setVal(float(_mass))
     hists[k] = ssf.Pdfs['final'].createHistogram("h_%s_%s"%(k,_extension),ssf.xvar,ROOT.RooFit.Binning(1600))
     if int(k.split("_")[-1]) == _opt: hists[k].SetLineWidth(3)
     else: hists[k].SetLineWidth(1)
@@ -140,7 +140,7 @@ def plotFTestResults(ssfs,_opt,_outdir="./",_extension='',_proc='',_cat='',_mass
   xmax = 1
   ymax = -1
   for k,ssf in ssfs.iteritems():
-    ssf.MH.setVal(int(_mass))
+    ssf.MH.setVal(float(_mass))
     x = int(k.split("_")[-1])
     if x > xmax: xmax = x
     y = ssf.getReducedChi2()
