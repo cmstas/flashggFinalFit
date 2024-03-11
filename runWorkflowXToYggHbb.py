@@ -5,7 +5,8 @@ import sys
 
 from detect_mass_points import detect_mass_points
 
-doSyst = False
+doSyst = True
+doSystResBkg = False
 
 
 def get_mX(mass):
@@ -95,7 +96,8 @@ def modelNonResBkg(doFailedFits, nonResYears, masses, nonResBkgTrees, procTempla
     print(failed_jobs)
 
     for year in nonResYears:
-      os.system('for f in $(ls Background/outdir_'+procTemplate+'_'+year+'_*/fTest/output/*.root | grep "'+year+'.root" -v); do rename .root _'+year+'.root $f; done')
+#      os.system('for f in $(ls Background/outdir_'+procTemplate+'_'+year+'_*/fTest/output/*.root | grep "'+year+'.root" -v); do rename .root _'+year+'.root $f; done')
+      os.system('for f in $(ls Background/outdir_'+procTemplate+'_'+year+'_*/fTest/output/*.root); do rename .root _'+year+'.root $f; done')
 
   print('Finished step 2: Model the non-resonant background')
   print("")
@@ -106,7 +108,7 @@ def modelSignalAndResBkg(sigModels, resHBkgModels, mggl, mggh):
   print("")
 
   os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d.py -i '+sigModels+' -o SignalModelInterpolation/outdir --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSyst' if doSyst else ''))
-  os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d_res_bkg.py -i '+resHBkgModels+' -o SignalModelInterpolation/res_bkg_outdir --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSyst' if doSyst else ''))
+  os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d_res_bkg.py -i '+resHBkgModels+' -o SignalModelInterpolation/res_bkg_outdir --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSyst' if doSystResBkg else ''))
 
   print('Finished step 3: Get the models for signal and resonant background')
   print("")
@@ -174,8 +176,8 @@ def getLimit(masses, config, mggl, mggh, procTemplate):
             'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/Results; ' + \
             'cp Combine/*combine_results_'+procTemplate+'_* Outputs/CollectedPlots_'+procTemplate+'/Combine/Results; ' + \
             'cp -r Combine/Models Outputs/CollectedPlots_'+procTemplate+'/Combine/Models; ' + \
-            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts; ' + \
-            'cp Combine/impacts* Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts/; ' + \
+#            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts; ' + \
+#            'cp Combine/impacts* Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts/; ' + \
             'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/NLL_Scans; ' + \
             'cp Combine/NLL_Scan* Outputs/CollectedPlots_'+procTemplate+'/Combine/NLL_Scans; ' \
   )
@@ -194,7 +196,10 @@ def getImpact(masses, config, mggl, mggh, procTemplate):
     mY = str(get_mY(m))
     print("Impacts to run for mX = "+mX+", mY = "+mY)
     os.system('bash get_limit_impacts.sh '+str(mggl)+' '+str(mggh)+' '+mX+' '+mY+' '+mH+' '+procTemplate)
-
+    os.system(
+            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts; ' + \
+            'cp Combine/impacts* Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts/; '  \
+    )
   print('Finished step 7: Get impacts')
   print("")
 

@@ -38,21 +38,26 @@ pushd Combine
 
   # Get PDF indices
 #  index_names=$(grep 'discrete' Datacard_ggbbres_${m}.txt | cut -d' ' -f1 | sed -z 's/\n/,/g')
-#  combine -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M MultiDimFit -m ${mh} --rMin $l --rMax $h -d Datacard_ggbbres_${m}_ggbbres.root -n _Scan_r_test_${mo} --freezeParameters MH,MX,MY --setParameters MX=${mx},MY=${my},r=${exp_limit} --saveSpecifiedIndex $index_names --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 
+#  combine -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M MultiDimFit -m ${mh} --rMin $l --rMax $h -d Datacard_ggbbres_${m}_ggbbres.root -n _Scan_r_test_${mo} --freezeParameters MH,MX,MY --setParameters MX=${mx},MY=${my},r=${exp_limit} --saveSpecifiedIndex $index_names
 #  index_values=$(python getSavedIndices.py higgsCombine_Scan_r_test_${mo}.MultiDimFit.mH${mh}.root)
-#  index_names=$(grep 'discrete' Datacard_ggbbres_${m}.txt | cut -d' ' -f1 | sed -z 's/\n/,/g')
+
   echo index
   echo ${index_names}
   echo ${exp_limit}
-  echo ${index_values}
+  echo ${mx}
+  echo ${my}
+  echo ${mh}
 
   # Run impacts with PDF indices fixed
-  combineTool.py --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M Impacts -t -1 --robustFit 1 -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n ${mo} --freezeParameters MH,MX,MY,${index_names} --setParameters MX=${mx},MY=${my},r=${exp_limit} --autoMaxPOIs "r" --rMin $ll --rMax $hh --doInitialFit
-  combineTool.py --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M Impacts --robustFit 1 -t -1 -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n ${mo} --freezeParameters MH,MX,MY,${index_names} --setParameters MX=${mx},MY=${my},r=${exp_limit} --autoMaxPOIs "r" --rMin $ll --rMax $hh --doFits --parallel 8
+  combineTool.py --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M Impacts -t -1 --robustFit 1 -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n ${mo} --freezeParameters MH,MX,MY --setParameters MX=${mx},MY=${my},MH=${mh},r=${exp_limit} --autoMaxPOIs "r" --rMin $ll --rMax $hh --doInitialFit 
+#  combineTool.py -M Impacts -d Datacard_${procTemplate}_${m}_${procTemplate}.root -m ${mh} --freezeParameters MX,MY,MH -n .impacts --setParameterRanges r=$l,$h --doInitialFit --robustFit 1
+#  combineTool.py -M Impacts -d Datacard_${procTemplate}_${m}_${procTemplate}.root -m ${mh} --freezeParameters MX,MY,MH -n .impacts --setParameterRanges r=$l,$h --doFits --robustFit 1
+#  combineTool.py -M Impacts -d Datacard_${procTemplate}_${m}_${procTemplate}.root -m ${mh} --freezeParameters MX,MY,MH -n .impacts --setParameterRanges r=$l,$h -o impacts_part3.json
+  combineTool.py --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M Impacts --robustFit 1 -t -1 -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n ${mo} --freezeParameters MH,MX,MY --setParameters MX=${mx},MY=${my},MH=${mh},r=${exp_limit} --autoMaxPOIs "r" --rMin $ll --rMax $hh --doFits --parallel 12 
   combineTool.py -M Impacts -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n ${mo} -o impacts_${mo}.json
-  plotImpacts.py -i impacts_${mo}.json -o impacts_${mo}
-  python remove_bkg_model_params.py impacts_${mo}.json impacts_no_bkg_${mo}.json
-  plotImpacts.py -i impacts_no_bkg_${mo}.json -o impacts_no_bkg_${mo}
+#  plotImpacts.py -i impacts_${mo}.json -o impacts_${mo}
+#  python remove_bkg_model_params.py impacts_${mo}.json impacts_no_bkg_${mo}.json
+#  plotImpacts.py -i impacts_no_bkg_${mo}.json -o impacts_no_bkg_${mo}
 
 
 

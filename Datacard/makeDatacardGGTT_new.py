@@ -112,7 +112,8 @@ def grabSystematics(df, args):
   years = df.year.unique()
 
   for syst in systematics_ggbbres.experimental_systematics:
-    if syst["correlateAcrossYears"] == -1:
+    #if syst["correlateAcrossYears"] == -1:
+    if abs(syst["correlateAcrossYears"]) == 1:
       df[syst["name"]] = '-'
       df_name = lambda sys_name, year: sys_name
     else:
@@ -248,7 +249,6 @@ def doPruning(df, args):
     for proc in df.proc.unique():
       if args.procTemplate in proc:
         df_cat_proc = df[(df.cat==cat)&(df.proc==proc)]
-        print(df_cat_proc)
         assert len(df_cat_proc) == 1
         sig_cat_yields[cat] += df_cat_proc.iloc[0]["sig_yield"]
         bkg_cat_yields[cat] += df_cat_proc.iloc[0]["bkg_yield"]
@@ -376,9 +376,13 @@ def main(args):
       df_cr = df[df.cat.isin(cr_cats)]
 
       df_sr = df[~df.cat.isin(cr_cats)]
+      print("before grab yield")
       df_sr = grabYields(df_sr, args)
+
+      print("Done yields")
       df_sr = doPruning(df_sr, args)
 
+      print("Done Pruning")
       for cat in df_sr.cat.unique():
         catnum = int(cat.split("cat")[1])
         if catnum == nCats - 1:

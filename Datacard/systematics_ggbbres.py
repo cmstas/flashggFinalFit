@@ -65,7 +65,15 @@ experimental_systematics = [
                 {'name':'btagLFStats1','title':'CMS_btag_lfstats1','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'btagLFStats2','title':'CMS_btag_lfstats2','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'btagCFErr1','title':'btag_cferr1','type':'factory','prior':'lnN','correlateAcrossYears':1},
-                {'name':'btagCFErr2','title':'btag_cferr2','type':'type':'factory','prior':'lnN','correlateAcrossYears':1},
+                {'name':'btagCFErr2','title':'btag_cferr2','type':'factory','prior':'lnN','correlateAcrossYears':1},
+		{'name':'JESAbsolute_fixed','title':'scale_j_absolute_allYear','type':'factory','prior':'lnN', 'correlateAcrossYears':1},
+		{'name':'JESAbsoluteYear_fixed','title':'scale_j_absolute','type':'factory','prior':'lnN', 'correlateAcrossYears':0},
+		{'name':'JESFlavorQCD','title':'scale_j_flavorQCD','type':'factory','prior':'lnN', 'correlateAcrossYears':1},
+		{'name':'JESBBEC1_fixed','title':'scale_j_BBEC1_allYear','type':'factory','prior':'lnN', 'correlateAcrossYears':1},
+		{'name':'JESBBEC1Year_fixed','title':'scale_j_BBEC1','type':'factory','prior':'lnN', 'correlateAcrossYears':0},
+		{'name':'JESRelativeBal','title':'scale_j_relativeBal','type':'factory','prior':'lnN', 'correlateAcrossYears':1},
+		{'name':'JESRelativeSampleYear','title':'scale_j_relativeSample','type':'factory','prior':'lnN', 'correlateAcrossYears':0},
+		{'name':'res_j','title':'res_j','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'presel_sf','title':'CMS_hgg_presel_sf','type':'factory','prior':'lnN','correlateAcrossYears':0}
 ]
 
@@ -75,18 +83,18 @@ experimental_systematics = [
 # mode = (other,scalesGlobal,scales,scalesCorr,smears): match the definition in the signal models
 
 signal_shape_systematics = [
-                {'name':'fnuf','title':'funf','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
+                {'name':'fnuf','title':'fnuf','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
                 {'name':'material','title':'material','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
                 {'name':'MCSmear_smear','title':'MCSmear','type':'signal_shape','mode':'smears','mean':'0.0','sigma':'1.0'},
-                {'name':'MCScale_scale','title':'MCScale','type':'signal_shape','mode':'scales','mean':'0.0','sigma':'1.0'},
-                {'name':'JESAbsolute_fixed','title':'scale_j_absolute_allYear','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
-                {'name':'JESAbsoluteYear_fixed','title':'scale_j_absolute','type':'signal_shape','mode':'scales','mean':'0.0','sigma':'1.0'},
-                {'name':'JESFlavorQCD','title':'scale_j_flavorQCD','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
-                {'name':'JESBBEC1_fixed','title':'scale_j_BBEC1','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
-                {'name':'JESBBEC1Year_fixed','title':'scale_j_BBEC1','type':'signal_shape','mode':'scales','mean':'0.0','sigma':'1.0'},
-                {'name':'JESRelativeBal','title':'scale_j_relativeBal','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
-                {'name':'JESRelativeSampleYear','title':'scale_j_relativeSample','type':'signal_shape','mode':'scales','mean':'0.0','sigma':'1.0'},
+                {'name':'MCScale_scale','title':'MCScale','type':'signal_shape','mode':'scales','mean':'0.0','sigma':'1.0'}
+                #{'name':'JESAbsolute_fixed','title':'scale_j_absolute_allYear','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
+                #{'name':'JESAbsoluteYear_fixed','title':'scale_j_absolute','type':'signal_shape','mode':'scales','mean':'0.0','sigma':'1.0'},
+                #{'name':'JESFlavorQCD','title':'scale_j_flavorQCD','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
+                #{'name':'JESBBEC1_fixed','title':'scale_j_BBEC1_allYear','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
+                #{'name':'JESBBEC1Year_fixed','title':'scale_j_BBEC1','type':'signal_shape','mode':'scales','mean':'0.0','sigma':'1.0'},
+                #{'name':'JESRelativeBal','title':'scale_j_relativeBal','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
+                #{'name':'JESRelativeSampleYear','title':'scale_j_relativeSample','type':'signal_shape','mode':'scales','mean':'0.0','sigma':'1.0'},
                 #{'name':'bTagSF8','title':'btag_cferr1','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
                 #{'name':'bTagSF9','title':'btag_cferr2','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
-                {'name':'res_j','title':'res_j','type':'signal_shape','mode':'scales','mean':'0.0','sigma':'1.0'},
+                #{'name':'res_j','title':'res_j','type':'signal_shape','mode':'scales','mean':'0.0','sigma':'1.0'},
 ]
