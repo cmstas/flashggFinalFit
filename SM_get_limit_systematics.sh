@@ -182,7 +182,7 @@ copy_plot(){
 
 #model_bkg
 #model_sig
-#make_datacard
+make_datacard
 run_combine
 syst_plots
 #copy_plot

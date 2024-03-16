@@ -42,8 +42,10 @@ theory_systematics = [
 		{'name':'alphaS_VH','title':'alphaS_VH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_vh.json'},
 		{'name':'alphaS_ttH','title':'alphaS_ttH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tth.json'},
 
-                {'name':'alphaS_pdf_ttHH','title':'alphaS_pdf_ttHH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tthh.json'},
-                {'name':'QCDscale_ttHH','title':'QCDscale_ttHH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tthh.json'},
+                {'name':'alphaS_pdf_ggHH','title':'alphaS_pdf_ggHH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_gghh.json'},
+                #{'name':'alphaS_pdf_ttHH','title':'alphaS_pdf_ttHH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tthh.json'},
+                #{'name':'QCDscale_ttHH','title':'QCDscale_ttHH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_tthh.json'},
+                {'name':'QCDscale_mtop_ggHH','title':'QCDscale_mtop_ggHH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_gghh.json'},
 ]
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -1,20 +1,22 @@
 {
-    "HHGGTauTau":{
+    "ggHH_ggbb":{
+        "alphaS_pdf_ggHH":[1.030,0.970],
+        "QCDscale_mtop_ggHH":[1.060,0.770],
+        "ggHH_xsec":[1.045,0.936]
+    },   
+    "ggHH_ggTauTau":{
+        "alphaS_pdf_ggHH":[1.030,0.970],
+        "QCDscale_mtop_ggHH":[1.060,0.770],
         "ggHH_xsec":[1.045,0.936]
     },
-    "HHGGWWdileptonic":{
+    "ggHH_ggWWdileptonic":{
+        "alphaS_pdf_ggHH":[1.030,0.970],
+        "QCDscale_mtop_ggHH":[1.060,0.770],
         "ggHH_xsec":[1.045,0.936]
     },
-    "HHGGWWsemileptonic":{
-        "ggHH_xsec":[1.045,0.936]
-    },
-    "ttHHggbb":{
-        "ggHH_xsec":[1.045,0.936]
-    },
-    "ttHHggWW":{
-        "ggHH_xsec":[1.045,0.936]
-    },
-    "ttHHggTauTau":{
+    "ggHH_ggWWsemileptonic":{
+        "alphaS_pdf_ggHH":[1.030,0.970],
+        "QCDscale_mtop_ggHH":[1.060,0.770],
         "ggHH_xsec":[1.045,0.936]
     }
 }
