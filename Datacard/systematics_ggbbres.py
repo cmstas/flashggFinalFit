@@ -49,6 +49,7 @@ experimental_systematics = [
                 {'name':'lumi_13TeV_','title':'lumi_13TeV','type':'constant','prior':'lnN','correlateAcrossYears':0,'value':{'2016':'1.010','2017':'1.020','2018':'1.015'}},
                 {'name':'lumi_13TeV_correlated','title':'lumi_13TeV_correlated','type':'constant','prior':'lnN','correlateAcrossYears':-1,'value':{'2016':'1.006','2017':'1.009','2018':'1.020'}},
                 {'name':'lumi_13TeV_1718','title':'lumi_13TeV_1718','type':'constant','prior':'lnN','correlateAcrossYears':-1,'value':{'2016':'-','2017':'1.006','2018':'1.002'}},
+
                 {'name':'L1_prefiring_sf','title':'CMS_hgg_L1_prefiring_sf','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'puWeight','title':'pileup','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'electron_veto_sf','title':'CMS_hgg_electron_veto_sf','type':'factory','prior':'lnN','correlateAcrossYears':0},
@@ -66,14 +67,14 @@ experimental_systematics = [
                 {'name':'btagLFStats2','title':'CMS_btag_lfstats2','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'btagCFErr1','title':'btag_cferr1','type':'factory','prior':'lnN','correlateAcrossYears':1},
                 {'name':'btagCFErr2','title':'btag_cferr2','type':'factory','prior':'lnN','correlateAcrossYears':1},
-		{'name':'JESAbsolute_fixed','title':'scale_j_absolute_allYear','type':'factory','prior':'lnN', 'correlateAcrossYears':1},
-		{'name':'JESAbsoluteYear_fixed','title':'scale_j_absolute','type':'factory','prior':'lnN', 'correlateAcrossYears':0},
-		{'name':'JESFlavorQCD','title':'scale_j_flavorQCD','type':'factory','prior':'lnN', 'correlateAcrossYears':1},
-		{'name':'JESBBEC1_fixed','title':'scale_j_BBEC1_allYear','type':'factory','prior':'lnN', 'correlateAcrossYears':1},
-		{'name':'JESBBEC1Year_fixed','title':'scale_j_BBEC1','type':'factory','prior':'lnN', 'correlateAcrossYears':0},
-		{'name':'JESRelativeBal','title':'scale_j_relativeBal','type':'factory','prior':'lnN', 'correlateAcrossYears':1},
-		{'name':'JESRelativeSampleYear','title':'scale_j_relativeSample','type':'factory','prior':'lnN', 'correlateAcrossYears':0},
-		{'name':'res_j','title':'res_j','type':'factory','prior':'lnN','correlateAcrossYears':0},
+		            {'name':'JESAbsolute_fixed','title':'scale_j_absolute_allYear','type':'factory','prior':'lnN', 'correlateAcrossYears':1},
+		            {'name':'JESAbsoluteYear_fixed','title':'scale_j_absolute','type':'factory','prior':'lnN', 'correlateAcrossYears':0},
+	            	{'name':'JESFlavorQCD','title':'scale_j_flavorQCD','type':'factory','prior':'lnN', 'correlateAcrossYears':1},
+	            	{'name':'JESBBEC1_fixed','title':'scale_j_BBEC1_allYear','type':'factory','prior':'lnN', 'correlateAcrossYears':1},
+	            	{'name':'JESBBEC1Year_fixed','title':'scale_j_BBEC1','type':'factory','prior':'lnN', 'correlateAcrossYears':0},
+		            {'name':'JESRelativeBal','title':'scale_j_relativeBal','type':'factory','prior':'lnN', 'correlateAcrossYears':1},
+		            {'name':'JESRelativeSampleYear','title':'scale_j_relativeSample','type':'factory','prior':'lnN', 'correlateAcrossYears':0},
+		            {'name':'res_j','title':'res_j','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'presel_sf','title':'CMS_hgg_presel_sf','type':'factory','prior':'lnN','correlateAcrossYears':0}
 ]
 

@@ -153,6 +153,7 @@ def plotLimitsStackMX(masses, limits, ylabel, nominal_mx, nominal_my, savename):
 
     plt.text(my[-1]+10, limits_slice[2][-1], r"$m_X=%d$ GeV $(\times 10^{%d)}$"%(mx, i), fontsize=12, verticalalignment="center")
 
+
   plt.xlabel(r"$m_Y$")
   plt.ylabel(ylabel)  
   plt.legend(ncol=2)
@@ -160,7 +161,6 @@ def plotLimitsStackMX(masses, limits, ylabel, nominal_mx, nominal_my, savename):
   plt.ylim(limits.min(), limits.max()*10**(i+1))
   left, right = plt.xlim()
   plt.xlim(left, my.max()*1.2)
-    
   mplhep.cms.label(llabel="Work in Progress", data=True, lumi=common.tot_lumi, loc=0)
 
   if savename!=None:
