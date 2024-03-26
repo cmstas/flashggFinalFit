@@ -78,7 +78,7 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
 
     #create nuisances
     nuisances = {}
-    nuisance_names = set([name.split("_")[2] for name in const_sys_names])
+    nuisance_names = set(['_'.join(name.split("_")[2:]) for name in const_sys_names])
     for name in nuisance_names:
       nuisances[name] = ROOT.RooRealVar(getNuisanceDatacardName(name, year),getNuisanceDatacardName(name, year), 0, -5, 5)
 

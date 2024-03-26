@@ -49,15 +49,15 @@ pushd Combine
   echo ${mh}
 
   # Run impacts with PDF indices fixed
-  combineTool.py --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M Impacts -t -1 --robustFit 1 -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n ${mo} --freezeParameters MH,MX,MY --setParameters MX=${mx},MY=${my},MH=${mh},r=${exp_limit} --autoMaxPOIs "r" --rMin $ll --rMax $hh --doInitialFit 
-#  combineTool.py -M Impacts -d Datacard_${procTemplate}_${m}_${procTemplate}.root -m ${mh} --freezeParameters MX,MY,MH -n .impacts --setParameterRanges r=$l,$h --doInitialFit --robustFit 1
-#  combineTool.py -M Impacts -d Datacard_${procTemplate}_${m}_${procTemplate}.root -m ${mh} --freezeParameters MX,MY,MH -n .impacts --setParameterRanges r=$l,$h --doFits --robustFit 1
-#  combineTool.py -M Impacts -d Datacard_${procTemplate}_${m}_${procTemplate}.root -m ${mh} --freezeParameters MX,MY,MH -n .impacts --setParameterRanges r=$l,$h -o impacts_part3.json
-  combineTool.py --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M Impacts --robustFit 1 -t -1 -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n ${mo} --freezeParameters MH,MX,MY --setParameters MX=${mx},MY=${my},MH=${mh},r=${exp_limit} --autoMaxPOIs "r" --rMin $ll --rMax $hh --doFits --parallel 12 
+  combineTool.py --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M Impacts -t -1 --robustFit 1 -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n ${mo} --freezeParameters MH,MX,MY --setParameters MX=${mx},MY=${my},MH=${mh},r=${exp_limit} --exclude MH,MX,MY --autoMaxPOIs "r" --rMin $ll --rMax $hh --doInitialFit
+
+#  combineTool.py --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M Impacts -t -1 --robustFit 1 -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n ${mo} --freezeParameters MH,MX,MY --setParameters MX=${mx},MY=${my},MH=${mh},r=${exp_limit} --exclude MH,MX,MY --autoMaxPOIs "r" --rMin $ll --rMax $hh --doInitialFit 
+#  combineTool.py --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M Impacts --robustFit 1 -t -1 -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n ${mo} --freezeParameters MH,MX,MY --setParameters MX=${mx},MY=${my},MH=${mh},r=${exp_limit} --exclude MH,MX,MY --autoMaxPOIs "r" --rMin $ll --rMax $hh --doFits --parallel 12 
+  combineTool.py --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M Impacts --robustFit 1 -t -1 -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n ${mo} --freezeParameters MH,MX,MY --setParameters MX=${mx},MY=${my},MH=${mh},r=${exp_limit} --exclude MH,MX,MY --autoMaxPOIs "r" --rMin $ll --rMax $hh --doFits --parallel 12 
   combineTool.py -M Impacts -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n ${mo} -o impacts_${mo}.json
-#  plotImpacts.py -i impacts_${mo}.json -o impacts_${mo}
-#  python remove_bkg_model_params.py impacts_${mo}.json impacts_no_bkg_${mo}.json
-#  plotImpacts.py -i impacts_no_bkg_${mo}.json -o impacts_no_bkg_${mo}
+  plotImpacts.py -i impacts_${mo}.json -o impacts_${mo}
+  python remove_bkg_model_params.py impacts_${mo}.json impacts_no_bkg_${mo}.json
+  plotImpacts.py -i impacts_no_bkg_${mo}.json -o impacts_no_bkg_${mo}
 
 
 
@@ -67,5 +67,5 @@ pushd Combine
 #  combine -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M MultiDimFit -m ${mh} --algo grid --points 100 --rMin $l --rMax $h -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n _Scan_r_no_sys_${mo} --freezeParameters MH,MX,MY,allConstrainedNuisances --setParameters MX=${mx},MY=${my},r=${exp_limit},${index_names}
 #  python plotLScanBasic.py $exp_limit NLL_Scan_${mo} higgsCombine_Scan_r_no_sys_${mo}.MultiDimFit.mH${mh}.root higgsCombine_Scan_r_${mo}.MultiDimFit.mH${mh}.root higgsCombine_Scan_r_fine_${mo}.MultiDimFit.mH${mh}.root 
   
-  rm higgsCombine*${mo}*
+#  rm higgsCombine*${mo}*
 popd

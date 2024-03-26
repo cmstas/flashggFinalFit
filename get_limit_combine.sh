@@ -18,7 +18,7 @@ pushd Combine
   echo "Nominal limit being calculated"
   combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M AsymptoticLimits -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n _AsymptoticLimit_r_${procTemplate}_${mo} --freezeParameters MH,MX,MY --run=blind --setParameters MX=${mx},MY=${my} > combine_results_${procTemplate}_${mo}.txt
   # Toy limits
-  #combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n _HybridNew_r_${procTemplate}_${mo} --freezeParameters MH,MX,MY -M HybridNew --LHCmode LHC-limits --expectedFromGrid 0.5 --setParameters MX=${mx},MY=${my} --saveHybridResult --rMin=${l} --rMax=${h} --fork 16 -T 500 > combine_results_${procTemplate}_toys_${mo}.txt
+  combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n _HybridNew_r_${procTemplate}_${mo} --freezeParameters MH,MX,MY -M HybridNew --LHCmode LHC-limits --expectedFromGrid 0.5 --setParameters MX=${mx},MY=${my} --saveHybridResult --rMin=${l} --rMax=${h} --fork 16 -T 500 > combine_results_${procTemplate}_toys_${mo}.txt
   exp_limit=$(grep 'Expected 50.0%' combine_results_${procTemplate}_${mo}.txt)
   l=$(grep 'Expected 16.0%:' combine_results_${procTemplate}_${mo}.txt)
   h=$(grep 'Expected 84.0%' combine_results_${procTemplate}_${mo}.txt)
@@ -41,7 +41,7 @@ pushd Combine
 #  echo "No systematics limit being calculated"
 #  combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M AsymptoticLimits -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n _AsymptoticLimit_r_${procTemplate}_${mo} --freezeParameters MH,MX,MY,allConstrainedNuisances --run=blind --setParameters MX=${mx},MY=${my} > combine_results_${procTemplate}_no_sys_${mo}.txt
   # Toy limits
-  #combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n _HybridNew_r_${procTemplate}_no_sys_${mo} --freezeParameters MH,MX,MY,allConstrainedNuisances -M HybridNew --LHCmode LHC-limits --expectedFromGrid 0.5 --setParameters MX=${mx},MY=${my} --saveHybridResult --rMin=${l} --rMax=${h} --fork 8 -T 5000  > combine_results_${procTemplate}_no_sys_toys_${mo}.txt
+#  combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n _HybridNew_r_${procTemplate}_no_sys_${mo} --freezeParameters MH,MX,MY,allConstrainedNuisances -M HybridNew --LHCmode LHC-limits --expectedFromGrid 0.5 --setParameters MX=${mx},MY=${my} --saveHybridResult --rMin=${l} --rMax=${h} --fork 8 -T 5000  > combine_results_${procTemplate}_no_sys_toys_${mo}.txt
 
 #  echo "No PDF index floating limit being calculated"
 #  index_names=$(grep 'discrete' Datacard_${procTemplate}_${m}.txt | cut -d' ' -f1 | sed -z 's/\n/,/g')
