@@ -238,7 +238,7 @@ def plotLimits2D(masses, limits, ylabel, savename):
   interp_masses = np.array(interp_masses)
   interp_limits = spi.griddata(masses[:,:2], limits[2], interp_masses, method="linear", fill_value=0)
 #  plt.hist2d(interp_masses[:,0], interp_masses[:,1], [mx_edges, my_edges], weights=interp_limits, norm=matplotlib.colors.LogNorm())
-  plt.hist2d(interp_masses[:,0], interp_masses[:,1], [mx_edges, my_edges], weights=interp_limits)  
+  plt.hist2d(interp_masses[:,0], interp_masses[:,1], [mx_edges, my_edges], weights=interp_limits, cmin=10e-10)  
   cbar = plt.colorbar()
   cbar.set_label(ylabel)
   plt.xlabel(r"$m_X$")
@@ -257,10 +257,14 @@ def plotLimits2D(masses, limits, ylabel, savename):
   plt.savefig(savename+"_exclude.png")
   plt.savefig(savename+"_exclude.pdf")
   #s = limits[2] < max_allowed_values
-  s = limits[2]
-  plt.scatter(masses[s,0], masses[s,1], marker='x', color="r", label="Limit below maximally allowed in NMSSM") 
-  plt.savefig(savename+"_exclude_points.png")
-  plt.savefig(savename+"_exclude_points.pdf")
+#  s = limits[2]
+#  print(limits)
+#  print(s)
+#  print(masses[s,0])
+
+#  plt.scatter(masses[s,0], masses[s,1], marker='x', color="r", label="Limit below maximally allowed in NMSSM") 
+#  plt.savefig(savename+"_exclude_points.png")
+#  plt.savefig(savename+"_exclude_points.pdf")
 
   plt.clf()
 
@@ -433,15 +437,15 @@ else:
   # limits_no_sys = limits_no_sys[:, s]
   # masses = masses[s]
   ylabel = r"$\sigma(pp \rightarrow X) B(X \rightarrow YH \rightarrow \gamma\gamma bb)$ [fb]"
-  plotLimitsStackMX(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br", "limits_stack_mx"))
+#  plotLimitsStackMX(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br", "limits_stack_mx"))
 #  plotLimitsStackMX(masses, limits_no_sys,      ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br_no_sys", "limits_stack_mx_no_sys"))
 #  plotLimitsStackMX(masses, limits_no_res_bkg,  ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br_no_res_bkg", "limits_stack_mx_no_res_bkg"))
-  plotLimitsStackMY(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br", "limits_stack_my"))
+#  plotLimitsStackMY(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br", "limits_stack_my"))
 #  plotLimitsStackMY(masses, limits_no_sys,      ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br_no_sys", "limits_stack_my_no_sys"))
 #  plotLimitsStackMY(masses, limits_no_res_bkg,  ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br_no_res_bkg", "limits_stack_my_no_res_bkg"))
-#  plotLimits2D(masses, limits,        ylabel, os.path.join(sys.argv[2], "Limits_xs_br", "limits_2d"))
-#  plotLimits2D(masses, limits_no_sys, ylabel, os.path.join(sys.argv[2], "Limits_xs_br_no_sys", "limits_2d_no_sys"))
-#  plotLimits2D(masses, limits_no_res_bkg, ylabel, os.path.join(sys.argv[2], "Limits_xs_br_no_res_bkg", "limits_2d_no_res_bkg"))
+  plotLimits2D(masses, limits,        ylabel, os.path.join(sys.argv[2], "Limits_xs_br", "limits_2d"))
+  plotLimits2D(masses, limits_no_sys, ylabel, os.path.join(sys.argv[2], "Limits_xs_br_no_sys", "limits_2d_no_sys"))
+  plotLimits2D(masses, limits_no_res_bkg, ylabel, os.path.join(sys.argv[2], "Limits_xs_br_no_res_bkg", "limits_2d_no_res_bkg"))
 
   for mx in np.unique(masses[:,0]):
     my = masses[masses[:,0]==mx,1]

@@ -66,9 +66,8 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
   a1 = ROOT.RooSpline1D("a1"+suffix, "a1"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, np.array(popts[:, 3]))
   a2 = ROOT.RooSpline1D("a2"+suffix, "a2"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, np.array(popts[:, 5]))
 
-  if doSyst:
+  if doSyst and systematicss[year][cat][masses[0]]!= "no systematics":
     systematics = systematicss[year][cat]
-
     #creates splines for const values
     const_sys_names = [name for name in systematics[masses[0]].keys() if "const" in name]
     consts_splines = {}
@@ -160,8 +159,10 @@ def main(args):
       cats = sorted(models[proc][year].keys())
       for cat in cats:
         out_path = os.path.join(args.outdir, "%s_%s_cat%s.root"%(proc, year, cat))
-#        makeWorkspace(models[proc], systematics[proc], year, cat, out_path, args.mgg_range, proc, args.doSyst)
-        makeWorkspace(models[proc], systematics, year, cat, out_path, args.mgg_range, proc, args.doSyst)
+        if args.doSyst:
+            makeWorkspace(models[proc], systematics[proc], year, cat, out_path, args.mgg_range, proc, args.doSyst)
+        else:
+            makeWorkspace(models[proc], systematics, year, cat, out_path, args.mgg_range, proc, args.doSyst)
 if __name__=="__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument('--indir', '-i', type=str, required=True)
