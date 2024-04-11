@@ -7,15 +7,15 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 
 #Location of input files, also used for naming of output
 #TODO: Get output naming split from tag to allow multiple runs from the same input files
-mass_point=M250
-tag=2HDM_${mass_point}_22Sep23_fixed_dijet_dummies
-
-
-#Identify which interpretation is being done in the analysis, needed a different name for clarity
-interpretation=2HDM_${mass_point}
-
-#Path to all input locations
-trees=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
+#mass_point=M250
+#tag=2HDM_${mass_point}_22Sep23_fixed_dijet_dummies
+#
+#
+##Identify which interpretation is being done in the analysis, needed a different name for clarity
+#interpretation=2HDM_${mass_point}
+#
+##Path to all input locations
+#trees=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
 
 cmsenv
 source setup.sh
@@ -41,10 +41,10 @@ model_bkg(){
 model_sig(){
         #Use to get Datacard.root for toys
         procs=("2HDMbb${mass_point}" "2HDMWW${mass_point}" "2HDMTAUTAU${mass_point}")
-        #Need to drop VBFH for M250
-        #procs=("2HDMbb${mass_point}" "2HDMWW${mass_point}" "2HDMTAUTAU${mass_point}" "ttHHggbb" "ttHHggWW" "ttHHggTauTau" "ggH" "ttH" "VH" "HHGGbb" "HHGGWWsemileptonic" "HHGGWWdileptonic" "HHGGTauTau")
+        #May need to drop VBFH for M250
+        procs=("2HDM_ggbb_${mass_point}" "2HDM_ggWW_${mass_point}" "2HDM_ggTauTau_${mass_point}" "ttHH_ggbb" "ttHH_ggWW" "ttHH_ggTauTau" "ggH" "ttH" "VBFH" "tHq" "tHW" "VH" "ggHH_ggbb" "ggHH_ggWWsemileptonic" "ggHH_ggWWdileptonic" "ggHH_ggTauTau")
         #Full list for M300 and M350
-        #procs=("2HDMbb${mass_point}" "2HDMWW${mass_point}" "2HDMTAUTAU${mass_point}" "ttHHggbb" "ttHHggWW" "ttHHggTauTau" "ggH" "ttH" "VBFH" "VH" "HHGGbb" "HHGGWWsemileptonic" "HHGGWWdileptonic" "HHGGTauTau")
+        procs=("2HDM_ggbb_${mass_point}" "2HDM_ggWW_${mass_point}" "2HDM_ggTauTau_${mass_point}" "ttHH_ggbb" "ttHH_ggWW" "ttHH_ggTauTau" "ggH" "ttH" "VBFH" "tHq" "tHW" "VH" "ggHH_ggbb" "ggHH_ggWWsemileptonic" "ggHH_ggWWdileptonic" "ggHH_ggTauTau")
 	for year in 2016 2017 2018
 	do
 		rm -rf $trees/ws_signal_$year
@@ -96,32 +96,36 @@ model_sig(){
                 #python RunPlotter.py --procs 2HDMTAUTAU${mass_point} --cats SR1 --years 2016,2017,2018 --ext packaged
                 #python RunPlotter.py --procs 2HDMTAUTAU${mass_point} --cats SR2 --years 2016,2017,2018 --ext packaged
 
-                #python RunPlotter.py --procs ttHHggbb --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttHHggbb --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttHHggWW --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttHHggWW --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttHHggTauTau --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs ttHHggTauTau --cats SR2 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs ttHH_ggbb --cats SR1 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs ttHH_ggbb --cats SR2 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs ttHH_ggWW --cats SR1 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs ttHH_ggWW --cats SR2 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs ttHH_ggTauTau --cats SR1 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs ttHH_ggTauTau --cats SR2 --years 2016,2017,2018 --ext packaged
                 #    
                 #python RunPlotter.py --procs VH --cats SR1 --years 2016,2017,2018 --ext packaged
                 #python RunPlotter.py --procs VH --cats SR2 --years 2016,2017,2018 --ext packaged
                 #python RunPlotter.py --procs ttH --cats SR1 --years 2016,2017,2018 --ext packaged
                 #python RunPlotter.py --procs ttH --cats SR2 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs tHq --cats SR1 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs tHq --cats SR2 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs tHW --cats SR1 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs tHW --cats SR2 --years 2016,2017,2018 --ext packaged
                 #python RunPlotter.py --procs ggH --cats SR1 --years 2016,2017,2018 --ext packaged
                 #python RunPlotter.py --procs ggH --cats SR2 --years 2016,2017,2018 --ext packaged
                 #python RunPlotter.py --procs VBFH --cats SR1 --years 2016,2017,2018 --ext packaged
                 #python RunPlotter.py --procs VBFH --cats SR2 --years 2016,2017,2018 --ext packaged
 
-                #python RunPlotter.py --procs HHGGbb --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGbb --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGWWsemileptonic --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGWWsemileptonic --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGWWdileptonic --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGWWdileptonic --cats SR2 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGTauTau --cats SR1 --years 2016,2017,2018 --ext packaged
-                #python RunPlotter.py --procs HHGGTauTau --cats SR2 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs ggHH_ggbb --cats SR1 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs ggHH_ggbb --cats SR2 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs ggHH_ggWWsemileptonic --cats SR1 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs ggHH_ggWWsemileptonic --cats SR2 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs ggHH_ggWWdileptonic --cats SR1 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs ggHH_ggWWdileptonic --cats SR2 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs ggHH_ggTauTau --cats SR1 --years 2016,2017,2018 --ext packaged
+                #python RunPlotter.py --procs ggHH_ggTauTau --cats SR2 --years 2016,2017,2018 --ext packaged
 
-                cp -a outdir_packaged outdir_${tag}_packaged
+               cp -a outdir_packaged outdir_${tag}_packaged
 	popd
 }
 
@@ -195,9 +199,16 @@ copy_plot(){
 	cp /home/users/iareed/public_html/ttHH/index.php /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/Signal
 }
 
-#model_bkg
-model_sig
-make_datacard
-run_combine
-#syst_plots
-#copy_plot
+for mass in 250 275 300 325 350
+do
+    mass_point=M${mass}
+    tag=2HDM_M${mass}_xxxxxxx_with_tH
+    interpretation=2HDM_${mass_point}
+    trees=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
+    model_bkg
+    model_sig
+    #make_datacard
+    #run_combine
+    #syst_plots
+    #copy_plot
+done
