@@ -1,18 +1,18 @@
 {
     "ggHH_ggbb":{
         "alphaS_pdf_ggHH":[1.030,0.970],
-        "QCDscale_mtop_ggHH":[1.060,0.770],
+        "QCDscale_mtop_ggHH":[1.060,0.770]
     },   
     "ggHH_ggTauTau":{
         "alphaS_pdf_ggHH":[1.030,0.970],
-        "QCDscale_mtop_ggHH":[1.060,0.770],
+        "QCDscale_mtop_ggHH":[1.060,0.770]
     },
     "ggHH_ggWWdileptonic":{
         "alphaS_pdf_ggHH":[1.030,0.970],
-        "QCDscale_mtop_ggHH":[1.060,0.770],
+        "QCDscale_mtop_ggHH":[1.060,0.770]
     },
     "ggHH_ggWWsemileptonic":{
         "alphaS_pdf_ggHH":[1.030,0.970],
-        "QCDscale_mtop_ggHH":[1.060,0.770],
+        "QCDscale_mtop_ggHH":[1.060,0.770]
     }
 }

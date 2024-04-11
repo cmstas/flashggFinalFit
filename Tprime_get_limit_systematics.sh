@@ -120,7 +120,7 @@ make_datacard(){
 	 rm -rf yields_$tag
          rm Datacard.txt
 
-	 python RunYields.py --inputWSDirMap 2016=${trees}/ws_signal_2016,2017=${trees}/ws_signal_2017,2018=${trees}/ws_signal_2018 --cats auto --procs auto --batch local --mergeYears --skipZeroes --ext $tag --doSystematics 
+	 python RunYields.py --mass "125.38" --inputWSDirMap 2016=${trees}/ws_signal_2016,2017=${trees}/ws_signal_2017,2018=${trees}/ws_signal_2018 --cats auto --procs auto --batch local --mergeYears --skipZeroes --ext $tag --doSystematics 
    #python RunYields.py --inputWSDirMap 2016=${trees}/ws_signal_2016,2017=${trees}/ws_signal_2017,2018=${trees}/ws_signal_2018 --cats auto --procs "HHggTauTau,HHggWWdileptonic,ggH,ttH,VH,VBFH" --batch local --mergeYears --ext $tag --doSystematics --skipZeroes
 
 	 python makeDatacard.py --years 2016,2017,2018 --ext $tag --prune --pruneThreshold 0.00001 --doSystematics
@@ -185,6 +185,7 @@ copy_plot(){
 }
 
 for mass in 500 550 600 650 700 750 800 850 900 950 1000 1100 1200 1300 1400 1500
+#for mass in 500
 do
     mass_point=M${mass}
     #tag=Tprime_${mass_point}_22Sep23_no_double_BB
@@ -198,8 +199,8 @@ do
     trees=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
 
     #model_bkg
-    model_sig
-    #make_datacard
+    #model_sig
+    make_datacard
     #run_combine
     #syst_plots
     #copy_plot
