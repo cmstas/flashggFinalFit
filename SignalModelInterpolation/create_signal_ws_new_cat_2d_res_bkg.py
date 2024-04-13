@@ -116,7 +116,7 @@ def tryMake(path):
     os.makedirs(path)
 
 def rearrangeModels(models):
-  sig_procs = ["VBFH_M125", "VH_M125", "ggH_M125", "ttH_M125"]
+  sig_procs = ["HHbbgg","VBFH_M125", "VH_M125", "ggH_M125", "ttH_M125"]
   years = models.keys()
   SRs = models[years[0]].keys() # Number of SRs consistent among years
 

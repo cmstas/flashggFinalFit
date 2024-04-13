@@ -33,6 +33,9 @@ pushd Combine
   echo "No resonant bkg limit being calculated"
   combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M AsymptoticLimits -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n _AsymptoticLimit_r_${procTemplate}_${mo} --freezeParameters MH,MX,MY --run=expected --setParameters MX=${mx},MY=${my},res_bkg_scaler=0 > combine_results_${procTemplate}_no_res_bkg_${mo}.txt
 
+  echo "No HH bkg limit being calculated"
+  combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M AsymptoticLimits -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n _AsymptoticLimit_r_${procTemplate}_${mo} --freezeParameters MH,MX,MY --run=expected --setParameters MX=${mx},MY=${my},HH_bkg_scaler=0 > combine_results_${procTemplate}_no_HH_bkg_${mo}.txt
+
   if [[ -n $(grep ABCD Datacard_${procTemplate}_${m}.txt) ]]; then
   echo "No DY bkg limit being calculated"
    combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M AsymptoticLimits -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n _AsymptoticLimit_r_${procTemplate}_${mo} --freezeParameters MH,MX,MY --freezeNuisanceGroups ABCD --run=expected --setParameters MX=${mx},MY=${my},dy_bkg_scaler=0 > combine_results_${procTemplate}_no_dy_bkg_${mo}.txt
