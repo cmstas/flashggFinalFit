@@ -415,9 +415,16 @@ def main(args):
     td.writePdfIndex(f,df[~df.cat.isin(cr_cats)],opt,"_combined")
 
     f.write("\nsignal_scaler rateParam * %s* 0.001\nnuisance edit freeze signal_scaler"%(args.procTemplate))
+    HHRateParamWritten = False;
+    ResRateParamWritten = False;
     for proc in df[df.prune==0].proc.unique():
-      if "M125" in proc: #only write lines when the resonant background is there
+      if "HHbbgg" in proc and not HHRateParamWritten: #only write lines when the HH background is there
+        f.write("\nHH_bkg_scaler rateParam * *HHbbgg* 1\nnuisance edit freeze HH_bkg_scaler")
+        HHRateParamWritten = True;
+      if "M125" in proc and not ResRateParamWritten: #only write lines when the resonant background is there
         f.write("\nres_bkg_scaler rateParam * *M125* 1\nnuisance edit freeze res_bkg_scaler")
+        ResRateParamWritten = True;
+      if HHRateParamWritten and ResRateParamWritten:
         break
     if args.do_dy_bkg:
       f.write("\ndy_bkg_scaler rateParam * *dy* 1\nnuisance edit freeze dy_bkg_scaler")
