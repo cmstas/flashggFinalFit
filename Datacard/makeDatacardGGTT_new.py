@@ -10,6 +10,8 @@ import systematics_ggbbres
 import json
 import numpy as np
 import copy
+from systematics import theory_systematics
+from tools.calcSystematics import factoryType, addConstantSyst, experimentalSystFactory, theorySystFactory
 
 class Options:
   def __init__(self, args):
@@ -71,15 +73,22 @@ def getValFromDict(sys_dict, sys_name):
 def findFactorySystematic(sys_name, proc, cat, year, sig_systematics, res_bkg_systematics, args):
   if args.procTemplate in proc:
     if sig_systematics != None:
-      sys_dict = sig_systematics[str(year)][str(cat[-1])]["%d_%d"%(args.MX, args.MY)]
+      parts = cat.split("cat")
+      cat_number = str(parts[-1])
+      sys_dict = sig_systematics[str(year)][cat_number]["%d_%d"%(args.MX, args.MY)]
       val = getValFromDict(sys_dict, sys_name)
     else:
       val = [1,1]
   else:
     if (res_bkg_systematics != None) and ("Interpolation" not in sys_name):
       slimmed_proc = "_".join(proc.split("_")[:-2]) #take away the year_hgg suffix
-      sys_dict = res_bkg_systematics[str(year)][str(cat[-1])]["%d_%d"%(args.MX, args.MY)][slimmed_proc]
-      val = getValFromDict(sys_dict, sys_name)        
+      parts = cat.split("cat")
+      cat_number = str(parts[-1])
+      sys_dict = res_bkg_systematics[str(year)][cat_number]["%d_%d"%(args.MX, args.MY)][slimmed_proc]
+      if (sys_dict=="no systematics"):
+        val = [1,1]
+      else:
+        val = getValFromDict(sys_dict, sys_name)        
     else:
       val = [1,1]
 
@@ -133,6 +142,11 @@ def grabSystematics(df, args):
         raise Exception()
       df.loc[idx, df_name(syst["name"], year)] = val
 
+  theoryFactoryType = {}
+  for syst in systematics_ggbbres.theory_systematics:
+    if syst['type'] == 'factory':
+      theoryFactoryType[syst['name']] = factoryType(data[mask],syst)
+  
   for syst in systematics_ggbbres.theory_systematics:
     assert syst["correlateAcrossYears"] == 1
     df[syst["name"]] = '-'
@@ -306,7 +320,8 @@ def createDYSystematics(df):
     {'name':'sig_sigma_merged_dy','title':'sig_sigma_merged_dy','type':'signal_shape','mode':'other','mean':'0.0','sigma':'1.0'}
   ]
   for cat in cats:
-    num = int(cat[-1])
+    parts = cat.split("cat")
+    num = int(parts[-1])
     cat = "cat%d"%num
     systematics.extend([
       {'name':'sig_norm_merged_%s_dy'%cat,'title':'sig_norm_merged_%s_dy'%cat,'type':'signal_shape','mode':'other','mean':'0.0','sigma':'1.0'},
@@ -492,6 +507,7 @@ if __name__=="__main__":
   #if not (115 < args.MH < 135):
   #  args.do_res_bkg = False
 
+  print(args.res_bkg_syst)
   if args.sig_syst == None:
     print("Not doing signal systematics")
   if args.do_res_bkg:
