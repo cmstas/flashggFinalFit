@@ -5,8 +5,8 @@ set -x
 #source /cvmfs/cms.cern.ch/cmsset_default.sh
 #source /vols/grid/cms/setup.sh
 
-tag=2HDM_M250_22Sep23_fixed_dijet_dummies
-#tag=SM_22Sep23_fixed_dijet_dummies
+#tag=2HDM_M250_22Sep23_fixed_dijet_dummies
+tag=SM_22Sep23_with_tH
 trees=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
 
 #cmsenv
@@ -17,8 +17,8 @@ nToys=500
 make_toys(){
     pushd Plots 
         rm -rf SplusBModels$tag
-        python makeToysHH.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_2HDM_M250.root --ext $tag --dryRun --nToys $nToys --dropResonantBkg
-        #python makeToysHH.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_ttHHggXX.root --ext $tag --dryRun --nToys $nToys --dropResonantBkg
+        #python makeToysHH.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_2HDM_M250.root --ext $tag --dryRun --nToys $nToys --dropResonantBkg
+        python makeToysHH.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_ttHHggXX.root --ext $tag --dryRun --nToys $nToys
         iter=0
         while [ $iter -lt $nToys ]
         do                      
@@ -40,10 +40,10 @@ make_toys(){
 #Should be run with a Datacard.root file with everything
 make_SpB(){
     pushd Plots 
-        python makeSplusBModelPlot.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_2HDM_M250_full.root --cat "SR1" --doBands --ext $tag #--parameterMap r:0 #--parameterMap ".*/ttHHggbb.*:r[1,0,2]"
-        #python makeSplusBModelPlot.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_ttHHggXX.root --cat "SR1" --doBands --ext $tag #--parameterMap r:0 #--parameterMap ".*/ttHHggbb.*:r[1,0,2]"
-        python makeSplusBModelPlot.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_2HDM_M250_full.root --cat "SR2" --doBands --ext $tag #--parameterMap r:0 #--parameterMap ".*/ttHHggbb.*:r[1,0,2]"
-        #python makeSplusBModelPlot.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_ttHHggXX.root --cat "SR2" --doBands --ext $tag #--parameterMap r:0 #--parameterMap ".*/ttHHggbb.*:r[1,0,2]"
+        #python makeSplusBModelPlot.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_2HDM_M250_full.root --cat "SR1" --doBands --ext $tag #--parameterMap r:0 #--parameterMap ".*/ttHHggbb.*:r[1,0,2]"
+        python makeSplusBModelPlot.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/bkp_Datacard_ttHHggXX.root --cat "SR1" --doBands --ext $tag #--parameterMap r:0 #--parameterMap ".*/ttHHggbb.*:r[1,0,2]"
+        #python makeSplusBModelPlot.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_2HDM_M250_full.root --cat "SR2" --doBands --ext $tag #--parameterMap r:0 #--parameterMap ".*/ttHHggbb.*:r[1,0,2]"
+        python makeSplusBModelPlot.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/bkp_Datacard_ttHHggXX.root --cat "SR2" --doBands --ext $tag #--parameterMap r:0 #--parameterMap ".*/ttHHggbb.*:r[1,0,2]"
 
         cp SplusBModels$tag/*.png /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/Bands/
     popd        
