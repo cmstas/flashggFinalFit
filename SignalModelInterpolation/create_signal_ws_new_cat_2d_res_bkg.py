@@ -22,10 +22,10 @@ def getNuisanceDatacardName(name, year):
     return "CMS_hgg_nuisance_fnuf_13TeVscaleCorr"
   elif name == "material":
     return "CMS_hgg_nuisance_material_13TeVscaleCorr"
-  elif name == "smear":
-    return "CMS_hgg_nuisance_MCSmear_smear_13TeVsmear_%s"%year
-  elif name == "scale":
-    return "CMS_hgg_nuisance_MCScale_scale_13TeVscale_%s"%year
+  elif name == "MCSmear_smear":
+    return "CMS_hgg_nuisance_MCSmear_13TeVsmear_%s"%year
+  elif name == "MCScale_scale":
+    return "CMS_hgg_nuisance_MCScale_13TeVscale_%s"%year
   else:
     raise Exception("Unexpected shape systematic: %s"%name)
 
@@ -34,6 +34,7 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
 
   model = models[year][cat]
   masses = model.keys()
+#  masses = ["1000_125"]
 
   mx = np.array([int(m.split("_")[0]) for m in masses])
   my = np.array([int(m.split("_")[1]) for m in masses])
@@ -41,11 +42,12 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
 
   masses = list(np.array(masses)[np.argsort(mx_my)])
   mx_my = np.sort(mx_my)
-    
+ 
   norms = np.asarray([model[m]["norm"] for m in masses])
   popts = np.asarray([model[m]["parameters"] for m in masses])
   mx_my_arr = np.asarray(mx_my, dtype=float)
 
+  print(mx[0], mx.min(), mx.max())
   MX = ROOT.RooRealVar("MX", "MX", mx[0], mx.min(), mx.max())
   MY = ROOT.RooRealVar("MY", "MY", my[0], my.min(), my.max())
   MX_MY = ROOT.RooFormulaVar("MX_MY", "MX_MY", "0.5*(@0+@1)*(@0+@1+1)+@1", ROOT.RooArgList(MX, MY))
@@ -55,35 +57,39 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
   assert mgg_range[0] < 125.0 < mgg_range[1]
   MH = ROOT.RooRealVar("MHBKG", "MHBKG", 125.0, mgg_range[0], mgg_range[1])
   MH.setConstant(True)
-
+#  print(norms)
+#  print(mx_my_arr)
   sig_norm_nominal = ROOT.RooSpline1D("sig_norm_nominal"+suffix, "sig_norm_nominal"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, norms)
   dm_nominal = ROOT.RooSpline1D("dm_nominal"+suffix, "dm_nominal"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, np.array(popts[:, 1]))
   sigma_nominal = ROOT.RooSpline1D("sigma_nominal"+suffix, "sigma_nominal"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, np.array(popts[:, 2]))
-
+  MX.setVal(1000)
+  MY.setVal(125)
+  print(MX.getVal(),MY.getVal(),sig_norm_nominal.getVal())
+  print(dm_nominal.getVal())
   mean_nominal = ROOT.RooFormulaVar("mean_nominal"+suffix, "mean_nominal"+suffix, "@0+@1", ROOT.RooArgList(MH, dm_nominal))
   n1 = ROOT.RooSpline1D("n1"+suffix, "n1"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, np.array(popts[:, 4]))
   n2 = ROOT.RooSpline1D("n2"+suffix, "n2"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, np.array(popts[:, 6]))
   a1 = ROOT.RooSpline1D("a1"+suffix, "a1"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, np.array(popts[:, 3]))
   a2 = ROOT.RooSpline1D("a2"+suffix, "a2"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, np.array(popts[:, 5]))
-
-  if doSyst and systematicss[year][cat][masses[0]]!= "no systematics":
+  if doSyst:
     systematics = systematicss[year][cat]
     #creates splines for const values
-    const_sys_names = [name for name in systematics[masses[0]].keys() if "const" in name]
+    const_sys_names = ["fnuf_mean","fnuf_rate","fnuf_sigma","material_mean","material_rate","material_sigma","MCScale_scale_mean","MCScale_scale_rate","MCScale_scale_sigma","MCSmear_smear_mean","MCSmear_smear_rate","MCSmear_smear_sigma"]
     consts_splines = {}
     for systematic in const_sys_names:
-      values = np.asarray([systematics[m][systematic] for m in masses])
+      values = np.asarray([systematics[m][systematic] if systematics[m] != "no systematics" else 0 for m in masses])
+
       consts_splines[systematic] = ROOT.RooSpline1D(systematic+suffix, systematic+suffix, MX_MY, len(mx_my_arr), mx_my_arr, values)
 
     #create nuisances
     nuisances = {}
-    nuisance_names = set(['_'.join(name.split("_")[2:]) for name in const_sys_names])
+    nuisance_names = set(["_".join(name.split("_")[:-1]) for name in const_sys_names if "mean" in name or "sigma" in name or "rate" in name])
     for name in nuisance_names:
       nuisances[name] = ROOT.RooRealVar(getNuisanceDatacardName(name, year),getNuisanceDatacardName(name, year), 0, -5, 5)
 
     #create RooFormulaVars including the systematics
     get_nuisance = lambda name, var: nuisances[name]
-    get_const = lambda name, var: consts_splines["const_%s_%s"%(var, name)]
+    get_const = lambda name, var: consts_splines["%s_%s"%(name, var)]
 
     formula = "@0*(1." + "".join(["+@%d*@%d"%(i*2+1,i*2+2) for i in range(len(const_sys_names)//3)]) + ")"
     
@@ -91,10 +97,14 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
     mean = ROOT.RooFormulaVar("mean"+suffix, "mean"+suffix, formula,  ROOT.RooArgList(mean_nominal, *[f(name, "mean") for name in nuisance_names for f in (get_const, get_nuisance)]))
     sigma = ROOT.RooFormulaVar("sigma"+suffix, "sigma"+suffix, formula,  ROOT.RooArgList(sigma_nominal, *[f(name, "sigma") for name in nuisance_names for f in (get_const, get_nuisance)]))
   else:
+    print("not doing resonant syst")
     sig_norm = ROOT.RooFormulaVar("sig%s_norm"%suffix, "sig%s_norm"%suffix, "@0", ROOT.RooArgList(sig_norm_nominal))
     mean = ROOT.RooFormulaVar("mean"+suffix, "mean"+suffix, "@0", ROOT.RooArgList(mean_nominal))
     sigma = ROOT.RooFormulaVar("sigma"+suffix, "sigma"+suffix, "@0", ROOT.RooArgList(sigma_nominal))
-  
+
+  print(sig_norm_nominal.getVal())
+  print(mean.getVal())
+  print(sig_norm.getVal())
   sig = ROOT.RooDoubleCBFast("sig"+suffix, "sig"+suffix, CMS_hgg_mass, mean, sigma, a1, n1, a2, n2)
 
   wsig_13TeV = ROOT.RooWorkspace("wsig_13TeV", "wsig_13TeV")
@@ -115,7 +125,7 @@ def tryMake(path):
     os.makedirs(path)
 
 def rearrangeModels(models):
-  sig_procs = ["VBFH_M125", "VH_M125", "ggH_M125", "ttH_M125"]
+  sig_procs = ["HHbbgg","VBFH_M125", "VH_M125", "ggH_M125", "ttH_M125"]
   years = models.keys()
   SRs = models[years[0]].keys() # Number of SRs consistent among years
 
@@ -163,6 +173,7 @@ def main(args):
             makeWorkspace(models[proc], systematics[proc], year, cat, out_path, args.mgg_range, proc, args.doSyst)
         else:
             makeWorkspace(models[proc], systematics, year, cat, out_path, args.mgg_range, proc, args.doSyst)
+
 if __name__=="__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument('--indir', '-i', type=str, required=True)
