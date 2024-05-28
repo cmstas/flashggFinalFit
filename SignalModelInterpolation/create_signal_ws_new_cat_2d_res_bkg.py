@@ -47,7 +47,6 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
   popts = np.asarray([model[m]["parameters"] for m in masses])
   mx_my_arr = np.asarray(mx_my, dtype=float)
 
-  print(mx[0], mx.min(), mx.max())
   MX = ROOT.RooRealVar("MX", "MX", mx[0], mx.min(), mx.max())
   MY = ROOT.RooRealVar("MY", "MY", my[0], my.min(), my.max())
   MX_MY = ROOT.RooFormulaVar("MX_MY", "MX_MY", "0.5*(@0+@1)*(@0+@1+1)+@1", ROOT.RooArgList(MX, MY))
@@ -62,22 +61,31 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
   sig_norm_nominal = ROOT.RooSpline1D("sig_norm_nominal"+suffix, "sig_norm_nominal"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, norms)
   dm_nominal = ROOT.RooSpline1D("dm_nominal"+suffix, "dm_nominal"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, np.array(popts[:, 1]))
   sigma_nominal = ROOT.RooSpline1D("sigma_nominal"+suffix, "sigma_nominal"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, np.array(popts[:, 2]))
-  MX.setVal(1000)
-  MY.setVal(125)
-  print(MX.getVal(),MY.getVal(),sig_norm_nominal.getVal())
-  print(dm_nominal.getVal())
   mean_nominal = ROOT.RooFormulaVar("mean_nominal"+suffix, "mean_nominal"+suffix, "@0+@1", ROOT.RooArgList(MH, dm_nominal))
   n1 = ROOT.RooSpline1D("n1"+suffix, "n1"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, np.array(popts[:, 4]))
   n2 = ROOT.RooSpline1D("n2"+suffix, "n2"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, np.array(popts[:, 6]))
   a1 = ROOT.RooSpline1D("a1"+suffix, "a1"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, np.array(popts[:, 3]))
   a2 = ROOT.RooSpline1D("a2"+suffix, "a2"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, np.array(popts[:, 5]))
+
   if doSyst:
     systematics = systematicss[year][cat]
     #creates splines for const values
     const_sys_names = ["fnuf_mean","fnuf_rate","fnuf_sigma","material_mean","material_rate","material_sigma","MCScale_scale_mean","MCScale_scale_rate","MCScale_scale_sigma","MCSmear_smear_mean","MCSmear_smear_rate","MCSmear_smear_sigma"]
     consts_splines = {}
+
     for systematic in const_sys_names:
-      values = np.asarray([systematics[m][systematic] if systematics[m] != "no systematics" else 0 for m in masses])
+      all_values = []
+      for m in masses:
+        # Check if systematics for mass m is "no systematics" or the systematic key does not exist
+        if systematics[m] == "no systematics" or systematic not in systematics[m]:
+            # Append 0 if no systematics or key doesn't exist
+            all_values.append(0)
+        else:
+            # Append the value from the dictionary
+            all_values.append(systematics[m][systematic])
+
+      values=np.asarray(all_values)
+      #values = np.asarray([systematics[m][systematic] if systematics[m] != "no systematics" else 0 for m in masses])
 
       consts_splines[systematic] = ROOT.RooSpline1D(systematic+suffix, systematic+suffix, MX_MY, len(mx_my_arr), mx_my_arr, values)
 
@@ -170,6 +178,7 @@ def main(args):
       for cat in cats:
         out_path = os.path.join(args.outdir, "%s_%s_cat%s.root"%(proc, year, cat))
         if args.doSyst:
+            print(proc)
             makeWorkspace(models[proc], systematics[proc], year, cat, out_path, args.mgg_range, proc, args.doSyst)
         else:
             makeWorkspace(models[proc], systematics, year, cat, out_path, args.mgg_range, proc, args.doSyst)

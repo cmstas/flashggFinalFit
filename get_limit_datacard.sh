@@ -26,13 +26,13 @@ pushd Datacard
     python makeDatacardGGTT_new.py -o Datacard_${procTemplate}_${m}.txt --n-in-sideband $indir/../CatOptim/N_in_sidebands.json --MH $mh --MX $mx --MY $my --procTemplate ${procTemplate} --prune --do-res-bkg --sig-syst ${sig_model}/systematics.json 
 
   elif [ $dy_bkg_model = 0 -a $res_bkg_sys = 1 ]; then
-    python makeDatacardGGTT_new.py -o Datacard_${procTemplate}_${m}.txt --n-in-sideband $indir/../CatOptim/N_in_sidebands.json --MH $mh --MX $mx --MY $my --procTemplate ${procTemplate} --prune --do-res-bkg --sig-syst ${sig_model}/systematics.json --res-bkg-syst ${resHBkgModels}/systematics.json 
+    python makeDatacardGGTT_new.py -o Datacard_${procTemplate}_${m}.txt --n-in-sideband $indir/../CatOptim/N_in_sidebands.json --MH $mh --MX $mx --MY $my --procTemplate ${procTemplate} --prune --do-res-bkg --sig-syst ${sig_model}/systematics.json --res-bkg-syst ${res_bkg_model}/systematics.json 
 
   elif [ $dy_bkg_model = 1 -a $res_bkg_sys = 0 ]; then
     python makeDatacardGGTT_new.py -o Datacard_${procTemplate}_${m}.txt --n-in-sideband $indir/../CatOptim/N_in_sidebands.json --MH $mh --MX $mx --MY $my --procTemplate ${procTemplate} --prune --do-res-bkg --sig-syst ${sig_model}/systematics.json --doABCD 
 
   else
-    python makeDatacardGGTT_new.py -o Datacard_${procTemplate}_${m}.txt --n-in-sideband $indir/../CatOptim/N_in_sidebands.json --MH $mh --MX $mx --MY $my --procTemplate ${procTemplate} --prune --do-res-bkg --sig-syst ${sig_model}/systematics.json --doABCD --res-bkg-syst ${resHBkgModels}/systematics.json
+    python makeDatacardGGTT_new.py -o Datacard_${procTemplate}_${m}.txt --n-in-sideband $indir/../CatOptim/N_in_sidebands.json --MH $mh --MX $mx --MY $my --procTemplate ${procTemplate} --prune --do-res-bkg --sig-syst ${sig_model}/systematics.json --doABCD --res-bkg-syst ${res_bkg_model}/systematics.json
 
   fi
 popd
