@@ -377,7 +377,6 @@ def main(args):
       new_rows.append(["dy_merged_hgg", cat+"cr", "merged", 1, "./Models/background/CMS-HGG_ws_%s_combined.root"%(cat+"cr"), "", "w_control_regions:bkg_combined_cat%d_dy"%catnum, 0])
       new_rows.append(["dy_merged_hgg", cat, "merged", 1, "./Models/background/CMS-HGG_ws_%s_combined.root"%(cat+"cr"), "", "w_control_regions:bkg_combined_cat%d_dy"%catnum, 0])
 
-
   df = pd.concat([df, pd.DataFrame(new_rows, columns=columns)], ignore_index=True)
 
   if args.prune:
@@ -387,18 +386,14 @@ def main(args):
     else:
       cr_cats = [cat for cat in df.cat.unique() if cat[-2:]=="cr"]
       nCats = len(cr_cats)
-      print(cr_cats)
 
       df_cr = df[df.cat.isin(cr_cats)]
 
       df_sr = df[~df.cat.isin(cr_cats)]
-      print("before grab yield")
       df_sr = grabYields(df_sr, args)
 
-      print("Done yields")
       df_sr = doPruning(df_sr, args)
 
-      print("Done Pruning")
       for cat in df_sr.cat.unique():
         catnum = int(cat.split("cat")[1])
         if catnum == nCats - 1:

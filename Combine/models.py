@@ -11,7 +11,7 @@ models = {
   --PO \"map=.*/ggttres.*:r[1,0,2]\"",
 
   "ggbbres":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
-  --PO \"map=.*/ggbbres.*:r[1,0,10]\"",
+  --PO \"map=.*/ggbbres.*:r[1,0,2]\"",
 
   # "ggtt_w_resonant_bkg":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
   # --PO \"map=.*/gravitonm300.*:r300[1,0,2]\", \

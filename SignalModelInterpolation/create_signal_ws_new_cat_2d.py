@@ -26,10 +26,6 @@ def getNuisanceDatacardName(name, year):
     return "CMS_hgg_nuisance_MCSmear_13TeVsmear_%s"%year
   elif name == "MCScale_scale":
     return "CMS_hgg_nuisance_MCScale_13TeVscale_%s"%year
-#  elif name == "btagCFErr1":
-#    return "CMS_hgg_nuisance_btag_cferr1_13TeVscaleCorr"
-#  elif name == "btagCFErr2":
-#    return "CMS_hgg_nuisance_btag_cferr2_13TeVscaleCorr"
   else:
     raise Exception("Unexpected shape systematic: %s"%name)
 
@@ -39,7 +35,6 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
   model = models[year][cat]
   masses = model.keys()
 
-  print(masses)
   mx = np.array([int(m.split("_")[0]) for m in masses])
   my = np.array([int(m.split("_")[1]) for m in masses])
   mx_my = unique(mx, my)
@@ -70,7 +65,6 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
     grad_norms_pos = np.asarray([0.0 for m in masses])
     grad_norms_neg = np.asarray([0.0 for m in masses])
 
-  print(mx[0],my[0])
   MX = ROOT.RooRealVar("MX", "MX", mx[0], mx.min(), mx.max())
   MY = ROOT.RooRealVar("MY", "MY", my[0], my.min(), my.max())
   MX_MY = ROOT.RooFormulaVar("MX_MY", "MX_MY", "0.5*(@0+@1)*(@0+@1+1)+@1", ROOT.RooArgList(MX, MY))
@@ -103,7 +97,6 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
 
     #creates splines for const values
     const_sys_names = [name for name in systematics[systematics.keys()[0]].keys() if "mean" in name or "sigma" in name or "rate" in name]
-    print(const_sys_names)
     consts_splines = {}
     for systematic in const_sys_names:
       values = np.asarray([systematics[m][systematic] for m in masses])
@@ -114,7 +107,6 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
     #nuisance_names = [set(["_".join(name.split("_")[:-1]) for name in const_sys_names]) if "mean" or "sigma" or "rate" in name]
     nuisance_names = set(["_".join(name.split("_")[:-1]) for name in const_sys_names if "mean" in name or "sigma" in name or "rate" in name])
 
-    print(nuisance_names)
     for name in nuisance_names:
       nuisances[name] = ROOT.RooRealVar(getNuisanceDatacardName(name, year),getNuisanceDatacardName(name, year), 0, -5, 5)
 
@@ -127,7 +119,6 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
     mean_rooArgList = ROOT.RooArgList(mean_nominal)
     sigma_rooArgList = ROOT.RooArgList(sigma_nominal)
     for name in nuisance_names:
-      print(name)
       for f in (get_const, get_nuisance):
         sig_norm_rooArgList.add(f(name, "rate"))
         mean_rooArgList.add(f(name, "mean"))
