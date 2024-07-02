@@ -32,7 +32,7 @@ pushd Datacard
     python makeDatacardGGTT_new.py -o Datacard_${procTemplate}_${m}.txt --n-in-sideband $indir/../CatOptim/N_in_sidebands.json --MH $mh --MX $mx --MY $my --procTemplate ${procTemplate} --prune --do-res-bkg --sig-syst ${sig_model}/systematics.json --doABCD 
 
   else
-    python makeDatacardGGTT_new.py -o Datacard_${procTemplate}_${m}.txt --n-in-sideband $indir/../CatOptim/N_in_sidebands.json --MH $mh --MX $mx --MY $my --procTemplate ${procTemplate} --prune --do-res-bkg --sig-syst ${sig_model}/systematics.json --doABCD --res-bkg-syst ${res_bkg_model}/systematics.json
+    python makeDatacardGGTT_new.py -o Datacard_${procTemplate}_${m}.txt --n-in-sideband ../CatOptim/N_in_sidebands.json --MH $mh --MX $mx --MY $my --procTemplate ${procTemplate} --prune --do-res-bkg --sig-syst ${sig_model}/systematics.json --doABCD --res-bkg-syst ${res_bkg_model}/systematics.json
 
   fi
 popd

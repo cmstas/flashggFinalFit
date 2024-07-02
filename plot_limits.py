@@ -66,14 +66,15 @@ def getLimits(results_path):
     
     limit = float(line.split("r < ")[1])
 
-    if "no_sys" in line:
-      limits_no_sys[idx2][idx1] = limit
-    elif "no_res_bkg" in line:
-      limits_no_res_bkg[idx2][idx1] = limit
-    elif "no_dy_bkg" in line:
-      limits_no_dy_bkg[idx2][idx1] = limit
-    else:
+    if "no_" not in line:
       limits[idx2][idx1] = limit
+    else:
+      if "no_sys" in line:
+        limits_no_sys[idx2][idx1] = limit
+      elif "no_res_bkg" in line:
+        limits_no_res_bkg[idx2][idx1] = limit
+      elif "no_dy_bkg" in line:
+        limits_no_dy_bkg[idx2][idx1] = limit
 
   #print(limits[2])
   #print(limits_no_sys[2])
@@ -151,7 +152,7 @@ def plotLimitsStackMX(masses, limits, ylabel, nominal_mx, nominal_my, savename):
     plt.fill_between(my, limits_slice[0], limits_slice[4], zorder=1, facecolor="yellow", label=label4)
     label1 = label2 = label3 = label4 = None
 
-    plt.text(my[-1]+10, limits_slice[2][-1], r"$m_X=%d$ GeV $(\times 10^{%d)}$"%(mx, i), fontsize=12, verticalalignment="center")
+    plt.text(my[-1]+10, limits_slice[2][-1], r"$m_X=%d$ GeV $(\times 10^{%d})$"%(mx, i), fontsize=12, verticalalignment="center")
 
 
   plt.xlabel(r"$m_Y$")
@@ -437,9 +438,9 @@ else:
   # limits_no_sys = limits_no_sys[:, s]
   # masses = masses[s]
   ylabel = r"$\sigma(pp \rightarrow X) B(X \rightarrow YH \rightarrow \gamma\gamma bb)$ [fb]"
-#  plotLimitsStackMX(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br", "limits_stack_mx"))
-#  plotLimitsStackMX(masses, limits_no_sys,      ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br_no_sys", "limits_stack_mx_no_sys"))
-#  plotLimitsStackMX(masses, limits_no_res_bkg,  ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br_no_res_bkg", "limits_stack_mx_no_res_bkg"))
+  plotLimitsStackMX(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br", "limits_stack_mx"))
+  plotLimitsStackMX(masses, limits_no_sys,      ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br_no_sys", "limits_stack_mx_no_sys"))
+  plotLimitsStackMX(masses, limits_no_res_bkg,  ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br_no_res_bkg", "limits_stack_mx_no_res_bkg"))
 #  plotLimitsStackMY(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br", "limits_stack_my"))
 #  plotLimitsStackMY(masses, limits_no_sys,      ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br_no_sys", "limits_stack_my_no_sys"))
 #  plotLimitsStackMY(masses, limits_no_res_bkg,  ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br_no_res_bkg", "limits_stack_my_no_res_bkg"))

@@ -1,4 +1,11 @@
 {
+    "ttH":{
+        "QCDscale_ttH":[1.058,0.908],
+        "pdf_Higgs_ttH":1.030,
+        "alphaS_ttH":1.020,
+        "ISR_ttH":[1.010,0.987],
+        "FSR_ttH":[1.001,0.995]
+    },
     "ttH_FWDH":{
         "QCDscale_ttH":[1.058,0.908],
         "pdf_Higgs_ttH":1.030,

@@ -6,7 +6,7 @@ import sys
 from detect_mass_points import detect_mass_points
 
 doSyst = True
-doSystResBkg = False
+doSystResBkg = True
 
 
 def get_mX(mass):
@@ -127,9 +127,9 @@ def makeDatacards(masses, sigModels, resHBkgModels, resDYBkg, config, procTempla
     mX = str(get_mX(m))
     mY = str(get_mY(m))
     if resDYBkg:
-      os.system('bash get_limit_datacard.sh '+sigModels+' '+resHBkgModels+' '+m+' '+mH+' '+mX+' '+mY+' 1 '+procTemplate+' '+indir)
+      os.system('bash get_limit_datacard.sh '+sigModels+' '+resHBkgModels+' '+m+' '+mH+' '+mX+' '+mY+' 1 '+procTemplate+' '+indir +(' 1' if doSystResBkg else ' 0'))
     else:
-      os.system('bash get_limit_datacard.sh '+sigModels+' '+resHBkgModels+' '+m+' '+mH+' '+mX+' '+mY+' 0 '+procTemplate+' '+indir)
+      os.system('bash get_limit_datacard.sh '+sigModels+' '+resHBkgModels+' '+m+' '+mH+' '+mX+' '+mY+' 0 '+procTemplate+' '+indir +(' 1' if doSystResBkg else ' 0'))
 
   print('Finished step 4: Make datacards')
   print("")
@@ -180,8 +180,8 @@ def getLimit(masses, config, mggl, mggh, procTemplate):
             'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/Results; ' + \
             'cp Combine/*combine_results_'+procTemplate+'_* Outputs/CollectedPlots_'+procTemplate+'/Combine/Results; ' + \
             'cp -r Combine/Models Outputs/CollectedPlots_'+procTemplate+'/Combine/Models; ' + \
-#            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts; ' + \
-#            'cp Combine/impacts* Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts/; ' + \
+            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts; ' + \
+            'cp Combine/impacts* Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts/; ' + \
             'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/NLL_Scans; ' + \
             'cp Combine/NLL_Scan* Outputs/CollectedPlots_'+procTemplate+'/Combine/NLL_Scans; ' \
   )
@@ -209,7 +209,7 @@ def getImpact(masses, config, mggl, mggh, procTemplate):
 
 
 def getFitDiagnostics(masses, config, mggl, mggh, procTemplate):
-  print('Starting step 7: Get fit diagnostics')
+  print('Starting step 8: Get fit diagnostics')
   print("")
 
   for m in masses:
@@ -219,7 +219,7 @@ def getFitDiagnostics(masses, config, mggl, mggh, procTemplate):
     print("Fit diagnostics to run for mX = "+mX+", mY = "+mY)
     os.system('bash get_limit_fitDiagnostics.sh '+str(mggl)+' '+str(mggh)+' '+mX+' '+mY+' '+mH+' '+procTemplate)
 
-  print('Finished step 7: Get fit diagnostics')
+  print('Finished step 8: Get fit diagnostics')
   print("")
 
 

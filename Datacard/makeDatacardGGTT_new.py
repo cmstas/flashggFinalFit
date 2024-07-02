@@ -67,7 +67,10 @@ def getValFromDict(sys_dict, sys_name):
   if sys_name in possible_sys:
     val = [sys_dict[sys_name], sys_dict[sys_name]]
   else:
-    val = [sys_dict[sys_name+"_left"], sys_dict[sys_name+"_right"]]
+    if sys_name + "_left" in sys_dict and sys_name + "_right" in sys_dict:
+      val = [sys_dict[sys_name + "_left"], sys_dict[sys_name + "_right"]]
+    else:
+      val = [1, 1]
   return val
 
 def findFactorySystematic(sys_name, proc, cat, year, sig_systematics, res_bkg_systematics, args):
@@ -216,11 +219,9 @@ def getBackgroundYield(f, cat, my):
     if prodVal == 0:
       prodVal = (mggh-mggl) / (xvar.getMax()-xvar.getMin())
     bkg_yields.append(prodVal)
-  print(bkg_yields)
   
   f.Close()
   return max(bkg_yields)
-  #return prod.getVal()
 
 def grabYields(df, args):
   df["sig_yield"] = 0
@@ -236,12 +237,10 @@ def grabYields(df, args):
     if args.procTemplate in row.proc:
       sf = 1. / 1000.
     df.loc[idx, "sig_yield"] = norm * sf * row.rate
-    print(idx, sf)
 
     if (args.procTemplate in row.proc) and (row.year == "2016"): # only need bkg yield in one row (choose 2016)
       bkg_workspace_file = "../Background/outdir_%s_combined_mx%dmy%d/fTest/output/CMS-HGG_multipdf_%s_combined.root"%(args.procTemplate, args.MX, args.MY, row["cat"])
       df.loc[idx, "bkg_yield"] = getBackgroundYield(bkg_workspace_file, row["cat"], args.MY)
-    print(df)
 
   return df
 
@@ -516,7 +515,6 @@ if __name__=="__main__":
   #if not (115 < args.MH < 135):
   #  args.do_res_bkg = False
 
-  print(args.res_bkg_syst)
   if args.sig_syst == None:
     print("Not doing signal systematics")
   if args.do_res_bkg:
