@@ -1,5 +1,6 @@
 {
     "ttH":{
+        "QCDscale_ttH_pre_app":[1.200,0.800],
         "QCDscale_ttH":[1.058,0.908],
         "pdf_Higgs_ttH":1.030,
         "alphaS_ttH":1.020,

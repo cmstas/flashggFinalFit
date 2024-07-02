@@ -1,22 +1,25 @@
 import pandas as pd
 
-input_dir = 'Datacard/yields_SM_23Sep22_fixed_lf_and_hf/'
+input_dir = 'Datacard/yields_SM_pre_app_20240523/'
 #input_dir = 'Datacard/yields_SM_23Sep22_with_HHGGXX/'
 
-df1 = pd.read_pickle(input_dir+'SR2.pkl')
+df1 = pd.read_pickle(input_dir+'SR1.pkl')
+print(df1.keys())
 df2 = pd.read_pickle(input_dir+'SR2.pkl')
 
-SM = ['ttHHggbb_', 'ttHHggWW_', 'ttHHggTauTau_']
+SM = ['ttHH_ggbb_', 'ttHH_ggWW_', 'ttHH_ggTauTau_']
 TwoHDM= ['2HDMbbM300_', '2HDMWWM300_', '2HDMTAUTAUM300_']
-backgrounds = ['VBFH_', 'VH_', 'ggH_', 'ttH_', 'HHGGbb_', 'HHGGWWsemileptonic_', 'HHGGWWdileptonic_', 'HHGGTauTau_']
+backgrounds = ['VBFH_', 'VH_', 'ggH_', 'ttH_', 'ggHH_ggbb_', 'ggHH_ggWWsemileptonic_', 'ggHH_ggWWdileptonic_', 'ggHH_ggTauTau_','tHq_','tHW_']
 signals = SM
-if 'ttHHggbb_' not in signals:
+if 'ttHH_ggbb_' not in signals:
     backgrounds += SM
 procs = signals+backgrounds+['bkg_mass','data_obs']
 years = ['2016', '2017', '2018']
 
 unyieldy1 = pd.Series(df1.nominal_yield.values, index=df1.proc).to_dict()
+print(unyieldy1)
 unyieldy2 = pd.Series(df2.nominal_yield.values, index=df2.proc).to_dict()
+print(unyieldy2)
 
 yields1 = {}
 yields2 = {}
@@ -33,6 +36,9 @@ for proc in yields1:
         if tmp not in unyieldy1:
             continue
         yields1[proc] += unyieldy1[tmp]
+        if unyieldy1[tmp] < 0:
+            print(tmp)
+            print('wrong bucko: ',unyieldy1[tmp])
 
 for proc in yields2:
     for year in years:
@@ -40,6 +46,10 @@ for proc in yields2:
         if tmp not in unyieldy2:
             continue
         yields2[proc] += unyieldy2[tmp]
+        if unyieldy2[tmp] < 0:
+            print(tmp)
+            print('wrong bucko: ',unyieldy2[tmp])
+
 
 for proc in total:
     total[proc]=yields1[proc]+yields2[proc]
@@ -67,12 +77,12 @@ table += '\\begin{tabular}{c|c|c||c|}\n'
 table += 'Process & SR1 & SR2 & Tot \\\\\\hline\n'
 for proc in signals:
     table += proc[:-1]+' & {:.4f} & {:.4f} & {:.4f} \\\\\\hline\n'.format(yields1[proc], yields2[proc], (yields1[proc]+yields2[proc]))
-#table += 'Signal Tot & {:.4f} & {:.4f} & {:.4f} \\\\\\hline\\hline\n'.format(sig_tot_SR1, sig_tot_SR2, sig_tot_TOT)
+table += 'Signal Tot & {:.4f} & {:.4f} & {:.4f} \\\\\\hline\\hline\n'.format(sig_tot_SR1, sig_tot_SR2, sig_tot_TOT)
 
 for proc in backgrounds:
     table += proc[:-1]+' & {:.4f} & {:.4f} & {:.4f} \\\\\\hline\n'.format(yields1[proc], yields2[proc], (yields1[proc]+yields2[proc]))
-#table += 'Bkg Tot & {:.4f} & {:.4f} & {:.4f} \\\\\\hline\n'.format(bkg_tot_SR1, bkg_tot_SR2, bkg_tot_TOT)
-    table += 'bkg_mass & {:.4f} & {:.4f} & {:.4f} \\\\\\hline\n'.format(yields1['bkg_mass'], yields2['bkg_mass'], (yields1['bkg_mass']+yields2['bkg_mass']))
+table += 'Bkg Tot & {:.4f} & {:.4f} & {:.4f} \\\\\\hline\n'.format(bkg_tot_SR1, bkg_tot_SR2, bkg_tot_TOT)
+table += 'bkg_mass & {:.4f} & {:.4f} & {:.4f} \\\\\\hline\n'.format(yields1['bkg_mass'], yields2['bkg_mass'], (yields1['bkg_mass']+yields2['bkg_mass']))
 table += '\\end{tabular}\n'
 table += '\\end{center}\n'
 print(table)

@@ -80,16 +80,16 @@ experimental_systematics = [
                 {'name':'Tau_pt','title' :'CMS_Tau_pt','type':'factory','prior':'lnN','correlateAcrossYears':0},
 
                 {'name':'weight_puWeight','title' :'CMS_weight_puWeight','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'weight_photon_id_sf_Diphoton_Photon','title' :'CMS_weight_photon_id_sf_Diphoton_Photon','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                #{'name':'weight_photon_id_sf_Diphoton_Photon','title' :'CMS_weight_photon_id_sf_Diphoton_Photon','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_photon_presel_sf_Diphoton_Photon','title' :'CMS_weight_photon_presel_sf_Diphoton_Photon','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_L1_prefiring_sf','title' :'CMS_hgg_L1_prefiringSF','type':'factory','prior':'lnN','correlateAcrossYears':0},
 
-                {'name':'weight_btag_deepjet_sf_SelectedJet_jes','title':'CMS_hgg_btag_deepjet_sf_jes','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'weight_btag_deepjet_sf_SelectedJet_cferr1','title':'CMS_hgg_btag_deepjet_sf_cferr1','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'weight_btag_deepjet_sf_SelectedJet_cferr2','title':'CMS_hgg_btag_deepjet_sf_cferr2','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                #{'name':'weight_btag_deepjet_sf_SelectedJet_jes','title':'CMS_hgg_btag_deepjet_sf_jes','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'weight_btag_deepjet_sf_SelectedJet_cferr1','title':'CMS_hgg_btag_deepjet_sf_cferr1','type':'factory','prior':'lnN','correlateAcrossYears':1},
+                {'name':'weight_btag_deepjet_sf_SelectedJet_cferr2','title':'CMS_hgg_btag_deepjet_sf_cferr2','type':'factory','prior':'lnN','correlateAcrossYears':1},
 
-                {'name':'weight_btag_deepjet_sf_SelectedJet_LF','title':'CMS_hgg_btag_deepjet_sf_lf','type':'factory','prior':'lnN','correlateAcrossYears':0},
-                {'name':'weight_btag_deepjet_sf_SelectedJet_HF','title':'CMS_hgg_btag_deepjet_sf_hf','type':'factory','prior':'lnN','correlateAcrossYears':0},
+                {'name':'weight_btag_deepjet_sf_SelectedJet_LF','title':'CMS_hgg_btag_deepjet_sf_lf','type':'factory','prior':'lnN','correlateAcrossYears':1},
+                {'name':'weight_btag_deepjet_sf_SelectedJet_HF','title':'CMS_hgg_btag_deepjet_sf_hf','type':'factory','prior':'lnN','correlateAcrossYears':1},
                 {'name':'weight_btag_deepjet_sf_SelectedJet_lfstats1','title':'CMS_hgg_btag_deepjet_sf_lfstats1','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_btag_deepjet_sf_SelectedJet_lfstats2','title':'CMS_hgg_btag_deepjet_sf_lfstats2','type':'factory','prior':'lnN','correlateAcrossYears':0},
                 {'name':'weight_btag_deepjet_sf_SelectedJet_hfstats1','title':'CMS_hgg_btag_deepjet_sf_hfstats1','type':'factory','prior':'lnN','correlateAcrossYears':0},
