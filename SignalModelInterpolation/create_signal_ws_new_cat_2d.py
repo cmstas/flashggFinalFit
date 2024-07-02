@@ -19,7 +19,7 @@ def unique(a, b):
 
 def getNuisanceDatacardName(name, year):
   if name == "fnuf":
-    return "CMS_hgg_nuisance_fnuf_13TeVscaleCorr"
+    return "CMS_hgg_nuisance_funf_13TeVscaleCorr"
   elif name == "material":
     return "CMS_hgg_nuisance_material_13TeVscaleCorr"
   elif name == "MCSmear_smear":
@@ -104,7 +104,6 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
 
     #create nuisances
     nuisances = {}
-    #nuisance_names = [set(["_".join(name.split("_")[:-1]) for name in const_sys_names]) if "mean" or "sigma" or "rate" in name]
     nuisance_names = set(["_".join(name.split("_")[:-1]) for name in const_sys_names if "mean" in name or "sigma" in name or "rate" in name])
 
     for name in nuisance_names:

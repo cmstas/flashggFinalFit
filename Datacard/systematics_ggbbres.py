@@ -37,8 +37,6 @@ theory_systematics = [
   {'name':'alphaS_qqH','title':'alphaS_qqH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'1.005'},
   {'name':'alphaS_VH','title':'alphaS_VH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'1.009'},
   {'name':'alphaS_ttH','title':'alphaS_ttH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'1.020'}
-#  {'name':'alphaS_pdf_ggHH','title':'alphaS_pdf_ggHH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_gghh.json'},
-#  {'name':'QCDscale_mtop_ggHH','title':'QCDscale_mtop_ggHH','type':'constant','prior':'lnN','correlateAcrossYears':1,'value':'theory_uncertainties/thu_gghh.json'},
   ]
 # PDF weight
 #for i in range(1,60): theory_systematics.append( {'name':'pdfWeight_%g'%i, 'title':'CMS_hgg_pdfWeight_%g'%i, 'type':'factory','prior':'lnN','correlateAcrossYears':1,'tiers':['shape']} )
@@ -90,14 +88,4 @@ signal_shape_systematics = [
                 {'name':'material','title':'material','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
                 {'name':'MCSmear_smear','title':'MCSmear','type':'signal_shape','mode':'smears','mean':'0.0','sigma':'1.0'},
                 {'name':'MCScale_scale','title':'MCScale','type':'signal_shape','mode':'scales','mean':'0.0','sigma':'1.0'}
-                #{'name':'JESAbsolute_fixed','title':'scale_j_absolute_allYear','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
-                #{'name':'JESAbsoluteYear_fixed','title':'scale_j_absolute','type':'signal_shape','mode':'scales','mean':'0.0','sigma':'1.0'},
-                #{'name':'JESFlavorQCD','title':'scale_j_flavorQCD','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
-                #{'name':'JESBBEC1_fixed','title':'scale_j_BBEC1_allYear','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
-                #{'name':'JESBBEC1Year_fixed','title':'scale_j_BBEC1','type':'signal_shape','mode':'scales','mean':'0.0','sigma':'1.0'},
-                #{'name':'JESRelativeBal','title':'scale_j_relativeBal','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
-                #{'name':'JESRelativeSampleYear','title':'scale_j_relativeSample','type':'signal_shape','mode':'scales','mean':'0.0','sigma':'1.0'},
-                #{'name':'bTagSF8','title':'btag_cferr1','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
-                #{'name':'bTagSF9','title':'btag_cferr2','type':'signal_shape','mode':'scalesCorr','mean':'0.0','sigma':'1.0'},
-                #{'name':'res_j','title':'res_j','type':'signal_shape','mode':'scales','mean':'0.0','sigma':'1.0'},
 ]
