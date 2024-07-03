@@ -54,10 +54,5 @@ pushd Combine
 #  combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M AsymptoticLimits -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n _AsymptoticLimit_r_${procTemplate}_${mo} --freezeParameters MH,MX,MY,allConstrainedNuisances,${index_names} --run=blind --setParameters MX=${mx},MY=${my}${index_values} > combine_results_${procTemplate}_no_sys_pdfIndexFixed_${mo}.txt
 
 
-  # Get PDF indices
-#  index_names=$(grep 'discrete' Datacard_ggbbres_${m}.txt | cut -d' ' -f1 | sed -z 's/\n/,/g')
-#  combine -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M MultiDimFit -m ${mh} --rMin $l --rMax $h -d Datacard_ggbbres_${m}_ggbbres.root -n _Scan_r_test_${mo} --freezeParameters MH,MX,MY --setParameters MX=${mx},MY=${my},r=${exp_limit} --saveSpecifiedIndex $index_names
-#  index_values=$(python getSavedIndices.py higgsCombine_Scan_r_test_${mo}.MultiDimFit.mH${mh}.root)
-
 #  rm higgsCombine*${mo}*
 popd

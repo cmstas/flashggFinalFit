@@ -110,9 +110,6 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
     mean = ROOT.RooFormulaVar("mean"+suffix, "mean"+suffix, "@0", ROOT.RooArgList(mean_nominal))
     sigma = ROOT.RooFormulaVar("sigma"+suffix, "sigma"+suffix, "@0", ROOT.RooArgList(sigma_nominal))
 
-  print(sig_norm_nominal.getVal())
-  print(mean.getVal())
-  print(sig_norm.getVal())
   sig = ROOT.RooDoubleCBFast("sig"+suffix, "sig"+suffix, CMS_hgg_mass, mean, sigma, a1, n1, a2, n2)
 
   wsig_13TeV = ROOT.RooWorkspace("wsig_13TeV", "wsig_13TeV")
@@ -172,16 +169,16 @@ def main(args):
 
   procs = sorted(models.keys())
   for proc in procs:
+    if args.doSyst:
+        systematics_proc = systematics[proc]
+    else:
+        systematics_proc = None
     years = sorted(models[proc].keys())
     for year in years:
       cats = sorted(models[proc][year].keys())
       for cat in cats:
         out_path = os.path.join(args.outdir, "%s_%s_cat%s.root"%(proc, year, cat))
-        if args.doSyst:
-            print(proc)
-            makeWorkspace(models[proc], systematics[proc], year, cat, out_path, args.mgg_range, proc, args.doSyst)
-        else:
-            makeWorkspace(models[proc], systematics, year, cat, out_path, args.mgg_range, proc, args.doSyst)
+        makeWorkspace(models[proc], systematics_proc, year, cat, out_path, args.mgg_range, proc, args.doSyst)
 
 if __name__=="__main__":
   parser = argparse.ArgumentParser()
