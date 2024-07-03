@@ -100,8 +100,7 @@ def modelNonResBkg(doFailedFits, nonResYears, masses, nonResBkgTrees, procTempla
     print(failed_jobs)
 
     for year in nonResYears:
-#      os.system('for f in $(ls Background/outdir_'+procTemplate+'_'+year+'_*/fTest/output/*.root | grep "'+year+'.root" -v); do rename .root _'+year+'.root $f; done')
-      os.system('for f in $(ls Background/outdir_'+procTemplate+'_'+year+'_*/fTest/output/*.root); do rename .root _'+year+'.root $f; done')
+      os.system('for f in $(ls Background/outdir_'+procTemplate+'_'+year+'_*/fTest/output/*.root | grep "'+year+'.root" -v); do rename .root _'+year+'.root $f; done')
 
   print('Finished step 2: Model the non-resonant background')
   print("")
