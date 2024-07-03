@@ -19,7 +19,7 @@ def unique(a, b):
 
 def getNuisanceDatacardName(name, year):
   if name == "fnuf":
-    return "CMS_hgg_nuisance_fnuf_13TeVscaleCorr"
+    return "CMS_hgg_nuisance_funf_13TeVscaleCorr"
   elif name == "material":
     return "CMS_hgg_nuisance_material_13TeVscaleCorr"
   elif name == "MCSmear_smear":
