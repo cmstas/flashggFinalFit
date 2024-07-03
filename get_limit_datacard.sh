@@ -21,7 +21,6 @@ get_last_cat() {
 }
 
 pushd Datacard
-#  python makeDatacardGGTT_new.py -o Datacard_${procTemplate}_${m}.txt --n-in-sideband $indir/../CatOptim/N_in_sidebands.json --MH $mh --MX $mx --MY $my --procTemplate ${procTemplate} --prune --sig-syst systematics_all_merged.json
   if [ $dy_bkg_model = 0 -a $res_bkg_sys = 0 ]; then 
     python makeDatacardGGTT_new.py -o Datacard_${procTemplate}_${m}.txt --n-in-sideband $indir/../CatOptim/N_in_sidebands.json --MH $mh --MX $mx --MY $my --procTemplate ${procTemplate} --prune --do-res-bkg --sig-syst ${sig_model}/systematics.json 
 

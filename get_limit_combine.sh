@@ -13,7 +13,7 @@ procTemplate=$6
 
 m="mx${mx}my${my}"
 mo="mx${mx}my${my}mh${mh}"
-# --run=expected after unblind
+
 pushd Combine  
   echo "Nominal limit being calculated"
   combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M AsymptoticLimits -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n _AsymptoticLimit_r_${procTemplate}_${mo} --freezeParameters MH,MX,MY --run=blind --setParameters MX=${mx},MY=${my} > combine_results_${procTemplate}_${mo}.txt
@@ -44,7 +44,7 @@ pushd Combine
   combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M AsymptoticLimits -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n _AsymptoticLimit_r_${procTemplate}_${mo} --freezeParameters MH,MX,MY,allConstrainedNuisances --run=blind --setParameters MX=${mx},MY=${my} > combine_results_${procTemplate}_no_sys_${mo}.txt
 
   # Toy limits
-#  combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n _HybridNew_r_${procTemplate}_no_sys_${mo} --freezeParameters MH,MX,MY,allConstrainedNuisances -M HybridNew --LHCmode LHC-limits --expectedFromGrid 0.5 --setParameters MX=${mx},MY=${my} --saveHybridResult --rMin=${l} --rMax=${h} --fork 8 -T 5000  > combine_results_${procTemplate}_no_sys_toys_${mo}.txt
+  #combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n _HybridNew_r_${procTemplate}_no_sys_${mo} --freezeParameters MH,MX,MY,allConstrainedNuisances -M HybridNew --LHCmode LHC-limits --expectedFromGrid 0.5 --setParameters MX=${mx},MY=${my} --saveHybridResult --rMin=${l} --rMax=${h} --fork 8 -T 5000  > combine_results_${procTemplate}_no_sys_toys_${mo}.txt
 
 
 #  echo "No PDF index floating limit being calculated"
