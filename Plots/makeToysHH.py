@@ -42,8 +42,11 @@ for p,v in poi_bf.iteritems():
   setParamStr += "%s=%.3f,"%(p,v)
   setParam0Str += "%s=0,"%p
 if opt.dropResonantBkg: 
-  setParamStr += "r_singleH=0,"
-  setParam0Str += "r_singleH=0,"
+  setParamStr += "singleH=0,"
+  setParamStr += "doubleH=0,"
+  setParam0Str += "singleH=0,"
+  setParam0Str += "doubleH=0,"
+
 if opt.MX is not None: 
   setParamStr += "MX=%s,"%opt.MX
   setParam0Str += "MX=%s,"%opt.MX
