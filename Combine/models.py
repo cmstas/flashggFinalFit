@@ -26,10 +26,20 @@ models = {
   --PO \"map=.*/2HDM_ggWW_M250.*:r[1,0,200]\" \
   --PO \"map=.*/2HDM_ggTauTau_M250.*:r[1,0,200]\"",
 
+"2HDM_M275":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/2HDM_ggbb_M275.*:r[1,0,200]\" \
+  --PO \"map=.*/2HDM_ggWW_M275.*:r[1,0,200]\" \
+  --PO \"map=.*/2HDM_ggTauTau_M275.*:r[1,0,200]\"",
+
  "2HDM_M300":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
   --PO \"map=.*/2HDM_ggbb_M300.*:r[1,0,200]\" \
   --PO \"map=.*/2HDM_ggWW_M300.*:r[1,0,200]\" \
   --PO \"map=.*/2HDM_ggTauTau_M300.*:r[1,0,200]\"",
+
+"2HDM_M325":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
+  --PO \"map=.*/2HDM_ggbb_M325.*:r[1,0,200]\" \
+  --PO \"map=.*/2HDM_ggWW_M325.*:r[1,0,200]\" \
+  --PO \"map=.*/2HDM_ggTauTau_M325.*:r[1,0,200]\"",
 
  "2HDM_M350":"-P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel \
   --PO \"map=.*/2HDM_ggbb_M350.*:r[1,0,200]\" \
