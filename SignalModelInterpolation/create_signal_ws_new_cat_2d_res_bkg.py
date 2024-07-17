@@ -34,7 +34,6 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
 
   model = models[year][cat]
   masses = model.keys()
-#  masses = ["1000_125"]
 
   mx = np.array([int(m.split("_")[0]) for m in masses])
   my = np.array([int(m.split("_")[1]) for m in masses])
@@ -56,8 +55,7 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
   assert mgg_range[0] < 125.0 < mgg_range[1]
   MH = ROOT.RooRealVar("MHBKG", "MHBKG", 125.0, mgg_range[0], mgg_range[1])
   MH.setConstant(True)
-#  print(norms)
-#  print(mx_my_arr)
+
   sig_norm_nominal = ROOT.RooSpline1D("sig_norm_nominal"+suffix, "sig_norm_nominal"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, norms)
   dm_nominal = ROOT.RooSpline1D("dm_nominal"+suffix, "dm_nominal"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, np.array(popts[:, 1]))
   sigma_nominal = ROOT.RooSpline1D("sigma_nominal"+suffix, "sigma_nominal"+suffix, MX_MY, len(mx_my_arr), mx_my_arr, np.array(popts[:, 2]))
@@ -105,7 +103,6 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
     mean = ROOT.RooFormulaVar("mean"+suffix, "mean"+suffix, formula,  ROOT.RooArgList(mean_nominal, *[f(name, "mean") for name in nuisance_names for f in (get_const, get_nuisance)]))
     sigma = ROOT.RooFormulaVar("sigma"+suffix, "sigma"+suffix, formula,  ROOT.RooArgList(sigma_nominal, *[f(name, "sigma") for name in nuisance_names for f in (get_const, get_nuisance)]))
   else:
-    print("not doing resonant syst")
     sig_norm = ROOT.RooFormulaVar("sig%s_norm"%suffix, "sig%s_norm"%suffix, "@0", ROOT.RooArgList(sig_norm_nominal))
     mean = ROOT.RooFormulaVar("mean"+suffix, "mean"+suffix, "@0", ROOT.RooArgList(mean_nominal))
     sigma = ROOT.RooFormulaVar("sigma"+suffix, "sigma"+suffix, "@0", ROOT.RooArgList(sigma_nominal))
