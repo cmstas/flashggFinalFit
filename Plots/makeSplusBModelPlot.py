@@ -58,8 +58,10 @@ def get_options():
 # Open WS
 if opt.inputWSFile is not None:
   print " --> Opening workspace: %s"%opt.inputWSFile
-  f = ROOT.TFile(opt.inputWSFile)
+  f = ROOT.TFile("/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/special_Datacard_ttHHggXX.root")
+  f2 = ROOT.TFile("/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_ttHHggXX.root")
   w = f.Get("w")
+  w2 = f2.Get("w")
   # If required loadSnapshot
   if opt.loadSnapshot is not None: 
     print "    * Loading snapshot: %s"%opt.loadSnapshot
@@ -106,6 +108,7 @@ if opt.doHHMjjFix:
 
 # Extract the total SB/B models
 sb_model, b_model = w.pdf("model_s"), w.pdf("model_b")
+nonres_model = w2.pdf("model_b")
 
 # Extract dataset for opt.cats
 d_obs = w.data("data_obs")
@@ -311,11 +314,15 @@ for cidx in range(len(cats)):
   # Extract pdfs for category and create histograms
   print "    * creating pdf histograms: S+B, B"
   sbpdf, bpdf = sb_model.getPdf(c), b_model.getPdf(c)
+  nonrespdf = nonres_model.getPdf(c)
   h_sbpdf = {'pdfNBins':sbpdf.createHistogram("h_sb_pdfNBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.pdfNBins,xvar.getMin(),xvar.getMax())),
              'nBins':sbpdf.createHistogram("h_sb_nBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.nBins,xvar.getMin(),xvar.getMax()))
             }
   h_bpdf = {'pdfNBins':bpdf.createHistogram("h_b_pdfNBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.pdfNBins,xvar.getMin(),xvar.getMax())),
              'nBins':bpdf.createHistogram("h_b_nBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.nBins,xvar.getMin(),xvar.getMax()))
+            }
+  h_nonrespdf = {'pdfNBins':nonrespdf.createHistogram("h_b_pdfNBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.pdfNBins,xvar.getMin(),xvar.getMax())),
+             'nBins':nonrespdf.createHistogram("h_b_nBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.nBins,xvar.getMin(),xvar.getMax()))
             }
   # Calculate yields
   SB, B = sbpdf.expectedEvents(_xvar_argset), bpdf.expectedEvents(_xvar_argset)
@@ -332,11 +339,11 @@ for cidx in range(len(cats)):
   else: print "    * Yield for category: S = %.2f, B=%.2f"%(S,B)
 
   # Extract signal pdf
+  signalScale = 1
   print "    * creating pdf histogram: S"
-  h_spdf = {'pdfNBins':h_sbpdf['pdfNBins']-h_bpdf['pdfNBins'],
-            'nBins':h_sbpdf['nBins']-h_bpdf['nBins']
+  h_spdf = {'pdfNBins':(h_sbpdf['pdfNBins']-h_bpdf['pdfNBins'])*signalScale,
+            'nBins':(h_sbpdf['nBins']-h_bpdf['nBins'])*signalScale
            }
-  
   # Scale pdf histograms to match binning used
   xvar_range = int(xvar.getBinning().highBound()-xvar.getBinning().lowBound())
   if opt.nBins != xvar_range:
@@ -420,7 +427,7 @@ for cidx in range(len(cats)):
   if not opt.skipIndividualCatPlots:
     print "    * making plot"
     if not os.path.isdir("./SplusBModels%s"%(opt.ext)): os.system("mkdir ./SplusBModels%s"%(opt.ext))
-    if opt.doBands: makeSplusBPlot(w,h_data,h_sbpdf,h_bpdf,h_spdf,h_data_ratio,h_bpdf_ratio,h_spdf_ratio,c,opt,df_bands,_reduceRange)
+    if opt.doBands: makeSplusBPlot(w,h_data,h_sbpdf,h_bpdf,h_spdf,h_nonrespdf,h_data_ratio,h_bpdf_ratio,h_spdf_ratio,c,opt,df_bands,_reduceRange)
     else: makeSplusBPlot(w,h_data,h_sbpdf,h_bpdf,h_spdf,h_data_ratio,h_bpdf_ratio,h_spdf_ratio,c,opt,None,_reduceRange)
 
   # Delete histograms

@@ -77,7 +77,7 @@ def extractBandProperties(data,category,bidx):
   props['down2sigma'] = np.percentile(data['%s_%g'%(c,bidx)].values,50*(1+math.erf(-2./math.sqrt(2))))
   return props
 
-def makeSplusBPlot(workspace,hD,hSB,hB,hS,hDr,hBr,hSr,cat,options,dB=None,reduceRange=None,limit=None):
+def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNR,hDr,hBr,hSr,cat,options,dB=None,reduceRange=None,limit=None):
   translateCats = {} if options.translateCats is None else LoadTranslations(options.translateCats)
   translatePOIs = {} if options.translatePOIs is None else LoadTranslations(options.translatePOIs)
   blindingRegion = [float(options.blindingRegion.split(",")[0]),float(options.blindingRegion.split(",")[1])]
@@ -148,13 +148,13 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hDr,hBr,hSr,cat,options,dB=None,reduce
       #gr_2sig_r.SetPointError(gr_i,xerr,xerr,properties['down2sigma'],properties['up2sigma'])
       gr_2sig_r.SetPointError(gr_i,xerr,xerr,properties['median']-properties['down2sigma'],properties['up2sigma']-properties['median'])
       gr_i += 1
-    gr_1sig.SetFillColor(ROOT.kGreen)
+    gr_1sig.SetFillColor(ROOT.kYellow-9)
     gr_1sig.SetFillStyle(1001)
-    gr_2sig.SetFillColor(ROOT.kYellow)
+    gr_2sig.SetFillColor(ROOT.kCyan-9)
     gr_2sig.SetFillStyle(1001)
-    gr_1sig_r.SetFillColor(ROOT.kGreen)
+    gr_1sig_r.SetFillColor(ROOT.kYellow-9)
     gr_1sig_r.SetFillStyle(1001)
-    gr_2sig_r.SetFillColor(ROOT.kYellow)
+    gr_2sig_r.SetFillColor(ROOT.kCyan-9)
     gr_2sig_r.SetFillStyle(1001)
     gr_2sig.Draw("LE3SAME")
     gr_1sig.Draw("LE3SAME")
@@ -166,11 +166,13 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hDr,hBr,hSr,cat,options,dB=None,reduce
   leg.SetTextSize(0.045)
   leg.AddEntry(hD,"Data","ep")
   if options.unblind:
-    leg.AddEntry(hSB['pdfNBins'],"S+B fit","l")
-    leg.AddEntry(hB['pdfNBins'],"B component","l")
+    leg.AddEntry(hSB['pdfNBins'],"S+B","l")
+    leg.AddEntry(hNR['pdfNBins'],"NRB","l")
+    leg.AddEntry(hB['pdfNBins'],"Tot B","l")
+    leg.AddEntry(hS['pdfNBins'],"S","l")
   else:
-    leg.AddEntry(hB['pdfNBins'],"B fit","l")
-    leg.AddEntry(hS['pdfNBins'],"S model","fl")
+    leg.AddEntry(hB['pdfNBins'],"Total bkg fit","l")
+    leg.AddEntry(hS['pdfNBins'],"Sig model","fl")
   if options.doBands:
     leg.AddEntry(gr_1sig,"#pm1 #sigma","F")
     leg.AddEntry(gr_2sig,"#pm2 #sigma","F")
@@ -178,12 +180,20 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hDr,hBr,hSr,cat,options,dB=None,reduce
   # Set pdf style
   if options.unblind:
     hSB['pdfNBins'].SetLineWidth(3)
-    hSB['pdfNBins'].SetLineColor(2)
+    hSB['pdfNBins'].SetLineColor(ROOT.kMagenta+3)
     hSB['pdfNBins'].Draw("Hist same c")
+    hS['pdfNBins'].SetLineWidth(3)
+    hS['pdfNBins'].SetLineColor(ROOT.kBlue)
+    hS['pdfNBins'].Draw("Hist same c")
     hB['pdfNBins'].SetLineWidth(3)
-    hB['pdfNBins'].SetLineColor(2)
+    hB['pdfNBins'].SetLineColor(ROOT.kRed)
     hB['pdfNBins'].SetLineStyle(2)
     hB['pdfNBins'].Draw("Hist same c")
+    hNR['pdfNBins'].SetLineWidth(3)
+    hNR['pdfNBins'].SetLineColor(1)
+    hNR['pdfNBins'].SetLineStyle(2)
+    hNR['pdfNBins'].Draw("Hist same c")
+ 
   else:
     hS['pdfNBins'].SetLineWidth(3)
     hS['pdfNBins'].SetLineColor(9)
@@ -252,11 +262,11 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hDr,hBr,hSr,cat,options,dB=None,reduce
   # Set pdf style
   if options.unblind:
     hSr.SetLineWidth(3)
-    hSr.SetLineColor(2)
+    hSr.SetLineColor(ROOT.kBlue)
     hSr.Draw("Hist same c")
     hBr.SetLineWidth(3)
     hBr.SetLineStyle(2)
-    hBr.SetLineColor(2)
+    hBr.SetLineColor(ROOT.kRed)
     hBr.Draw("Hist same c")
   else:
     hSr.SetLineWidth(3)
@@ -279,7 +289,7 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hDr,hBr,hSr,cat,options,dB=None,reduce
   lat1.SetTextAlign(33)
   lat1.SetNDC(1)
   lat1.SetTextSize(0.045*padSizeRatio)
-  lat1.DrawLatex(0.87,0.91,"B component subtracted")
+  lat1.DrawLatex(0.87,0.91,"Tot B subtracted")
 
   # Save canvas
   canv.Update()
