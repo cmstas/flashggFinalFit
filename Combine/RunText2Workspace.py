@@ -8,6 +8,7 @@ def get_options():
   parser = OptionParser()
   parser.add_option('--mode', dest='mode', default='mu_inclusive', help="Physics Model (specified in models.py)")
   parser.add_option('--ext',dest='ext', default="", help='In case running over datacard with extension')
+  parser.add_option('--tag',dest='tag', help='tag')
   parser.add_option('--common_opts',dest='common_opts', default="-m 125.38 higgsMassRange=122,128", help='Common options')
   parser.add_option('--batch', dest='batch', default='SGE', help="Batch system [SGE,IC,condor]")
   parser.add_option('--queue', dest='queue', default='workday', help="Condor queue")
@@ -37,7 +38,7 @@ fsub = open("./t2w_jobs/t2w_%s%s.sh"%(opt.mode,opt.ext),"w")
 fsub.write("#!/bin/bash\n\n")
 fsub.write("cd %s\n\n"%os.environ['PWD'])
 fsub.write("eval `scramv1 runtime -sh`\n\n")
-fsub.write("text2workspace.py Datacard%s.txt -o Datacard%s_%s.root %s %s"%(opt.ext,opt.ext,opt.mode,opt.common_opts,models[opt.mode]))
+fsub.write("text2workspace.py Datacard%s_%s.txt -o Datacard%s_%s.root %s %s"%(opt.ext,opt.tag,opt.ext,opt.mode,opt.common_opts,models[opt.mode]))
 fsub.close()
 
 # Change permission for file
