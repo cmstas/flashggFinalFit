@@ -117,6 +117,7 @@ make_datacard(){
         rm -rf yields_$tag
         rm Datacard.txt
 
+        #python RunYields.py --mass "125.38" --inputWSDirMap 2016=${trees}/ws_signal_2016,2017=${trees}/ws_signal_2017,2018=${trees}/ws_signal_2018 --cats SR1 --procs auto --batch local --mergeYears --skipZeroes --ext $tag --doSystematics 
         python RunYields.py --mass "125.38" --inputWSDirMap 2016=${trees}/ws_signal_2016,2017=${trees}/ws_signal_2017,2018=${trees}/ws_signal_2018 --cats auto --procs auto --batch local --mergeYears --skipZeroes --ext $tag --doSystematics 
 
         python makeDatacard.py --years 2016,2017,2018 --ext $tag --prune --pruneThreshold 0.00001 --doSystematics
@@ -126,46 +127,84 @@ make_datacard(){
 
 run_combine(){
     pushd Combine
-        rm -rf Models
-        mkdir -p Models
-        mkdir -p Models/signal
-        mkdir -p Models/background
-        cp ../Signal/outdir_${tag}_packaged/CMS-HGG*.root ./Models/signal/
-        cp ../Background/outdir_$tag/CMS-HGG*.root ./Models/background/
-        cp ../Datacard/Datacard_${tag}.txt Datacard.txt
+	rm -rf Models
+	mkdir -p Models
+	mkdir -p Models/signal
+	mkdir -p Models/background
+	mkdir -p Models/data
+	cp ../Signal/outdir_${tag}_packaged/CMS-HGG*.root ./Models/signal/
+	cp ../Background/outdir_${tag}/CMS-HGG*.root ./Models/background/
+	cp ../Background/outdir_${tag}/CMS-HGG*.root ./Models/data/
+	cp ../Datacard/Datacard_${tag}.txt Datacard_${tag}.txt
 
-        python RunText2Workspace.py --mode $interpretation --dryRun
-        ./t2w_jobs/t2w_${interpretation}.sh
+	python RunText2Workspace.py --tag $tag --mode $interpretation --dryRun
+	./t2w_jobs/t2w_${interpretation}.sh
+	#rm combine_results_${tag}.txt
+	#rm combine_results_${tag}_unblind.txt
+        #common_runes=" --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2"
+        ##Blind
+        #eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --run=blind --freezeParameters MH $common_runes > combine_results_${tag}.txt"
+	#eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --run=blind --freezeParameters allConstrainedNuisances $common_runes > stat_only_${tag}.txt"
+        ##Unblind
+        #eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters MH $common_runes > combine_results_${tag}_unblind.txt"
+	#eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters allConstrainedNuisances $common_runes > stat_only_${tag}_unblind.txt"
 
-        combine --redefineSignalPOI r  -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters MH --run=blind > combine_results_${tag}.txt --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2
-        combine --redefineSignalPOI r  -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters allConstrainedNuisances --run=blind > stat_only_${tag}.txt --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2
+        ## Likelyhood scan parts
+	##combine --expectSignal 1 -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M MultiDimFit --algo grid --points 100 -m 125.38 -d Datacard_${interpretation}.root -n _Scan_r --freezeParameters MH --rMin -10 --rMax 200
+	##python plotLScan.py higgsCombine_Scan_r.MultiDimFit.mH125.root
+	##cp NLL_scan* /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/
 
-        # Likelyhood scan parts
-        #combine --expectSignal 1 -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M MultiDimFit --algo grid --points 100 -m 125 -d Datacard_ggtt_resBkg_syst.root -n _Scan_r --freezeParameters MH --rMin 0 --rMax 5
-        #python plotLScan.py higgsCombine_Scan_r.MultiDimFit.mH125.root
-        #cp NLL_scan* /home/users/fsetti/public_html/HH2ggtautau/flashggFinalFit/$tag/
-
-        tail combine_results_${tag}.txt
-    popd	
+        #echo "Blind"
+	#tail combine_results_${tag}.txt
+        #echo "Unblind"
+	#tail combine_results_${tag}_unblind.txt
+    popd
 }
 
 syst_plots(){
     pushd Combine
-        #Start by extracting the central limit (always on line 10) from the associated run tag
+        #Start by extracting the central expected limit (always on line 10) from the associated run tag
         line=10
         central_limit=$(sed -n "${line}p" "combine_results_${tag}.txt" | awk '{print $NF}')
 
-        text2workspace.py Datacard.txt -m 125.38
-        combineTool.py  --setParameters r=$central_limit -t -1 -M Impacts -d Datacard.root --redefineSignalPOI r --autoMaxPOIs "r" --rMin -10 --rMax 200 --squareDistPoiStep -m 125.38 --freezeParameters MH --doInitialFit --robustFit 1 --robustHesse 1 --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2
-        combineTool.py  --setParameters r=$central_limit -t -1 -M Impacts -d Datacard.root --redefineSignalPOI r --autoMaxPOIs "r" --rMin -10 --rMax 200 --squareDistPoiStep -m 125.38 --freezeParameters MH --robustFit 1 --robustHesse 1 --doFits --parallel 10 --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2
+	mkdir -p /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/
+        #Run options that always are used, moved to here to improve legibility
+        common_runes=" --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2"
 
-        rm impacts.json
-        combineTool.py -M Impacts -d Datacard.root --redefineSignalPOI r --autoMaxPOIs "r" --setParameters r=$central_limit -t -1 --rMin -10 --rMax 200 --squareDistPoiStep -m 125.38 --freezeParameters MH -o impacts.json --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2
+        # Blind Impacts
+        ## Clean outputs to make failures more obvious
+        #rm impacts.json
+        #rm impacts.pdf
+	#rm /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/impacts.pdf
+        ## Actually run the impacts
+        #eval "combineTool.py -M Impacts -d Datacard_${interpretation}.root -m 125.38 -t -1 --setParameters r=$central_limit --redefineSignalPOI r --autoMaxPOIs 'r' --rMin -10 --rMax 200 --squareDistPoiStep --freezeParameters MH --doInitialFit $common_runes"
+        #eval "combineTool.py -M Impacts -d Datacard_${interpretation}.root -m 125.38 -t -1 --setParameters r=$central_limit --redefineSignalPOI r --autoMaxPOIs 'r' --rMin -10 --rMax 200 --squareDistPoiStep --freezeParameters MH --doFits --parallel 10 $common_runes"
+        #eval "combineTool.py -M Impacts -d Datacard_${interpretation}.root -m 125.38 -t -1 --setParameters r=$central_limit --redefineSignalPOI r --autoMaxPOIs 'r' --rMin -10 --rMax 200 --squareDistPoiStep --freezeParameters MH -o impacts.json $common_runes"
+	#plotImpacts.py -i impacts.json -o impacts
+	#cp impacts.pdf /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/impacts.pdf
 
-        plotImpacts.py -i impacts.json -o impacts 
-        mkdir -p /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/
-        cp impacts.pdf /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/impacts.pdf
-    popd	
+        # Unblind GOF
+        #combine -M GoodnessOfFit Datacard_${tag}.txt -m 125.38 --algo=saturated -n _ttHH_Tprime_${mass_point}_data --freezeParameters MH
+        #combine -M GoodnessOfFit Datacard_${tag}.txt -m 125.38 --algo=saturated -n _ttHH_Tprime_${mass_point}_toys --freezeParameters MH --toysFreq -t 1000
+        #combineTool.py -M CollectGoodnessOfFit --input higgsCombine_ttHH_Tprime_${mass_point}_data.GoodnessOfFit.mH125.38.root higgsCombine_ttHH_Tprime_${mass_point}_toys.GoodnessOfFit.mH125.38.123456.root -m 125.38 -o gof_Tprime_${mass_point}.json
+        #plotGof.py gof_Tprime_${mass_point}.json --statistic saturated --mass 125.379997253 -o gof_Tprime_${mass_point}_plot --title-right="Tprime ${mass_point}"
+
+        # Unblind Impacts
+        ## Clean outputs to make failures more obvious
+        #rm impacts_unblind.json
+        #rm impacts_unblind.pdf
+        #rm impacts_partial_unblind.pdf
+	#rm /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/impacts_unblind.pdf
+	#rm /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/impacts_partial_unblind.pdf
+        ## Actually run the impacts
+        #eval "combineTool.py -M Impacts -d Datacard_${interpretation}.root -m 125.38 --redefineSignalPOI r --autoMaxPOIs 'r' --rMin -10 --rMax 200 --squareDistPoiStep --freezeParameters MH --doInitialFit --robustHesse 1 --robustFit 1 $common_runes"
+        #eval "combineTool.py -M Impacts -d Datacard_${interpretation}.root -m 125.38 --redefineSignalPOI r --autoMaxPOIs 'r' --rMin -10 --rMax 200 --squareDistPoiStep --freezeParameters MH --doFits --robustHesse 1 --robustFit 1 --parallel 10 $common_runes"
+        #eval "combineTool.py -M Impacts -d Datacard_${interpretation}.root -m 125.38 --redefineSignalPOI r --autoMaxPOIs 'r' --rMin -10 --rMax 200 --squareDistPoiStep --freezeParameters MH -o impacts_unblind.json $common_runes"
+	#plotImpacts.py -i impacts_unblind.json -o impacts_unblind
+	#plotImpacts.py -i impacts_unblind.json -o impacts_partial_unblind --blind
+	#cp impacts_unblind.pdf /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/impacts_unblind.pdf
+	#cp impacts_partial_unblind.pdf /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/impacts_partial_unblind.pdf
+    popd
 }
 
 copy_plot(){
@@ -179,11 +218,12 @@ copy_plot(){
     cp /home/users/iareed/public_html/ttHH/index.php /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/Signal
 }
 
-for mass in 500 550 600 650 700 750 800 850 900 950 1000 1100 1200 1300 1400 1500; do
-#for mass in 900 950 1000 1100 1200 1300 1400 1500; do
-#for mass in 500; do
+for mass in 500; do
+#for mass in 500 550 600 650 700 750 800 850 900 950; do
+#for mass in 1000 1100 1200 1300 1400 1500; do
+#for mass in 500 550 600 650 700 750 800 850 900 950 1000 1100 1200 1300 1400 1500; do
     mass_point=M${mass}
-    tag=Tprime_M${mass}_04Apr24_with_tH
+    tag=Tprime_M${mass}_pre_app
 
     #Identify which interpretation is being done in the analysis, needed a different name for clarity
     interpretation=Tprime_${mass_point}
@@ -193,9 +233,8 @@ for mass in 500 550 600 650 700 750 800 850 900 950 1000 1100 1200 1300 1400 150
 
     #model_bkg
     #model_sig
-    #make_datacard
-    run_combine
-    syst_plots
-    copy_plot
+    make_datacard
+    #run_combine
+    #syst_plots
+    #copy_plot
 done
-

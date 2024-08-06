@@ -199,9 +199,12 @@ fdata.write("\nSingleH rateParam * tHW_*  1.0")
 fdata.write("\nDoubleH rateParam * ggHH_gg*  1.0")
 fdata.write("\nnuisance edit freeze SingleH")
 fdata.write("\nnuisance edit freeze DoubleH")
-fdata.write("\nresBkg group = SingleH DoubleH")
-
-
+if (("Tprime" in opt.ext) or ("2HDM" in opt.ext)):
+    fdata.write("\nttHH_bkg rateParam * ttHH_gg*  1.0")
+    fdata.write("\nnuisance edit freeze ttHH_bkg")
+    fdata.write("\nresBkg group = SingleH DoubleH ttHH_bkg")
+else:
+    fdata.write("\nresBkg group = SingleH DoubleH")
 
 fdata.close()
 
