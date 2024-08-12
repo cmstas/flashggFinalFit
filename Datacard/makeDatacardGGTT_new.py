@@ -145,11 +145,6 @@ def grabSystematics(df, args):
         raise Exception()
       df.loc[idx, df_name(syst["name"], year)] = val
 
-  theoryFactoryType = {}
-  for syst in systematics_ggbbres.theory_systematics:
-    if syst['type'] == 'factory':
-      theoryFactoryType[syst['name']] = factoryType(data[mask],syst)
-  
   for syst in systematics_ggbbres.theory_systematics:
     assert syst["correlateAcrossYears"] == 1
     df[syst["name"]] = '-'
