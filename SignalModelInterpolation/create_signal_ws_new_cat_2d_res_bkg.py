@@ -68,6 +68,7 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
   if doSyst:
     systematics = systematicss[year][cat]
     #creates splines for const values
+    #it is a bit tricky here... because for the res bkg, it could be empty for the systematics.keys()[0], which means for the first SR there is no resonant background, so we cannot make it the same way as signals to add the keys. And we don't know which one is the first SR that has resonant background, so we manually wrote those names...
     const_sys_names = ["fnuf_mean","fnuf_rate","fnuf_sigma","material_mean","material_rate","material_sigma","MCScale_scale_mean","MCScale_scale_rate","MCScale_scale_sigma","MCSmear_smear_mean","MCSmear_smear_rate","MCSmear_smear_sigma"]
     consts_splines = {}
 
