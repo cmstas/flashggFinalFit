@@ -56,5 +56,5 @@ pushd Combine
 #  combine --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2 -M AsymptoticLimits -m ${mh} -d Datacard_${procTemplate}_${m}_${procTemplate}.root -n _AsymptoticLimit_r_${procTemplate}_${mo} --freezeParameters MH,MX,MY,allConstrainedNuisances,${index_names} --run=blind --setParameters MX=${mx},MY=${my}${index_values} > combine_results_${procTemplate}_no_sys_pdfIndexFixed_${mo}.txt
 
 
-#  rm higgsCombine*${mo}*
+  rm higgsCombine_AsymptoticLimit_r*${mo}*
 popd
