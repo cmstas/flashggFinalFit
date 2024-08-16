@@ -100,7 +100,6 @@ def modelNonResBkg(doFailedFits, nonResYears, masses, nonResBkgTrees, procTempla
     print(failed_jobs)
 
     for year in nonResYears:
-#      os.system('for f in $(ls Background/outdir_'+procTemplate+'_'+year+'_*/fTest/output/*.root | grep "'+year+'.root" -v); do rename .root _'+year+'.root $f; done')
       os.system('for f in $(ls Background/outdir_'+procTemplate+'_'+year+'_*/fTest/output/*.root); do rename .root _'+year+'.root $f; done')
 
   print('Finished step 2: Model the non-resonant background')
@@ -112,7 +111,7 @@ def modelSignalAndResBkg(sigModels, resHBkgModels, mggl, mggh):
   print("")
 
   os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d.py -i '+sigModels+' -o SignalModelInterpolation/outdir --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSystSignal' if doSystSignal else ''))
-#  os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d_res_bkg.py -i '+resHBkgModels+' -o SignalModelInterpolation/res_bkg_outdir --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSystSignal' if doSystResBkg else ''))
+  os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d_res_bkg.py -i '+resHBkgModels+' -o SignalModelInterpolation/res_bkg_outdir --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSystSignal' if doSystResBkg else ''))
 
   print('Finished step 3: Get the models for signal and resonant background')
   print("")
@@ -180,8 +179,8 @@ def getLimit(masses, config, mggl, mggh, procTemplate):
             'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/Results; ' + \
             'cp Combine/*combine_results_'+procTemplate+'_* Outputs/CollectedPlots_'+procTemplate+'/Combine/Results; ' + \
             'cp -r Combine/Models Outputs/CollectedPlots_'+procTemplate+'/Combine/Models; ' + \
-#            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts; ' + \
-#            'cp Combine/impacts* Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts/; ' + \
+            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts; ' + \
+            'cp Combine/impacts* Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts/; ' + \
             'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/NLL_Scans; ' + \
             'cp Combine/NLL_Scan* Outputs/CollectedPlots_'+procTemplate+'/Combine/NLL_Scans; ' \
   )
@@ -260,10 +259,12 @@ def main(args):
     treePerYearDir = args.nonResBkgTrees+'/'+year
     masses=[m for m in detect_mass_points(treePerYearDir) if args.masses in m]
     if args.useSmallMassGrid:
-      masses=["mx1000my100","mx240my100","mx280my100","mx300my100","mx320my100","mx360my100",
-              "mx400my100","mx450my100","mx500my100","mx550my100",
-              "mx600my100","mx650my100","mx700my100","mx750my100",
-              "mx800my100","mx850my100","mx900my100","mx950my100"]
+      masses=["mx240my70", "mx320my70", "mx450my70", "mx600my70", "mx750my70", "mx850my70", "mx1000my70",
+              "mx240my100", "mx320my100", "mx450my100", "mx600my100", "mx750my100", "mx850my100", "mx1000my100",
+              "mx300my170", "mx320my170", "mx450my170", "mx600my170", "mx750my170", "mx850my170", "mx1000my170",
+              "mx450my300", "mx600my300", "mx750my300", "mx850my300", "mx1000my300",
+              "mx600my450", "mx750my450", "mx850my450", "mx1000my450",
+              "mx750my600", "mx850my600", "mx1000my600", "mx1000my800"]
     masses=[m for m in masses if args.masses in m]
     print('Year = '+year)
     print('Detected mass points,\tSRs,\tCRs:')
