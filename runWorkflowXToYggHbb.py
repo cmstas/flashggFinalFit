@@ -5,7 +5,8 @@ import sys
 
 from detect_mass_points import detect_mass_points
 
-doSyst = False
+doSystSignal = True
+doSystResBkg = True
 
 
 def get_mX(mass):
@@ -99,7 +100,7 @@ def modelNonResBkg(doFailedFits, nonResYears, masses, nonResBkgTrees, procTempla
     print(failed_jobs)
 
     for year in nonResYears:
-      os.system('for f in $(ls Background/outdir_'+procTemplate+'_'+year+'_*/fTest/output/*.root | grep "'+year+'.root" -v); do rename .root _'+year+'.root $f; done')
+      os.system('for f in $(ls Background/outdir_'+procTemplate+'_'+year+'_*/fTest/output/*.root); do rename .root _'+year+'.root $f; done')
 
   print('Finished step 2: Model the non-resonant background')
   print("")
@@ -109,8 +110,8 @@ def modelSignalAndResBkg(sigModels, resHBkgModels, mggl, mggh):
   print('Starting step 3: Get the models for signal and resonant background')
   print("")
 
-  os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d.py -i '+sigModels+' -o SignalModelInterpolation/outdir --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSyst' if doSyst else ''))
-  os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d_res_bkg.py -i '+resHBkgModels+' -o SignalModelInterpolation/res_bkg_outdir --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSyst' if doSyst else ''))
+  os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d.py -i '+sigModels+' -o SignalModelInterpolation/outdir --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSyst' if doSystSignal else ''))
+  os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d_res_bkg.py -i '+resHBkgModels+' -o SignalModelInterpolation/res_bkg_outdir --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSyst' if doSystResBkg else ''))
 
   print('Finished step 3: Get the models for signal and resonant background')
   print("")
@@ -125,9 +126,9 @@ def makeDatacards(masses, sigModels, resHBkgModels, resDYBkg, config, procTempla
     mX = str(get_mX(m))
     mY = str(get_mY(m))
     if resDYBkg:
-      os.system('bash get_limit_datacard.sh '+sigModels+' '+resHBkgModels+' '+m+' '+mH+' '+mX+' '+mY+' 1 '+procTemplate+' '+indir)
+      os.system('bash get_limit_datacard.sh '+sigModels+' '+resHBkgModels+' '+m+' '+mH+' '+mX+' '+mY+' 1 '+procTemplate+' '+indir +(' 1' if doSystResBkg else ' 0'))
     else:
-      os.system('bash get_limit_datacard.sh '+sigModels+' '+resHBkgModels+' '+m+' '+mH+' '+mX+' '+mY+' 0 '+procTemplate+' '+indir)
+      os.system('bash get_limit_datacard.sh '+sigModels+' '+resHBkgModels+' '+m+' '+mH+' '+mX+' '+mY+' 0 '+procTemplate+' '+indir +(' 1' if doSystResBkg else ' 0'))
 
   print('Finished step 4: Make datacards')
   print("")
@@ -198,13 +199,16 @@ def getImpact(masses, config, mggl, mggh, procTemplate):
     mY = str(get_mY(m))
     print("Impacts to run for mX = "+mX+", mY = "+mY)
     os.system('bash get_limit_impacts.sh '+str(mggl)+' '+str(mggh)+' '+mX+' '+mY+' '+mH+' '+procTemplate)
-
+    os.system(
+            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts; ' + \
+            'cp Combine/impacts* Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts/; '  \
+    )
   print('Finished step 7: Get impacts')
   print("")
 
 
 def getFitDiagnostics(masses, config, mggl, mggh, procTemplate):
-  print('Starting step 7: Get fit diagnostics')
+  print('Starting step 8: Get fit diagnostics')
   print("")
 
   for m in masses:
@@ -214,7 +218,7 @@ def getFitDiagnostics(masses, config, mggl, mggh, procTemplate):
     print("Fit diagnostics to run for mX = "+mX+", mY = "+mY)
     os.system('bash get_limit_fitDiagnostics.sh '+str(mggl)+' '+str(mggh)+' '+mX+' '+mY+' '+mH+' '+procTemplate)
 
-  print('Finished step 7: Get fit diagnostics')
+  print('Finished step 8: Get fit diagnostics')
   print("")
 
 

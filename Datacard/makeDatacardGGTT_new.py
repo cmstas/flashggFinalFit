@@ -10,6 +10,8 @@ import systematics_ggbbres
 import json
 import numpy as np
 import copy
+from systematics import theory_systematics
+from tools.calcSystematics import factoryType, addConstantSyst, experimentalSystFactory, theorySystFactory
 
 class Options:
   def __init__(self, args):
@@ -65,21 +67,31 @@ def getValFromDict(sys_dict, sys_name):
   if sys_name in possible_sys:
     val = [sys_dict[sys_name], sys_dict[sys_name]]
   else:
-    val = [sys_dict[sys_name+"_left"], sys_dict[sys_name+"_right"]]
+    if sys_name + "_left" in sys_dict and sys_name + "_right" in sys_dict:
+      val = [sys_dict[sys_name + "_left"], sys_dict[sys_name + "_right"]]
+    else:
+      val = [1, 1]
   return val
 
 def findFactorySystematic(sys_name, proc, cat, year, sig_systematics, res_bkg_systematics, args):
   if args.procTemplate in proc:
     if sig_systematics != None:
-      sys_dict = sig_systematics[str(year)][str(cat[-1])]["%d_%d"%(args.MX, args.MY)]
+      parts = cat.split("cat")
+      cat_number = str(parts[-1])
+      sys_dict = sig_systematics[str(year)][cat_number]["%d_%d"%(args.MX, args.MY)]
       val = getValFromDict(sys_dict, sys_name)
     else:
       val = [1,1]
   else:
     if (res_bkg_systematics != None) and ("Interpolation" not in sys_name):
       slimmed_proc = "_".join(proc.split("_")[:-2]) #take away the year_hgg suffix
-      sys_dict = res_bkg_systematics[str(year)][str(cat[-1])]["%d_%d"%(args.MX, args.MY)][slimmed_proc]
-      val = getValFromDict(sys_dict, sys_name)        
+      parts = cat.split("cat")
+      cat_number = str(parts[-1])
+      sys_dict = res_bkg_systematics[str(year)][cat_number]["%d_%d"%(args.MX, args.MY)][slimmed_proc]
+      if (sys_dict=="no systematics"):
+        val = [1,1]
+      else:
+        val = getValFromDict(sys_dict, sys_name)        
     else:
       val = [1,1]
 
@@ -112,6 +124,7 @@ def grabSystematics(df, args):
   years = df.year.unique()
 
   for syst in systematics_ggbbres.experimental_systematics:
+
     if abs(syst["correlateAcrossYears"]) == 1:
       df[syst["name"]] = '-'
       df_name = lambda sys_name, year: sys_name
@@ -201,11 +214,9 @@ def getBackgroundYield(f, cat, my):
     if prodVal == 0:
       prodVal = (mggh-mggl) / (xvar.getMax()-xvar.getMin())
     bkg_yields.append(prodVal)
-  print(bkg_yields)
   
   f.Close()
   return max(bkg_yields)
-  #return prod.getVal()
 
 def grabYields(df, args):
   df["sig_yield"] = 0
@@ -248,7 +259,6 @@ def doPruning(df, args):
     for proc in df.proc.unique():
       if args.procTemplate in proc:
         df_cat_proc = df[(df.cat==cat)&(df.proc==proc)]
-        print(df_cat_proc)
         assert len(df_cat_proc) == 1
         sig_cat_yields[cat] += df_cat_proc.iloc[0]["sig_yield"]
         bkg_cat_yields[cat] += df_cat_proc.iloc[0]["bkg_yield"]
@@ -306,7 +316,8 @@ def createDYSystematics(df):
     {'name':'sig_sigma_merged_dy','title':'sig_sigma_merged_dy','type':'signal_shape','mode':'other','mean':'0.0','sigma':'1.0'}
   ]
   for cat in cats:
-    num = int(cat[-1])
+    parts = cat.split("cat")
+    num = int(parts[-1])
     cat = "cat%d"%num
     systematics.extend([
       {'name':'sig_norm_merged_%s_dy'%cat,'title':'sig_norm_merged_%s_dy'%cat,'type':'signal_shape','mode':'other','mean':'0.0','sigma':'1.0'},
@@ -361,7 +372,6 @@ def main(args):
       new_rows.append(["dy_merged_hgg", cat+"cr", "merged", 1, "./Models/background/CMS-HGG_ws_%s_combined.root"%(cat+"cr"), "", "w_control_regions:bkg_combined_cat%d_dy"%catnum, 0])
       new_rows.append(["dy_merged_hgg", cat, "merged", 1, "./Models/background/CMS-HGG_ws_%s_combined.root"%(cat+"cr"), "", "w_control_regions:bkg_combined_cat%d_dy"%catnum, 0])
 
-
   df = pd.concat([df, pd.DataFrame(new_rows, columns=columns)], ignore_index=True)
 
   if args.prune:
@@ -371,12 +381,12 @@ def main(args):
     else:
       cr_cats = [cat for cat in df.cat.unique() if cat[-2:]=="cr"]
       nCats = len(cr_cats)
-      print(cr_cats)
 
       df_cr = df[df.cat.isin(cr_cats)]
 
       df_sr = df[~df.cat.isin(cr_cats)]
       df_sr = grabYields(df_sr, args)
+
       df_sr = doPruning(df_sr, args)
 
       for cat in df_sr.cat.unique():

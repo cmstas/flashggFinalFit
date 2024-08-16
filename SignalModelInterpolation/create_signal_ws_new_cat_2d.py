@@ -18,36 +18,14 @@ def unique(a, b):
   return 0.5*(a+b)*(a+b+1)+b
 
 def getNuisanceDatacardName(name, year):
-  if name == "fnufUnc":
+  if name == "fnuf":
     return "CMS_hgg_nuisance_funf_13TeVscaleCorr"
-  elif name == "materialUnc":
+  elif name == "material":
     return "CMS_hgg_nuisance_material_13TeVscaleCorr"
-  elif name == "PhoSmearUnc":
+  elif name == "MCSmear_smear":
     return "CMS_hgg_nuisance_MCSmear_13TeVsmear_%s"%year
-  elif name == "PhoScaleUnc":
+  elif name == "MCScale_scale":
     return "CMS_hgg_nuisance_MCScale_13TeVscale_%s"%year
-  elif name == "PUWeight":
-    return "CMS_hgg_nuisance_pileup_13TeVscale_%s"%year
-  elif name == "JESUnc2":
-    return "CMS_hgg_nuisance_scale_j_absolute_13TeVscaleCorr"
-  elif name == "JESUnc3":
-    return "CMS_hgg_nuisance_scale_j_absolute_13TeVscale_%s"%year
-  elif name == "JESUnc4":
-    return "CMS_hgg_nuisance_scale_j_flavorQCD_13TeVscaleCorr"
-  elif name == "JESUnc5":
-    return "CMS_hgg_nuisance_scale_j_BBEC1_13TeVscaleCorr"
-  elif name == "JESUnc6":
-    return "CMS_hgg_nuisance_scale_j_BBEC1_13TeVscale_%s"%year
-  elif name == "JESUnc11":
-    return "CMS_hgg_nuisance_scale_j_relativeBal_13TeVscaleCorr"
-  elif name == "JESUnc12":
-    return "CMS_hgg_nuisance_scale_j_relativeSample_13TeVscale_%s"%year
-  elif name == "bTagSF8":
-    return "CMS_hgg_nuisance_btag_cferr1_13TeVscaleCorr"
-  elif name == "bTagSF9":
-    return "CMS_hgg_nuisance_btag_cferr2_13TeVscaleCorr"
-  elif name == "JERUnc":
-    return "CMS_hgg_nuisance_res_j_13TeVscale_%s"%year
   else:
     raise Exception("Unexpected shape systematic: %s"%name)
 
@@ -118,7 +96,7 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
     systematics = systematicss[year][cat]
 
     #creates splines for const values
-    const_sys_names = [name for name in systematics[systematics.keys()[0]].keys() if "_" in name]
+    const_sys_names = [name for name in systematics[systematics.keys()[0]].keys() if "mean" in name or "sigma" in name or "rate" in name]
     consts_splines = {}
     for systematic in const_sys_names:
       values = np.asarray([systematics[m][systematic] for m in masses])
@@ -127,6 +105,7 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
     #create nuisances
     nuisances = {}
     nuisance_names = set(["_".join(name.split("_")[:-1]) for name in const_sys_names])
+
     for name in nuisance_names:
       nuisances[name] = ROOT.RooRealVar(getNuisanceDatacardName(name, year),getNuisanceDatacardName(name, year), 0, -5, 5)
 
@@ -139,7 +118,6 @@ def makeWorkspace(models, systematicss, year, cat, workspace_output, mgg_range, 
     mean_rooArgList = ROOT.RooArgList(mean_nominal)
     sigma_rooArgList = ROOT.RooArgList(sigma_nominal)
     for name in nuisance_names:
-      print(name)
       for f in (get_const, get_nuisance):
         sig_norm_rooArgList.add(f(name, "rate"))
         mean_rooArgList.add(f(name, "mean"))
