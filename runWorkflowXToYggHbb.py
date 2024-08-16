@@ -110,8 +110,8 @@ def modelSignalAndResBkg(sigModels, resHBkgModels, mggl, mggh):
   print('Starting step 3: Get the models for signal and resonant background')
   print("")
 
-  os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d.py -i '+sigModels+' -o SignalModelInterpolation/outdir --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSystSignal' if doSystSignal else ''))
-  os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d_res_bkg.py -i '+resHBkgModels+' -o SignalModelInterpolation/res_bkg_outdir --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSystSignal' if doSystResBkg else ''))
+  os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d.py -i '+sigModels+' -o SignalModelInterpolation/outdir --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSyst' if doSystSignal else ''))
+  os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d_res_bkg.py -i '+resHBkgModels+' -o SignalModelInterpolation/res_bkg_outdir --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSyst' if doSystResBkg else ''))
 
   print('Finished step 3: Get the models for signal and resonant background')
   print("")
