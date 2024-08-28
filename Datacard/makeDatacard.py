@@ -191,20 +191,20 @@ if not writePdfIndex(fdata,data,opt):
   print " --> [ERROR] in writing pdf indices. Leaving..."
   leave()
 writeBreak(fdata)
-fdata.write("\nSingleH rateParam * VH_*  1.0")
-fdata.write("\nSingleH rateParam * ggH_*  1.0")
-fdata.write("\nSingleH rateParam * ttH_*  1.0")
-fdata.write("\nSingleH rateParam * tHq_*  1.0")
-fdata.write("\nSingleH rateParam * tHW_*  1.0")
-fdata.write("\nDoubleH rateParam * ggHH_gg*  1.0")
-fdata.write("\nnuisance edit freeze SingleH")
-fdata.write("\nnuisance edit freeze DoubleH")
-if (("Tprime" in opt.ext) or ("2HDM" in opt.ext)):
-    fdata.write("\nttHH_bkg rateParam * ttHH_gg*  1.0")
-    fdata.write("\nnuisance edit freeze ttHH_bkg")
-    fdata.write("\nresBkg group = SingleH DoubleH ttHH_bkg")
-else:
-    fdata.write("\nresBkg group = SingleH DoubleH")
+#fdata.write("\nSingleH rateParam * VH_*  1.0")
+#fdata.write("\nSingleH rateParam * ggH_*  1.0")
+#fdata.write("\nSingleH rateParam * ttH_*  1.0")
+#fdata.write("\nSingleH rateParam * tHq_*  1.0")
+#fdata.write("\nSingleH rateParam * tHW_*  1.0")
+#fdata.write("\nDoubleH rateParam * ggHH_gg*  1.0")
+#fdata.write("\nnuisance edit freeze SingleH")
+#fdata.write("\nnuisance edit freeze DoubleH")
+#if (("Tprime" in opt.ext) or ("2HDM" in opt.ext)):
+#    fdata.write("\nttHH_bkg rateParam * ttHH_gg*  1.0")
+#    fdata.write("\nnuisance edit freeze ttHH_bkg")
+#    fdata.write("\nresBkg group = SingleH DoubleH ttHH_bkg")
+#else:
+#    fdata.write("\nresBkg group = SingleH DoubleH")
 
 fdata.close()
 

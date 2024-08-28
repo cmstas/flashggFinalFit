@@ -26,6 +26,7 @@ ROOT.gStyle.SetOptStat(0)
 def get_options():
   parser = OptionParser()
   parser.add_option("--inputWSFile", dest="inputWSFile", default=None, help="Input RooWorkspace file. If loading snapshot then use a post-fit workspace where the option --saveWorkspace was set")
+  parser.add_option("--inputSpecialFile", dest="inputSpecialFile", default=None, help="Input RooWorkspace file. If loading snapshot then use a post-fit workspace where the option --saveWorkspace was set")
   parser.add_option("--loadSnapshot", dest="loadSnapshot", default=None, help="Load best-fit snapshot name")
   parser.add_option("--cats", dest="cats", default=None, help="Analysis categories. all = loop over cats and plot sum")
   parser.add_option("--unblind", dest="unblind", default=False, action="store_true", help="Unblind signal region")
@@ -58,8 +59,12 @@ def get_options():
 # Open WS
 if opt.inputWSFile is not None:
   print " --> Opening workspace: %s"%opt.inputWSFile
-  f = ROOT.TFile("/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/special_Datacard_ttHHggXX.root")
-  f2 = ROOT.TFile("/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_ttHHggXX.root")
+  f = ROOT.TFile(opt.inputSpecialFile)
+  #f = ROOT.TFile("/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/special_Datacard_ttHHggXX.root")
+  #f = ROOT.TFile("/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacardspecial_Tprime_M500.root")
+  f2 = ROOT.TFile(opt.inputWSFile)
+  #f2 = ROOT.TFile("/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_ttHHggXX.root")
+  #f2 = ROOT.TFile("/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_Tprime_M500.root")
   w = f.Get("w")
   w2 = f2.Get("w")
   # If required loadSnapshot

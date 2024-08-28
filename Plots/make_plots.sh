@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 
 
-tag=SM_pre_app_20240523
+tag=Tprime_M550_pre_app
+#tag=SM_pre_app_20240523
 trees=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
 
-nToys=500
+nToys=50
 make_toys(){
     pushd Plots 
         rm -rf SplusBModels$tag
-        python makeToysHH.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_ttHHggXX.root --ext $tag --dryRun --nToys $nToys #--dropResonantBkg
+        python makeToysHH.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_Tprime_M500_full.root --ext $tag --dryRun --nToys $nToys #--dropResonantBkg
+        #python makeToysHH.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_ttHHggXX.root --ext $tag --dryRun --nToys $nToys #--dropResonantBkg
         iter=0
         while [ $iter -lt $nToys ]
         do 
@@ -29,15 +31,15 @@ make_toys(){
 
 make_SpB(){
     pushd Plots 
-        python makeSplusBModelPlot.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_ttHHggXX.root --cat "SR1" --doBands --ext $tag # --parameterMap "singleH:1,doubleH:1"
-        python makeSplusBModelPlot.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_ttHHggXX.root --cat "SR2" --doBands --ext $tag
+        python makeSplusBModelPlot.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_Tprime_M${mass}.root --inputSpecialFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacardspecial_Tprime_M${mass}.root --cat "SR1" --doBands --ext $tag # --parameterMap "singleH:1,doubleH:1"
+        #python makeSplusBModelPlot.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_ttHHggXX.root --cat "SR1" --doBands --ext $tag # --parameterMap "singleH:1,doubleH:1"
         mv SplusBModels${tag}/SR1_CMS_hgg_mass.pdf SplusBModels${tag}/SR1_CMS_hgg_mass_blind.pdf
         mv SplusBModels${tag}/SR1_CMS_hgg_mass.png SplusBModels${tag}/SR1_CMS_hgg_mass_blind.png
         mv SplusBModels${tag}/SR2_CMS_hgg_mass.pdf SplusBModels${tag}/SR2_CMS_hgg_mass_blind.pdf
         mv SplusBModels${tag}/SR2_CMS_hgg_mass.png SplusBModels${tag}/SR2_CMS_hgg_mass_blind.png
 
-        python makeSplusBModelPlot.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_ttHHggXX.root --cat "SR1" --doBands --ext $tag --unblind # --parameterMap "singleH:1,doubleH:1"
-        python makeSplusBModelPlot.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_ttHHggXX.root --cat "SR2" --doBands --ext $tag --unblind
+        #python makeSplusBModelPlot.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_ttHHggXX.root --cat "SR1" --doBands --ext $tag --unblind # --parameterMap "singleH:1,doubleH:1"
+        #python makeSplusBModelPlot.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_Tprime_M500.root --cat "SR1" --doBands --ext $tag --unblind # --parameterMap "singleH:1,doubleH:1"
         mv SplusBModels${tag}/SR1_CMS_hgg_mass.pdf SplusBModels${tag}/SR1_CMS_hgg_mass_unblind.pdf
         mv SplusBModels${tag}/SR1_CMS_hgg_mass.png SplusBModels${tag}/SR1_CMS_hgg_mass_unblind.png
         mv SplusBModels${tag}/SR2_CMS_hgg_mass.pdf SplusBModels${tag}/SR2_CMS_hgg_mass_unblind.pdf
@@ -46,5 +48,5 @@ make_SpB(){
     popd
 }
 
-make_toys
+#make_toys
 make_SpB

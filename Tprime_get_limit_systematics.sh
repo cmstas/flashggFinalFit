@@ -117,11 +117,46 @@ make_datacard(){
         rm -rf yields_$tag
         rm Datacard.txt
 
-        #python RunYields.py --mass "125.38" --inputWSDirMap 2016=${trees}/ws_signal_2016,2017=${trees}/ws_signal_2017,2018=${trees}/ws_signal_2018 --cats SR1 --procs auto --batch local --mergeYears --skipZeroes --ext $tag --doSystematics 
-        python RunYields.py --mass "125.38" --inputWSDirMap 2016=${trees}/ws_signal_2016,2017=${trees}/ws_signal_2017,2018=${trees}/ws_signal_2018 --cats auto --procs auto --batch local --mergeYears --skipZeroes --ext $tag --doSystematics 
+        if (($mass < $SR1_only)); then
+            python RunYields.py --mass "125.38" --inputWSDirMap 2016=${trees}/ws_signal_2016,2017=${trees}/ws_signal_2017,2018=${trees}/ws_signal_2018 --cats auto --procs auto --batch local --mergeYears --skipZeroes --ext $tag --doSystematics 
+        else
+            python RunYields.py --mass "125.38" --inputWSDirMap 2016=${trees}/ws_signal_2016,2017=${trees}/ws_signal_2017,2018=${trees}/ws_signal_2018 --cats SR1 --procs auto --batch local --mergeYears --skipZeroes --ext $tag --doSystematics 
+        fi
 
-        python makeDatacard.py --years 2016,2017,2018 --ext $tag --prune --pruneThreshold 0.00001 --doSystematics
+        python makeDatacard.py --years 2016,2017,2018 --ext ${tag} --prune --pruneThreshold 0.00001 --doSystematics
         cp Datacard.txt Datacard_${tag}.txt
+    popd
+}
+
+make_datacard_for_SB_plots(){
+    #Make usre desired systematics are specified here Datacard/systematics.py
+    #TODO: Check theory_uncertainties are updated for 2HDM and Tprime
+    #pushd Datacard
+    #    rm Datacard.txt
+
+    #    if (($mass < $SR1_only)); then
+    #        python RunYields.py --mass "125.38" --inputWSDirMap 2016=${trees}/ws_signal_2016,2017=${trees}/ws_signal_2017,2018=${trees}/ws_signal_2018 --cats auto --procs auto --batch local --mergeYears --skipZeroes --ext $tag --doSystematics 
+    #    else
+    #        python RunYields.py --mass "125.38" --inputWSDirMap 2016=${trees}/ws_signal_2016,2017=${trees}/ws_signal_2017,2018=${trees}/ws_signal_2018 --cats SR1 --procs auto --batch local --mergeYears --skipZeroes --ext $tag --doSystematics 
+    #    fi
+
+    #    python makeDatacard.py --years 2016,2017,2018 --ext ${tag} --prune --pruneThreshold 0.00001 --doSystematics
+    #    cp Datacard.txt Datacard_${tag}_special.txt
+    #popd
+
+    pushd Combine
+	rm -rf Models
+	mkdir -p Models
+	mkdir -p Models/signal
+	mkdir -p Models/background
+	mkdir -p Models/data
+	cp ../Signal/outdir_${tag}_packaged/CMS-HGG*.root ./Models/signal/
+	cp ../Background/outdir_${tag}/CMS-HGG*.root ./Models/background/
+	cp ../Background/outdir_${tag}/CMS-HGG*.root ./Models/data/
+	cp ../Datacard/Datacard_${tag}_special.txt Datacardspecial_${tag}.txt
+
+	python RunText2Workspace.py --tag ${tag} --ext "special" --mode $interpretation --dryRun
+	./t2w_jobs/t2w_${interpretation}special.sh
     popd
 }
 
@@ -137,8 +172,10 @@ run_combine(){
 	cp ../Background/outdir_${tag}/CMS-HGG*.root ./Models/data/
 	cp ../Datacard/Datacard_${tag}.txt Datacard_${tag}.txt
 
-	python RunText2Workspace.py --tag $tag --mode $interpretation --dryRun
+	python RunText2Workspace.py --tag ${tag} --mode $interpretation --dryRun
 	./t2w_jobs/t2w_${interpretation}.sh
+	#python RunText2Workspace.py --tag ${tag}_nonRes --mode $interpretation --dryRun
+	#./t2w_jobs/t2w_${interpretation}.sh
 	#rm combine_results_${tag}.txt
 	#rm combine_results_${tag}_unblind.txt
         #common_runes=" --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2"
@@ -218,12 +255,13 @@ copy_plot(){
     cp /home/users/iareed/public_html/ttHH/index.php /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/Signal
 }
 
-for mass in 500; do
+for mass in 500 550; do
 #for mass in 500 550 600 650 700 750 800 850 900 950; do
 #for mass in 1000 1100 1200 1300 1400 1500; do
 #for mass in 500 550 600 650 700 750 800 850 900 950 1000 1100 1200 1300 1400 1500; do
     mass_point=M${mass}
     tag=Tprime_M${mass}_pre_app
+    SR1_only=1000
 
     #Identify which interpretation is being done in the analysis, needed a different name for clarity
     interpretation=Tprime_${mass_point}
@@ -233,7 +271,8 @@ for mass in 500; do
 
     #model_bkg
     #model_sig
-    make_datacard
+    make_datacard_for_SB_plots
+    #make_datacard
     #run_combine
     #syst_plots
     #copy_plot
