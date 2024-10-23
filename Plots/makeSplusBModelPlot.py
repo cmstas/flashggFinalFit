@@ -26,10 +26,11 @@ ROOT.gStyle.SetOptStat(0)
 def get_options():
   parser = OptionParser()
   parser.add_option("--inputWSFile", dest="inputWSFile", default=None, help="Input RooWorkspace file. If loading snapshot then use a post-fit workspace where the option --saveWorkspace was set")
+  parser.add_option("--inputSpecialFile", dest="inputSpecialFile", default=None, help="Input RooWorkspace file. If loading snapshot then use a post-fit workspace where the option --saveWorkspace was set")
   parser.add_option("--loadSnapshot", dest="loadSnapshot", default=None, help="Load best-fit snapshot name")
   parser.add_option("--cats", dest="cats", default=None, help="Analysis categories. all = loop over cats and plot sum")
-  parser.add_option("--unblind", dest="unblind", default=False, action="store_true", help="Unblind signal region")
-  parser.add_option("--blindingRegion", dest="blindingRegion", default="116,134", help="Region in xvar to blind")
+  parser.add_option("--unblind", dest="unblind", default=False, action="store_true", help="Unblind signal region") 
+  parser.add_option("--blindingRegion", dest="blindingRegion", default="120,130", help="Region in xvar to blind")  # plot with --unblind to avoid using
   parser.add_option("--dataScaler", dest="dataScaler", default=1., type='float', help="Scaling term for data histogram")
   parser.add_option("--doBkgRenormalization", dest="doBkgRenormalization", default=False, action="store_true", help="Do Bkg renormalization")
   parser.add_option("--doBands", dest="doBands", default=False, action="store_true", help="Do +-1/2sigma bands for bkg model")
@@ -46,8 +47,8 @@ def get_options():
   parser.add_option("--ext", dest="ext", default='', help="Extension for saving")
   parser.add_option("--mass", dest="mass", default=None, help="Higgs mass")
   parser.add_option("--xvar", dest="xvar", default="CMS_hgg_mass,m_{#gamma#gamma},GeV", help="X-variable: name,title,units")
-  parser.add_option("--nBins", dest="nBins", default=80, type='int', help="Number of bins")
-  parser.add_option("--pdfNBins", dest="pdfNBins", default=3200, type='int', help="Number of bins")
+  parser.add_option("--nBins", dest="nBins", default=160, type='int', help="Number of bins")
+  parser.add_option("--pdfNBins", dest="pdfNBins", default=160, type='int', help="Number of bins")
   parser.add_option("--translateCats", dest="translateCats", default=None, help="JSON to store cat translations")
   parser.add_option("--translatePOIs", dest="translatePOIs", default=None, help="JSON to store poi translations")
   parser.add_option("--problematicCats", dest="problematicCats", default='', help='Problematic analysis categories to skip when processing all')
@@ -58,8 +59,10 @@ def get_options():
 # Open WS
 if opt.inputWSFile is not None:
   print " --> Opening workspace: %s"%opt.inputWSFile
-  f = ROOT.TFile(opt.inputWSFile)
+  f = ROOT.TFile(opt.inputSpecialFile)
+  f2 = ROOT.TFile(opt.inputWSFile)
   w = f.Get("w")
+  w2 = f2.Get("w")
   # If required loadSnapshot
   if opt.loadSnapshot is not None: 
     print "    * Loading snapshot: %s"%opt.loadSnapshot
@@ -106,6 +109,7 @@ if opt.doHHMjjFix:
 
 # Extract the total SB/B models
 sb_model, b_model = w.pdf("model_s"), w.pdf("model_b")
+nonres_model = w2.pdf("model_b")
 
 # Extract dataset for opt.cats
 d_obs = w.data("data_obs")
@@ -114,7 +118,7 @@ wdata_cats = OrderedDict()
 for cidx in range(chan.numTypes()):
   chan.setIndex(cidx)
   c = chan.getLabel()
-  if(opt.cats!='all')&(c not in opt.cats.split(",")): continue
+  if opt.cats != 'all' and (opt.cats not in c or "cr" in c): continue
   if( opt.doHHMjjFix )&( c in catsfix ): _xvar_argset, _wxvar_argset = xvarfix_argset, wxvarfix_argset
   else: _xvar_argset, _wxvar_argset = xvar_argset, wxvar_argset
   data_cats[c] = ROOT.RooDataSet("d_%s"%c,"d_%s"%c,_xvar_argset)
@@ -187,7 +191,7 @@ print " --> Extracting datasets"
 # Loop over bins and add entry for each "weight" to cat datasets 
 for i in range(d_obs.numEntries()):
   p = d_obs.get(i)
-  if(opt.cats!='all')&(p.getCatLabel("CMS_channel") not in opt.cats.split(",")): continue
+  if(opt.cats!='all')&(opt.cats not in p.getCatLabel("CMS_channel") or "cr" in p.getCatLabel("CMS_channel")): continue
   nent = int(d_obs.weight())
   for ient in range(nent): data_cats[p.getCatLabel("CMS_channel")].add(p)
   if opt.doCatWeights: 
@@ -211,9 +215,9 @@ if opt.doBands:
     # Create dataframe
     df_bands = pd.DataFrame(columns=_columns)
     # Loop over toys file and add row for each toy dataset
-    toyFiles = glob.glob("./SplusBModels%s/toys/toy_*.root"%opt.ext)
+    toyFiles = glob.glob("./postfit/SplusBModels%s/toys/toy_*.root"%opt.ext)
     if len(toyFiles) == 0:
-      print "     * [ERROR] No toys files of form ./SplusBModels%s/toys/toy_*.root. Skipping bands"%opt.ext
+      print "     * [ERROR] No toys files of form ./postfit/SplusBModels%s/toys/toy_*.root. Skipping bands"%opt.ext
       opt.doBands = False
     else:
       for tidx in range(len(toyFiles)):
@@ -235,7 +239,7 @@ if opt.doBands:
 	for cidx in range(chan.numTypes()):
 	  chan.setIndex(cidx)
 	  c = chan.getLabel()
-	  if( opt.cats == 'all' )|( c in opt.cats.split(",") ):
+	  if( opt.cats == 'all' )|(opt.cats in c and "cr" not in c):
             if( opt.doHHMjjFix )&( c in catsfix ): 
               _xvar, _xvar_arglist = xvarfix, xvarfix_arglist
             else:
@@ -263,8 +267,8 @@ if opt.doBands:
         else: print "   --> Toy veto: zero entries in first bin"
       # Savin toy yields dataframe to pickle file
       if opt.saveToyYields:
-        print "      * Saving toy yields to: SplusBModels%s/toyYields_%s.pkl"%(opt.ext,opt.xvar.split(",")[0])
-        with open("SplusBModels%s/toyYields_%s.pkl"%(opt.ext,opt.xvar.split(",")[0]),"w") as fD: pickle.dump(df_bands,fD)
+        print "      * Saving toy yields to: postfit/SplusBModels%s/toyYields_%s.pkl"%(opt.ext,opt.xvar.split(",")[0])
+        with open("postfit/SplusBModels%s/toyYields_%s.pkl"%(opt.ext,opt.xvar.split(",")[0]),"w") as fD: pickle.dump(df_bands,fD)
 
 # Process each category separately
 for cidx in range(len(cats)):
@@ -311,11 +315,15 @@ for cidx in range(len(cats)):
   # Extract pdfs for category and create histograms
   print "    * creating pdf histograms: S+B, B"
   sbpdf, bpdf = sb_model.getPdf(c), b_model.getPdf(c)
+  nonrespdf = nonres_model.getPdf(c)
   h_sbpdf = {'pdfNBins':sbpdf.createHistogram("h_sb_pdfNBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.pdfNBins,xvar.getMin(),xvar.getMax())),
              'nBins':sbpdf.createHistogram("h_sb_nBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.nBins,xvar.getMin(),xvar.getMax()))
             }
   h_bpdf = {'pdfNBins':bpdf.createHistogram("h_b_pdfNBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.pdfNBins,xvar.getMin(),xvar.getMax())),
              'nBins':bpdf.createHistogram("h_b_nBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.nBins,xvar.getMin(),xvar.getMax()))
+            }
+  h_nonrespdf = {'pdfNBins':nonrespdf.createHistogram("h_b_pdfNBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.pdfNBins,xvar.getMin(),xvar.getMax())),
+             'nBins':nonrespdf.createHistogram("h_b_nBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.nBins,xvar.getMin(),xvar.getMax()))
             }
   # Calculate yields
   SB, B = sbpdf.expectedEvents(_xvar_argset), bpdf.expectedEvents(_xvar_argset)
@@ -332,11 +340,11 @@ for cidx in range(len(cats)):
   else: print "    * Yield for category: S = %.2f, B=%.2f"%(S,B)
 
   # Extract signal pdf
+  signalScale = 1
   print "    * creating pdf histogram: S"
-  h_spdf = {'pdfNBins':h_sbpdf['pdfNBins']-h_bpdf['pdfNBins'],
-            'nBins':h_sbpdf['nBins']-h_bpdf['nBins']
+  h_spdf = {'pdfNBins':(h_sbpdf['pdfNBins']-h_bpdf['pdfNBins'])*signalScale,
+            'nBins':(h_sbpdf['nBins']-h_bpdf['nBins'])*signalScale
            }
-  
   # Scale pdf histograms to match binning used
   xvar_range = int(xvar.getBinning().highBound()-xvar.getBinning().lowBound())
   if opt.nBins != xvar_range:
@@ -358,14 +366,16 @@ for cidx in range(len(cats)):
   h_bpdf_ratio = h_bpdf['pdfNBins']-h_bpdf['pdfNBins']
   h_spdf_ratio = h_spdf['pdfNBins'].Clone()
   h_data_ratio = h_data.Clone()
-  h_data_ratio.Reset()
+  #h_data_ratio.Reset()
   for ibin in range(1,h_data.GetNbinsX()+1):
     bcenter = h_data.GetBinCenter(ibin)
     if(not opt.unblind)&(bcenter>blindingRegion[0])&(bcenter<blindingRegion[1]): continue
     bval, berr = h_data.GetBinContent(ibin), h_data.GetBinError(ibin)
     bkgval = h_bpdf['nBins'].GetBinContent(ibin)
-    h_data_ratio.SetBinContent(ibin,bval-bkgval)
-    h_data_ratio.SetBinError(ibin,berr)
+    bkgerr = h_bpdf['nBins'].GetBinError(ibin)
+    if berr!=0:
+      h_data_ratio.SetBinContent(ibin,(bval-bkgval)/berr)
+      h_data_ratio.SetBinError(ibin,berr)
   if opt.doCatWeights:
     h_wbpdf_ratio = h_wbpdf['pdfNBins']-h_wbpdf['pdfNBins']
     h_wspdf_ratio = h_wspdf['pdfNBins'].Clone()
@@ -420,7 +430,7 @@ for cidx in range(len(cats)):
   if not opt.skipIndividualCatPlots:
     print "    * making plot"
     if not os.path.isdir("./SplusBModels%s"%(opt.ext)): os.system("mkdir ./SplusBModels%s"%(opt.ext))
-    if opt.doBands: makeSplusBPlot(w,h_data,h_sbpdf,h_bpdf,h_spdf,h_data_ratio,h_bpdf_ratio,h_spdf_ratio,c,opt,df_bands,_reduceRange)
+    if opt.doBands: makeSplusBPlot(w,h_data,h_sbpdf,h_bpdf,h_spdf,h_nonrespdf,h_data_ratio,h_bpdf_ratio,h_spdf_ratio,c,opt,df_bands,_reduceRange)
     else: makeSplusBPlot(w,h_data,h_sbpdf,h_bpdf,h_spdf,h_data_ratio,h_bpdf_ratio,h_spdf_ratio,c,opt,None,_reduceRange)
 
   # Delete histograms
