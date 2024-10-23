@@ -215,9 +215,9 @@ if opt.doBands:
     # Create dataframe
     df_bands = pd.DataFrame(columns=_columns)
     # Loop over toys file and add row for each toy dataset
-    toyFiles = glob.glob("./SplusBModels%s/toys/toy_*.root"%opt.ext)
+    toyFiles = glob.glob("./postfit/SplusBModels%s/toys/toy_*.root"%opt.ext)
     if len(toyFiles) == 0:
-      print "     * [ERROR] No toys files of form ./SplusBModels%s/toys/toy_*.root. Skipping bands"%opt.ext
+      print "     * [ERROR] No toys files of form ./postfit/SplusBModels%s/toys/toy_*.root. Skipping bands"%opt.ext
       opt.doBands = False
     else:
       for tidx in range(len(toyFiles)):
@@ -267,8 +267,8 @@ if opt.doBands:
         else: print "   --> Toy veto: zero entries in first bin"
       # Savin toy yields dataframe to pickle file
       if opt.saveToyYields:
-        print "      * Saving toy yields to: SplusBModels%s/toyYields_%s.pkl"%(opt.ext,opt.xvar.split(",")[0])
-        with open("SplusBModels%s/toyYields_%s.pkl"%(opt.ext,opt.xvar.split(",")[0]),"w") as fD: pickle.dump(df_bands,fD)
+        print "      * Saving toy yields to: postfit/SplusBModels%s/toyYields_%s.pkl"%(opt.ext,opt.xvar.split(",")[0])
+        with open("postfit/SplusBModels%s/toyYields_%s.pkl"%(opt.ext,opt.xvar.split(",")[0]),"w") as fD: pickle.dump(df_bands,fD)
 
 # Process each category separately
 for cidx in range(len(cats)):
@@ -366,14 +366,16 @@ for cidx in range(len(cats)):
   h_bpdf_ratio = h_bpdf['pdfNBins']-h_bpdf['pdfNBins']
   h_spdf_ratio = h_spdf['pdfNBins'].Clone()
   h_data_ratio = h_data.Clone()
-  h_data_ratio.Reset()
+  #h_data_ratio.Reset()
   for ibin in range(1,h_data.GetNbinsX()+1):
     bcenter = h_data.GetBinCenter(ibin)
     if(not opt.unblind)&(bcenter>blindingRegion[0])&(bcenter<blindingRegion[1]): continue
     bval, berr = h_data.GetBinContent(ibin), h_data.GetBinError(ibin)
     bkgval = h_bpdf['nBins'].GetBinContent(ibin)
-    h_data_ratio.SetBinContent(ibin,bval-bkgval)
-    h_data_ratio.SetBinError(ibin,berr)
+    bkgerr = h_bpdf['nBins'].GetBinError(ibin)
+    if berr!=0:
+      h_data_ratio.SetBinContent(ibin,(bval-bkgval)/berr)
+      h_data_ratio.SetBinError(ibin,berr)
   if opt.doCatWeights:
     h_wbpdf_ratio = h_wbpdf['pdfNBins']-h_wbpdf['pdfNBins']
     h_wspdf_ratio = h_wspdf['pdfNBins'].Clone()

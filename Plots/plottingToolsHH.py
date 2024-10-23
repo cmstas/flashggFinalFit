@@ -81,6 +81,7 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNonRes,hDr,hBr,hSr,cat,options,dB=Non
   translateCats = {} #if options.translateCats is None else LoadTranslations(options.translateCats)
   translatePOIs = {} #if options.translatePOIs is None else LoadTranslations(options.translatePOIs)
   blindingRegion = [float(options.blindingRegion.split(",")[0]),float(options.blindingRegion.split(",")[1])]
+  reduceRange=[65,500]
   if reduceRange is not None:
     for h in [hD,hDr,hBr,hSr]: h.GetXaxis().SetRangeUser(reduceRange[0],reduceRange[1])
     for h_ipdf in [hSB,hB,hS]:
@@ -134,6 +135,7 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNonRes,hDr,hBr,hSr,cat,options,dB=Non
       xval = h_axes.GetXaxis().GetBinCenter(ibin)
       xerr = 0.5*(h_axes.GetXaxis().GetBinWidth(ibin))
       bkgval = hB['nBins'].GetBinContent(ibin)
+      bkgerr = hB['nBins'].GetBinError(ibin)
       properties = extractBandProperties(dB,cat,ibin)
       gr_1sig.SetPoint(gr_i,xval,properties['median'])
       gr_2sig.SetPoint(gr_i,xval,properties['median'])
@@ -243,8 +245,12 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNonRes,hDr,hBr,hSr,cat,options,dB=Non
   h_axes_ratio.GetXaxis().SetTickLength(0.03*padSizeRatio)
   h_axes_ratio.GetYaxis().SetLabelSize(0.035*padSizeRatio)
   h_axes_ratio.GetYaxis().SetLabelOffset(0.007)
-  h_axes_ratio.GetYaxis().SetTitle("")
+  h_axes_ratio.GetYaxis().SetTitleSize(0.08)
+  h_axes_ratio.GetYaxis().SetTitleOffset(0.6)
+  h_axes_ratio.GetYaxis().SetTitle("(data-fit)/unc_{data}")
   h_axes_ratio.Draw()
+
+
   # Draw bands 
   if options.doBands:
     gr_2sig_r.Draw("LE3SAME")
@@ -255,7 +261,7 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNonRes,hDr,hBr,hSr,cat,options,dB=Non
   ###  hSr.SetLineColor(2)
   ###  hSr.Draw("Hist same c")
     hBr.SetLineWidth(3)
-    hBr.SetLineStyle(2)
+    hBr.SetLineStyle(1)
     hBr.SetLineColor(2)
     hBr.Draw("Hist same c")
   else:
@@ -279,7 +285,7 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNonRes,hDr,hBr,hSr,cat,options,dB=Non
   lat1.SetTextAlign(33)
   lat1.SetNDC(1)
   lat1.SetTextSize(0.045*padSizeRatio)
-  lat1.DrawLatex(0.87,0.91,"B component subtracted")
+  lat1.DrawLatex(0.87,0.91,"(data-fit)/unc_{data}")
 
   # Save canvas
   canv.Update()
