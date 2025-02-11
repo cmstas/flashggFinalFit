@@ -41,6 +41,7 @@ Background/outdir_*
 Background/config_*
 Datacard/yields_*
 Combine/impacts*.json
+Combine/gof*.json
 Combine/t2w_jobs/
 files/*
 Plots/SplusBModels*/

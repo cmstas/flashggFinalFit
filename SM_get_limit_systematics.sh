@@ -2,7 +2,7 @@
 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 
-tag=SM_pre_app_20240523
+tag=SM_arc_20241205_unblind
 interpretation=ttHHggXX
 trees=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
 
@@ -117,7 +117,8 @@ make_datacard(){
         #python RunYields.py --mass "125.38" --inputWSDirMap 2016=${trees}/ws_signal_2016,2017=${trees}/ws_signal_2017,2018=${trees}/ws_signal_2018 --cats auto --procs "ttHH_ggbb,ttHH_ggWW,ttHH_ggTauTau" --batch local --mergeYears --skipZeroes --ext $tag --doSystematics
 
         python makeDatacard.py --years 2016,2017,2018 --ext $tag --prune --pruneThreshold 0.00001 --doSystematics
-        cp Datacard.txt Datacard_${tag}.txt
+        #cp Datacard.txt Datacard_${tag}.txt
+        cp Datacard.txt Datacardspecial_${tag}.txt
     popd
 }
 
@@ -132,28 +133,33 @@ run_combine(){
 	cp ../Background/outdir_${tag}/CMS-HGG*.root ./Models/background/
 	cp ../Background/outdir_${tag}/CMS-HGG*.root ./Models/data/
 	cp ../Datacard/Datacard_${tag}.txt Datacard_${tag}.txt
+	#cp ../Datacard/Datacardspecial_${tag}.txt Datacardspecial_${tag}.txt
 
-	python RunText2Workspace.py --tag $tag --mode $interpretation --dryRun
-	./t2w_jobs/t2w_${interpretation}.sh
-	rm combine_results_${tag}.txt
-	rm combine_results_${tag}_unblind.txt
+	#python RunText2Workspace.py --tag $tag --mode $interpretation --dryRun
+	#python RunText2Workspace.py --tag ${tag} --ext "special" --mode $interpretation --dryRun
+	#./t2w_jobs/t2w_${interpretation}.sh
+	#./t2w_jobs/t2w_${interpretation}special.sh
+	#rm combine_results_${tag}.txt
+	#rm combine_results_${tag}_unblind.txt
         common_runes=" --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2"
-        #Blind
-        eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --run=blind --freezeParameters MH $common_runes > combine_results_${tag}.txt"
-	eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --run=blind --freezeParameters allConstrainedNuisances $common_runes > stat_only_${tag}.txt"
-        #Unblind
-        #eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters MH $common_runes > combine_results_${tag}_unblind.txt"
-	#eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters allConstrainedNuisances $common_runes > stat_only_${tag}_unblind.txt"
+        ##Blind
+        #eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --run=blind --freezeParameters MH $common_runes > combine_results_${tag}.txt"
+	#eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --run=blind --freezeParameters allConstrainedNuisances $common_runes > stat_only_${tag}.txt"
+        ##Unblind
+        #eval "combine -M AsymptoticLimits --redefineSignalPOI r -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters MH $common_runes > combine_results_${tag}_unblind.txt"
+	#eval "combine -M AsymptoticLimits --redefineSignalPOI r -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters allConstrainedNuisances $common_runes > stat_only_${tag}_unblind.txt"
+	#eval "combine -M FitDiagnostics   --redefineSignalPOI r -m 125.38 -d Datacard_${interpretation}.root -n _fits_comp --saveShapes --saveWithUncertainties --saveWorkspace"
+	eval "combine --redefineSignalPOI r -M MultiDimFit -m 125.38 -d Datacard_${interpretation}.root -n fits_comp_v2 --freezeParameters MH --setParameters MH=125.38 --saveWorkspace --rMin 0 --rMax 100  $common_runes"
 
         # Likelyhood scan parts
 	#combine --expectSignal 1 -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M MultiDimFit --algo grid --points 100 -m 125.38 -d Datacard_${interpretation}.root -n _Scan_r --freezeParameters MH --rMin -10 --rMax 200
 	#python plotLScan.py higgsCombine_Scan_r.MultiDimFit.mH125.root
 	#cp NLL_scan* /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/
 
-        echo "Blind"
-	tail combine_results_${tag}.txt
-        #echo "Unblind"
-	#tail combine_results_${tag}_unblind.txt
+        #echo "Blind"
+	#tail combine_results_${tag}.txt
+        echo "Unblind"
+	tail combine_results_${tag}_unblind.txt
     popd
 }
 
@@ -216,7 +222,7 @@ copy_plot(){
 
 #model_bkg
 #model_sig
-make_datacard
+#make_datacard
 run_combine
 #syst_plots
 #copy_plot

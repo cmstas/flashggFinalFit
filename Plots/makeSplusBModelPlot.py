@@ -36,7 +36,7 @@ def get_options():
   parser.add_option("--doBands", dest="doBands", default=False, action="store_true", help="Do +-1/2sigma bands for bkg model")
   parser.add_option("--doToyVeto", dest="doToyVeto", default=False, action="store_true", help="Veto non-sensical toys with 0 as first entry in bin")
   parser.add_option("--loadToyYields", dest="loadToyYields", default='', help="Load pkl file storing toy yields in dataframe")
-  parser.add_option("--saveToyYields", dest="saveToyYields", default=False, action="store_true", help="Save toy yields dataframe")
+  parser.add_option("--saveToyYields", dest="saveToyYields", default=True, action="store_true", help="Save toy yields dataframe")
   parser.add_option("--doZeroes", dest="doZeroes", default=False, action="store_true", help="Add error of unity to zero bins to show on plot")
   parser.add_option("--skipIndividualCatPlots", dest="skipIndividualCatPlots", default=False, action="store_true", help="Skip plotting of individual categories")
   parser.add_option("--doSumCategories", dest="doSumCategories", default=False, action="store_true", help="Do plot summing the categories being processed")
@@ -113,7 +113,7 @@ if opt.doHHMjjFix:
 
 # Extract the total SB/B models
 sb_model, b_model = w.pdf("model_s"), w.pdf("model_b")
-nonres_model = w2.pdf("model_b")
+nrb_model = w2.pdf("model_b")
 
 # Extract dataset for opt.cats
 d_obs = w.data("data_obs")
@@ -319,7 +319,7 @@ for cidx in range(len(cats)):
   # Extract pdfs for category and create histograms
   print "    * creating pdf histograms: S+B, B"
   sbpdf, bpdf = sb_model.getPdf(c), b_model.getPdf(c)
-  nonrespdf = nonres_model.getPdf(c)
+  nonrespdf = nrb_model.getPdf(c)
   h_sbpdf = {'pdfNBins':sbpdf.createHistogram("h_sb_pdfNBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.pdfNBins,xvar.getMin(),xvar.getMax())),
              'nBins':sbpdf.createHistogram("h_sb_nBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.nBins,xvar.getMin(),xvar.getMax()))
             }
@@ -367,7 +367,8 @@ for cidx in range(len(cats)):
   
   # Create ratio histograms (+weighted)
   print "    * creating ratio histograms"
-  h_bpdf_ratio = h_bpdf['pdfNBins']-h_bpdf['pdfNBins']
+  h_bpdf_ratio = h_bpdf['pdfNBins']-h_nonrespdf['pdfNBins']
+  #h_bpdf_ratio = h_bpdf['pdfNBins']-h_bpdf['pdfNBins']
   h_spdf_ratio = h_spdf['pdfNBins'].Clone()
   h_data_ratio = h_data.Clone()
   h_data_ratio.Reset()
@@ -375,7 +376,8 @@ for cidx in range(len(cats)):
     bcenter = h_data.GetBinCenter(ibin)
     if(not opt.unblind)&(bcenter>blindingRegion[0])&(bcenter<blindingRegion[1]): continue
     bval, berr = h_data.GetBinContent(ibin), h_data.GetBinError(ibin)
-    bkgval = h_bpdf['nBins'].GetBinContent(ibin)
+    bkgval = h_nonrespdf['nBins'].GetBinContent(ibin)
+    #bkgval = h_bpdf['nBins'].GetBinContent(ibin)
     h_data_ratio.SetBinContent(ibin,bval-bkgval)
     h_data_ratio.SetBinError(ibin,berr)
   if opt.doCatWeights:
@@ -432,6 +434,7 @@ for cidx in range(len(cats)):
   if not opt.skipIndividualCatPlots:
     print "    * making plot"
     if not os.path.isdir("./SplusBModels%s"%(opt.ext)): os.system("mkdir ./SplusBModels%s"%(opt.ext))
+               #def makeSplusBPlot(we,hD,   hSB,    hB,    hS,    hNR,hDr,hBr,hSr,cat,options,dB=None,reduceRange=None,limit=None):
     if opt.doBands: makeSplusBPlot(w,h_data,h_sbpdf,h_bpdf,h_spdf,h_nonrespdf,h_data_ratio,h_bpdf_ratio,h_spdf_ratio,c,opt,df_bands,_reduceRange)
     else: makeSplusBPlot(w,h_data,h_sbpdf,h_bpdf,h_spdf,h_data_ratio,h_bpdf_ratio,h_spdf_ratio,c,opt,None,_reduceRange)
 

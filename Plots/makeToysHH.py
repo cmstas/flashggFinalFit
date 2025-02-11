@@ -33,6 +33,7 @@ for job in glob.glob("./SplusBModels%s/toys/jobs/sub*.sh"%opt.ext): os.system("r
 inputWSFile = opt.inputWSFile
 f = ROOT.TFile(inputWSFile)
 w = f.Get("w")
+print(w)
 if opt.loadSnapshot is not None: w.loadSnapshot(opt.loadSnapshot)
 poi_bf = {}
 for poi in opt.POIs.split(","): poi_bf[poi] = w.var(poi).getVal()
@@ -64,18 +65,21 @@ if opt.batch == 'IC':
     # Generate command
     fsub.write("#Generate command\n")
     #gen_cmd = "combine %s -m %.3f -M GenerateOnly --saveWorkspace --toysFrequentist --bypassFrequentistFit -t 1 --setParameters %s=%.3f -s -1 -n _%g_gen_step"%(inputWSFile,mh_bf,opt.POI,poi_bf,itoy)
-    gen_cmd = "combine %s -m %.3f -M GenerateOnly --saveWorkspace --toysFrequentist --bypassFrequentistFit -t 1 %s -s -1 -n _%g_gen_step"%(inputWSFile,mh_bf,setParamStr,itoy)
+    gen_cmd = "combine %s -m %.3f -M GenerateOnly --expectSignal 100 --saveWorkspace --toysFrequentist --bypassFrequentistFit -t 1 %s -s -1 -n _%g_gen_step"%(inputWSFile,mh_bf,setParamStr,itoy)
     if opt.loadSnapshot is not None: gen_cmd += " --snapshotName %s"%opt.loadSnapshot
     fsub.write("%s\n\n"%gen_cmd)
     # Fit cmd
     fsub.write("#Fit command\n")
     fsub.write("mv higgsCombine_%g_gen_step*.root gen_%g.root\n"%(itoy,itoy))
     #fit_cmd = "combine gen_%g.root -m %.3f -M MultiDimFit --floatOtherPOIs=1 --saveWorkspace --toysFrequentist --bypassFrequentistFit -t 1 --setParameters %s=%.3f -s -1 -n _%g_fit_step --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2"%(itoy,mh_bf,opt.POI,poi_bf,itoy)
-    fit_cmd = "combine gen_%g.root -m %.3f -M MultiDimFit -P %s --floatOtherPOIs=1 --saveWorkspace --toysFrequentist --bypassFrequentistFit -t 1 %s -s -1 -n _%g_fit_step --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2"%(itoy,mh_bf,opt.POIs.split(",")[0],setParamStr,itoy)
+    fit_cmd = "combine gen_%g.root -m %.3f -M MultiDimFit -P %s --floatOtherPOIs=0 --saveWorkspace --toysFrequentist --bypassFrequentistFit -t 1 %s -s -1 -n _%g_fit_step --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2"%(itoy,mh_bf,opt.POIs.split(",")[0],setParamStr,itoy)
     fsub.write("%s\n\n"%fit_cmd)
     # Throw cmd
     fsub.write("#Throw command\n")
     fsub.write("mv higgsCombine_%g_fit_step*.root fit_%g.root\n"%(itoy,itoy))
+    #dummy = 11.717850685119629
+    #dummy = dummy*.4
+    #throw_cmd = "combine fit_%g.root -m %.3f --snapshotName MultiDimFit -M GenerateOnly --saveToys --toysFrequentist --bypassFrequentistFit -t -1 -n _%g_throw_step %s%s"%(itoy,mh_bf,itoy,"--setParameters r=",dummy)
     throw_cmd = "combine fit_%g.root -m %.3f --snapshotName MultiDimFit -M GenerateOnly --saveToys --toysFrequentist --bypassFrequentistFit -t -1 -n _%g_throw_step %s"%(itoy,mh_bf,itoy,setParam0Str)
     fsub.write("%s\n\n"%throw_cmd)
     # Clean up
@@ -84,7 +88,16 @@ if opt.batch == 'IC':
     fsub.close()
 
   # Change permission of all files and set running on batch
-  os.system("chmod 775 ./SplusBModels%s/toys/jobs/sub*.sh"%opt.ext)
+  os.system("chmod 775 ./SplusBModels%s/toys/jobs/sub_toy_0*.sh"%opt.ext)
+  os.system("chmod 775 ./SplusBModels%s/toys/jobs/sub_toy_1*.sh"%opt.ext)
+  os.system("chmod 775 ./SplusBModels%s/toys/jobs/sub_toy_2*.sh"%opt.ext)
+  os.system("chmod 775 ./SplusBModels%s/toys/jobs/sub_toy_3*.sh"%opt.ext)
+  os.system("chmod 775 ./SplusBModels%s/toys/jobs/sub_toy_4*.sh"%opt.ext)
+  os.system("chmod 775 ./SplusBModels%s/toys/jobs/sub_toy_5*.sh"%opt.ext)
+  os.system("chmod 775 ./SplusBModels%s/toys/jobs/sub_toy_6*.sh"%opt.ext)
+  os.system("chmod 775 ./SplusBModels%s/toys/jobs/sub_toy_7*.sh"%opt.ext)
+  os.system("chmod 775 ./SplusBModels%s/toys/jobs/sub_toy_8*.sh"%opt.ext)
+  os.system("chmod 775 ./SplusBModels%s/toys/jobs/sub_toy_9*.sh"%opt.ext)
   if not opt.dryRun:
     subs = glob.glob("./SplusBModels%s/toys/jobs/sub*"%opt.ext)
     for fsub in subs: os.system("qsub -q hep.q -l h_rt=0:20:0 -l h_vmem=12G %s"%fsub)

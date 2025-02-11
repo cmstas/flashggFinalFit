@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-
-tag=Tprime_M550_pre_app
-#tag=SM_pre_app_20240523
+tag=SM_pre_app_20240523
 trees=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
 
 nToys=50
@@ -48,5 +46,5 @@ make_SpB(){
     popd
 }
 
-#make_toys
+make_toys
 make_SpB

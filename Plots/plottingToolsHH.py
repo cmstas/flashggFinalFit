@@ -133,6 +133,7 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNR,hDr,hBr,hSr,cat,options,dB=None,re
     for ibin in range(h_axes.GetXaxis().GetFirst(),h_axes.GetNbinsX()+1):
       xval = h_axes.GetXaxis().GetBinCenter(ibin)
       xerr = 0.5*(h_axes.GetXaxis().GetBinWidth(ibin))
+      #bkgval = hNR['nBins'].GetBinContent(ibin)
       bkgval = hB['nBins'].GetBinContent(ibin)
       properties = extractBandProperties(dB,cat,ibin)
       gr_1sig.SetPoint(gr_i,xval,properties['median'])
@@ -220,7 +221,6 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNR,hDr,hBr,hSr,cat,options,dB=None,re
   lat0.DrawLatex(0.6,0.92,"138 fb^{-1} (13 TeV)")
   lat0.DrawLatex(0.6,0.8,"#scale[0.6]{%s}"%Translate(cat,translateCats))
   #lat0.DrawLatex(0.15,0.83,"#scale[0.75]{H#rightarrow#gamma#gamma}")
-  #lat0.DrawLatex(0.15,0.83,"#scale[0.75]{Non-resonant HH #rightarrow #gamma#gamma#tau#tau}")
   if(options.loadSnapshot is not None):
     #lat0.DrawLatex(0.15,0.77,"#scale[0.6]{#vec{#alpha} = STXS stage 1.2 minimal}")
     lat0.DrawLatex(0.15,0.77,"#scale[0.6]{#vec{#alpha} = (#mu_{ggH}, #mu_{VBF}, #mu_{VH}, #mu_{top})}")
@@ -244,8 +244,10 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNR,hDr,hBr,hSr,cat,options,dB=None,re
   pad2.cd()
   h_axes_ratio = hDr.Clone()
   h_axes_ratio.Reset()
-  h_axes_ratio.SetMaximum(max((hDr.GetMaximum()+hDr.GetBinError(hDr.GetMaximumBin()))*1.5,hSr.GetMaximum()*1.2))
-  h_axes_ratio.SetMinimum((hDr.GetMinimum()-hDr.GetBinError(hDr.GetMinimumBin()))*1.3)
+  h_axes_ratio.SetMaximum(2)
+  #h_axes_ratio.SetMaximum(max((hDr.GetMaximum()+hDr.GetBinError(hDr.GetMaximumBin()))*1.5,hSr.GetMaximum()*1.2))
+  h_axes_ratio.SetMinimum(-1)
+  #h_axes_ratio.SetMinimum((hDr.GetMinimum()-hDr.GetBinError(hDr.GetMinimumBin()))*1.3)
   h_axes_ratio.SetTitle("")
   h_axes_ratio.GetXaxis().SetTitleSize(0.05*padSizeRatio)
   h_axes_ratio.GetXaxis().SetLabelSize(0.035*padSizeRatio)
@@ -289,7 +291,8 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNR,hDr,hBr,hSr,cat,options,dB=None,re
   lat1.SetTextAlign(33)
   lat1.SetNDC(1)
   lat1.SetTextSize(0.045*padSizeRatio)
-  lat1.DrawLatex(0.87,0.91,"Tot B subtracted")
+  lat1.DrawLatex(0.87,0.91,"NRB subtracted")
+  #lat1.DrawLatex(0.87,0.91,"Tot B subtracted")
 
   # Save canvas
   canv.Update()

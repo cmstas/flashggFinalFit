@@ -19,7 +19,7 @@ def get_options():
   parser.add_option("--xvar", dest="xvar", default='CMS_hgg_mass:m_{#gamma#gamma}:GeV', help="x-var (name:title:units)")
   parser.add_option("--mass", dest="mass", default='125.38', help="Mass of datasets")
   parser.add_option("--MH", dest="MH", default='125.38', help="Higgs mass (for pdf)")
-  parser.add_option("--nBins", dest="nBins", default=160, type='int', help="Number of bins")
+  parser.add_option("--nBins", dest="nBins", default=80, type='int', help="Number of bins")
   parser.add_option("--pdf_nBins", dest="pdf_nBins", default=3200, type='int', help="Number of bins")
   parser.add_option("--threshold", dest="threshold", default=0.001, type='float', help="Threshold to prune process from plot default = 0.1% of total category norm")
   parser.add_option("--translateCats", dest="translateCats", default=None, help="JSON to store cat translations")
