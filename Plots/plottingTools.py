@@ -117,7 +117,7 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hDr,hBr,hSr,cat,options,dB=None,reduce
   h_axes.GetXaxis().SetTitle("")
   h_axes.GetXaxis().SetLabelSize(0)
   h_axes.GetYaxis().SetTitleSize(0.05)
-  h_axes.GetYaxis().SetTitle("Events / GeV")
+  h_axes.GetYaxis().SetTitle("Events / 5 GeV")
   h_axes.GetYaxis().SetTitleOffset(1.1)
   h_axes.GetYaxis().SetLabelSize(0.035)
   h_axes.GetYaxis().SetLabelOffset(0.007)

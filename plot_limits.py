@@ -21,7 +21,7 @@ BR_H_TT = 6.27e-2
 BR_H_BB = 5.84e-1
 
 BR_HH_GGTT = 2 * BR_H_GG * BR_H_TT
-BR_HH_GGBB = 2 * BR_H_GG * BR_H_BB
+BR_XYH_GGBB = BR_H_GG * BR_H_BB
 
 #NMSSM_max_allowed_Y_gg = pd.DataFrame({"MX":   [650, 650,  650, 650, 650],
 #                                       "MY":   [70,    250,   550,   800,   70,    100,   70,    70,    125,   300,   90,    400,   70,    100,   300,   250,   500,   70,    190,   450,   550,   70,    500,   600,   70,    170,   400,   650,   70,    80,    190,   650,   700,   70,    500], 
@@ -72,7 +72,7 @@ def getLimits(results_path):
       idx2=3
     elif "97.5%" in line:
       idx2=4
-    
+
     limit = float(line.split("r < ")[1])
 
     if "no_" not in line and "Expected" in line:
@@ -110,20 +110,49 @@ def getLimits(results_path):
 
   return masses, limits, limits_no_sys, limits_no_res_bkg, limits_no_dy_bkg, limits_observed
     
-def plotLimits(mX, limits, ylabel, nominal_masses, savename=None, xlabel=r"$m_X$"):
-  plt.scatter(mX, limits[2], zorder=3, facecolors="none", edgecolors="blue")
-  plt.scatter(mX[np.isin(mX, nominal_masses)], limits[2][np.isin(mX, nominal_masses)], zorder=4, facecolors="none", edgecolors="red", label="Nominal masses")
-  plt.plot(mX, limits[2], 'b--', zorder=3, label="Expected 95% CL limit")
-  plt.fill_between(mX, limits[1], limits[3], zorder=2, facecolor="green", label=r"$\pm$ $1\sigma$")
-  plt.fill_between(mX, limits[0], limits[4], zorder=1, facecolor="yellow", label=r"$\pm$ $2\sigma$")
+def plotLimits(mX, limits, ylabel, nominal_masses, savename=None, xlabel=r"$m_X$", doObserved = False, limits_observed = None, tag=None):
+
+#  plt.scatter(mX, limits[2], zorder=3, facecolors="none", edgecolors="blue")
+#  plt.scatter(mX[np.isin(mX, nominal_masses)], limits[2][np.isin(mX, nominal_masses)], zorder=4, facecolors="none", edgecolors="red", label="Nominal masses")
+  plt.plot(mX, limits[2], 'k--', zorder=3, label="Median expected")
+  plt.fill_between(mX, limits[1], limits[3], zorder=2, color = '#607641', label=r"68% expected")
+  plt.fill_between(mX, limits[0], limits[4], zorder=1, color='#F5BB54', label=r"95% expected")
   plt.xlabel(xlabel)
   plt.ylabel(ylabel)
   
   plt.legend()
   bottom, top = plt.ylim()
-  
-  mplhep.cms.label(llabel="Work in Progress", data=True, lumi=common.tot_lumi, loc=0)
+#  plt.ylim(0,0.85)
+  plt.ylim(0,5)
+  font_size=28
+  legend_font_size=24
+  plt.xlabel(xlabel, fontsize=font_size)
+  plt.ylabel(ylabel, fontsize=font_size)
+  plt.xticks(fontsize=font_size)
+  plt.yticks(fontsize=font_size)
 
+  if doObserved:
+    plt.plot(mX, limits_observed, 'k-', zorder=5)
+    plt.scatter(mX, limits_observed, zorder=3, facecolors="none", edgecolors="black")
+    plt.plot(my, limits_observed_slice, color='k', zorder=5 ,label="Observed", marker='o')
+
+  mplhep.cms.text("", loc=2)
+  mplhep.cms.lumitext(r"$132\ \mathrm{fb}^{-1}\ (13\ \mathrm{TeV})$")
+
+  #mplhep.cms.lumitext("13 TeV")
+  #mplhep.cms.label(data=True, lumi=common.tot_lumi, loc=2)
+
+  mx_value = tag  # or pick any value/index you want
+  plt.text(
+    0.05, 0.81,
+    "$m_X = {}\\,\\mathrm{{GeV}}$\n$95\% \ CL\ upper\ limits$".format(mx_value),
+    transform=plt.gca().transAxes,
+    fontsize=26,
+    verticalalignment='top',
+    horizontalalignment='left'
+  )
+
+  plt.legend(fontsize=legend_font_size)
   if savename!=None:
     plt.savefig(savename+".png")
     plt.savefig(savename+".pdf")
@@ -132,14 +161,31 @@ def plotLimits(mX, limits, ylabel, nominal_masses, savename=None, xlabel=r"$m_X$
     plt.savefig(savename+"_log.pdf")
     plt.clf()
 
-def plotLimitsStackMX(masses, limits, ylabel, nominal_mx, nominal_my, savename, doObserved = False, limits_observed = None):
+def plotLimitsStackMXLow(masses, limits, ylabel, nominal_mx, nominal_my, savename, doObserved = False, limits_observed = None):
+  #hep.cms.label(data=True,label="", loc=2, ax=ax)
+  #mplhep.cms.label(data=True, lumi=common.tot_lumi, loc=2)
+  mplhep.cms.text("", loc=2)
+  mplhep.cms.lumitext(r"$132\ \mathrm{fb}^{-1}\ (13\ \mathrm{TeV})$")
+
+#  mplhep.cms.lumitext("13 TeV")
   label1 = "Nominal masses"
-  label2 = "Expected 95% CL limit"
-  label3 = r"$\pm$ $1\sigma$"
-  label4 = r"$\pm$ $2\sigma$"
-  label5 = "Observed 95% CL limits"
+  label2 = "Median expected"
+  label3 = r"68% expected"
+  label4 = r"95% expected"
+  label5 = "Observed"
+
+  plt.text(
+    0.35, 0.95,
+    rf"95% CL upper limits",
+    transform=plt.gca().transAxes,
+    fontsize=26,
+    verticalalignment='top',
+    horizontalalignment='left'
+  )
 
   for i, mx in enumerate(np.sort(np.unique(masses[:,0]))):
+    if mx>550:
+        continue
     my = masses[masses[:,0]==mx,1]
     limits_slice = limits[:,masses[:,0]==mx]
     limits_slice = limits_slice[:,np.argsort(my)]
@@ -152,56 +198,154 @@ def plotLimitsStackMX(masses, limits, ylabel, nominal_mx, nominal_my, savename, 
 
     limits_slice *= 10**i
 
-    plt.scatter(my, limits_slice[2], zorder=3, facecolors="none", edgecolors="blue")
-    if mx in nominal_mx:
-      plt.scatter(my[np.isin(my, nominal_my)], limits_slice[2][np.isin(my, nominal_my)], zorder=4, facecolors="none", edgecolors="red", label=label1)
-    plt.plot(my, limits_slice[2], 'b--', zorder=3, label=label2)
-    plt.fill_between(my, limits_slice[1], limits_slice[3], zorder=2, facecolor="green", label=label3)
-    plt.fill_between(my, limits_slice[0], limits_slice[4], zorder=1, facecolor="yellow", label=label4)
+#    plt.scatter(my, limits_slice[2], zorder=3, facecolors="none", edgecolors="blue")
+#    if mx in nominal_mx:
+#      plt.scatter(my[np.isin(my, nominal_my)], limits_slice[2][np.isin(my, nominal_my)], zorder=4, facecolors="none", edgecolors="red", label=label1)
+    plt.plot(my, limits_slice[2], 'k--', zorder=3, label=label2)
+    plt.fill_between(my, limits_slice[1], limits_slice[3], zorder=2, color='#607641', label=label3)
+    plt.fill_between(my, limits_slice[0], limits_slice[4], zorder=1, color='#F5BB54', label=label4)
     label1 = label2 = label3 = label4 = None
 
-    plt.text(my[-1]+10, limits_slice[2][-1], r"$m_X=%d$ GeV $(\times 10^{%d})$"%(mx, i), fontsize=12, verticalalignment="center")
+    plt.text(my[-1]+10, limits_slice[2][-1], r"$m_X=%d$ GeV $(\times 10^{%d})$"%(mx, i), fontsize=20, verticalalignment="center")
    
     if doObserved:
       limits_observed_slice *= 10**i
-      if mx == 600:
+      #if mx == 600:
       # Apply the mask only when mx is 600 to exclude my=400
-        mask = my != 400
-      else:
+      #  mask = my != 400
+      #else:
       # No mask applied, include all points
-        mask = np.ones_like(my, dtype=bool)
+      #  mask = np.ones_like(my, dtype=bool)
 
-      plt.scatter(my[mask], limits_observed_slice[mask], zorder=3, facecolors="none", edgecolors="black")
-      #plt.scatter(my, limits_observed_slice, zorder=3, facecolors="none", edgecolors="black")
+      plt.scatter(my, limits_observed_slice, zorder=3, facecolors="none", edgecolors="black")
       if mx in nominal_mx:
-        plt.scatter(my[np.isin(my, nominal_my) & mask],
-                limits_observed_slice[np.isin(my, nominal_my) & mask],
+        plt.scatter(my[np.isin(my, nominal_my)],
+                limits_observed_slice[np.isin(my, nominal_my)],
                 zorder=5, facecolors="black", edgecolors="black")
         #plt.scatter(my[np.isin(my, nominal_my)], limits_observed_slice[np.isin(my, nominal_my)], zorder=5, facecolors="black", edgecolors="black")
       #plt.plot(my, limits_observed_slice, 'k-', zorder=5, label=label5)
-      plt.plot(my[mask], limits_observed_slice[mask], 'k-', zorder=5, label=label5)
+      plt.plot(my, limits_observed_slice, color='k', zorder=5, label=label5, marker='o')
       label5 = None
 
-  plt.xlabel(r"$m_Y$")
-  plt.ylabel(ylabel)  
-  plt.legend(ncol=2)
+  font_size=28
+  legend_font_size=24
+  plt.xticks(fontsize=font_size)
+  plt.yticks(fontsize=font_size)
+
+  plt.xlabel(r"$m_Y \ [GeV]$",fontsize=font_size)
+  plt.ylabel(ylabel,fontsize=font_size)  
+  plt.legend(fontsize=legend_font_size,loc='upper left',bbox_to_anchor=(0.25, 0.9),ncol=2)
   bottom, top = plt.ylim()
-  plt.ylim(limits.min(), limits.max()*10**(i+1))
+#  plt.ylim(limits.min(), limits.max()*10**(i+1))
+  plt.ylim(limits.min(), limits.max()*10**(11))
   left, right = plt.xlim()
-  plt.xlim(left, my.max()*1.2)
-  mplhep.cms.label(llabel="Work in Progress", data=True, lumi=common.tot_lumi, loc=0)
+  plt.xlim(left, my.max()*1.4)
+#  hep.cms.label("Preliminary", loc=0, ax=ax)
+#  mplhep.cms.label(data=True, lumi=common.tot_lumi, loc=0)
 
   if savename!=None:
-    plt.savefig(savename+".png")
-    plt.savefig(savename+".pdf")
+    plt.savefig(savename+"_low.png")
+    plt.savefig(savename+"_low.pdf")
     plt.yscale("log")
-    plt.savefig(savename+"_log.png")
-    plt.savefig(savename+"_log.pdf")
+    plt.savefig(savename+"_low_log.png")
+    plt.savefig(savename+"_low_log.pdf")
+    plt.clf()
+
+def plotLimitsStackMXHigh(masses, limits, ylabel, nominal_mx, nominal_my, savename, doObserved = False, limits_observed = None):
+#  hep.cms.label(data=True,label="", loc=2, ax=ax)
+  mplhep.cms.text("", loc=2)
+  mplhep.cms.lumitext(r"$132\ \mathrm{fb}^{-1}\ (13\ \mathrm{TeV})$")
+
+  #mplhep.cms.lumitext("13 TeV")
+#  mplhep.cms.label(data=True, lumi=common.tot_lumi, loc=2)
+  label1 = "Nominal masses"
+  label2 = "Median expected"
+  label3 = r"68% expected"
+  label4 = r"95% expected"
+  label5 = "Observed"
+
+  plt.text(
+    0.35, 0.95,
+    rf"95% CL upper limits",
+    transform=plt.gca().transAxes,
+    fontsize=26,
+    verticalalignment='top',
+    horizontalalignment='left'
+  )
+
+  iline=0
+  for i, mx in enumerate(np.sort(np.unique(masses[:,0]))):
+    if mx<=550:
+        continue
+    my = masses[masses[:,0]==mx,1]
+    limits_slice = limits[:,masses[:,0]==mx]
+    limits_slice = limits_slice[:,np.argsort(my)]
+
+    if doObserved:
+      limits_observed_slice = limits_observed[masses[:,0]==mx]
+      limits_observed_slice = limits_observed_slice[np.argsort(my)]
+
+    my = my[np.argsort(my)]
+
+    limits_slice *= 10**iline
+
+#    plt.scatter(my, limits_slice[2], zorder=3, facecolors="none", edgecolors="blue")
+#    if mx in nominal_mx:
+#      plt.scatter(my[np.isin(my, nominal_my)], limits_slice[2][np.isin(my, nominal_my)], zorder=4, facecolors="none", edgecolors="red", label=label1)
+    plt.plot(my, limits_slice[2], 'k--', zorder=3, label=label2)
+    plt.fill_between(my, limits_slice[1], limits_slice[3], zorder=2, color='#607641', label=label3)
+    plt.fill_between(my, limits_slice[0], limits_slice[4], zorder=1, color='#F5BB54', label=label4)
+    label1 = label2 = label3 = label4 = None
+
+    plt.text(my[-1]+10, limits_slice[2][-1], r"$m_X=%d$ GeV $(\times 10^{%d})$"%(mx, iline), fontsize=20, verticalalignment="center")
+
+    if doObserved:
+      limits_observed_slice *= 10**iline
+      #if mx == 600:
+      # Apply the mask only when mx is 600 to exclude my=400
+      #  mask = my != 400
+      #else:
+      # No mask applied, include all points
+      #  mask = np.ones_like(my, dtype=bool)
+
+      plt.scatter(my, limits_observed_slice, zorder=3, facecolors="none", edgecolors="black")
+      if mx in nominal_mx:
+        plt.scatter(my[np.isin(my, nominal_my)],
+                limits_observed_slice[np.isin(my, nominal_my)],
+                zorder=5, facecolors="black", edgecolors="black")
+        #plt.scatter(my[np.isin(my, nominal_my)], limits_observed_slice[np.isin(my, nominal_my)], zorder=5, facecolors="black", edgecolors="black")
+      #plt.plot(my, limits_observed_slice, 'k-', zorder=5, label=label5)
+      plt.plot(my, limits_observed_slice, color='k', zorder=5, label=label5, marker='o')
+      label5 = None
+      
+    iline=iline+1
+
+  font_size=28
+  legend_font_size=24
+  plt.xticks(fontsize=font_size)
+  plt.yticks(fontsize=font_size)
+  plt.legend(fontsize=legend_font_size,loc='upper left',bbox_to_anchor=(0.22, 0.9),ncol=2)
+  plt.xlabel(r"$m_Y \ [GeV]$",fontsize=font_size)
+  plt.ylabel(ylabel,fontsize=font_size)
+  bottom, top = plt.ylim()
+#  plt.ylim(limits.min(), limits.max()*10**(i+1))
+  plt.ylim(limits.min(), limits.max()*10**(iline+2))
+  left, right = plt.xlim()
+  plt.xlim(left, my.max()*1.45)
+#  hep.cms.label("Preliminary", loc=0, ax=ax)
+#  mplhep.cms.label(data=True, lumi=common.tot_lumi, loc=0)
+
+  if savename!=None:
+    plt.savefig(savename+"_high.png")
+    plt.savefig(savename+"_high.pdf")
+    plt.yscale("log")
+    plt.savefig(savename+"_high_log.png")
+    plt.savefig(savename+"_high_log.pdf")
     plt.clf()
 
 def plotLimitsStackMY(masses, limits, ylabel, nominal_mx, nominal_my, savename):
   label1 = "Nominal masses"
-  label2 = "Expected 95% CL limit"
+  label2 = "Expected 95 % CL limit"
   label3 = r"$\pm$ $1\sigma$"
   label4 = r"$\pm$ $2\sigma$"
 
@@ -232,8 +376,8 @@ def plotLimitsStackMY(masses, limits, ylabel, nominal_mx, nominal_my, savename):
   plt.ylim(limits.min(), limits.max()*10**(i+1))
   left, right = plt.xlim()
   plt.xlim(left, 1175)
-    
-  mplhep.cms.label(llabel="Work in Progress", data=True, lumi=common.tot_lumi, loc=0)
+  mplhep.cms.label(lumi=common.tot_lumi, loc=2)  
+#  mplhep.cms.label( data=True, lumi=common.tot_lumi, loc=0)
 
   if savename!=None:
     plt.savefig(savename+".png")
@@ -243,7 +387,7 @@ def plotLimitsStackMY(masses, limits, ylabel, nominal_mx, nominal_my, savename):
     plt.savefig(savename+"_log.pdf")
     plt.clf()
 
-def plotLimits2D(masses, limits, ylabel, savename):
+def plotLimits2D(masses, limits, ylabel, savename, doObserved = False):
   bin_edges = []
   mx = np.sort(np.unique(masses[:,0]))
   my = np.sort(np.unique(masses[:,1]))
@@ -264,21 +408,29 @@ def plotLimits2D(masses, limits, ylabel, savename):
     for myi in my_edge_centers:
       interp_masses.append([mxi, myi])
   interp_masses = np.array(interp_masses)
-  interp_limits = spi.griddata(masses[:,:2], limits[2], interp_masses, method="linear", fill_value=0)
+  if doObserved:
+      interp_limits = spi.griddata(masses[:,:2], limits, interp_masses, method="linear", fill_value=0)
+  else:
+      interp_limits = spi.griddata(masses[:,:2], limits[2], interp_masses, method="linear", fill_value=0)
 #  plt.hist2d(interp_masses[:,0], interp_masses[:,1], [mx_edges, my_edges], weights=interp_limits, norm=matplotlib.colors.LogNorm())
   plt.hist2d(interp_masses[:,0], interp_masses[:,1], [mx_edges, my_edges], weights=interp_limits, cmin=10e-10)  
   cbar = plt.colorbar()
   cbar.set_label(ylabel)
-  plt.xlabel(r"$m_X$")
-  plt.ylabel(r"$m_Y$")
+  plt.xlabel(r"$m_X(GeV)$")
+  plt.ylabel(r"$m_Y(GeV)$")
 
   plt.text(0.25, 0.9, r"$H\rightarrow bb$", transform=plt.gca().transAxes, fontsize=32)
   plt.text(0.05, 0.9, r"$Y\rightarrow\gamma\gamma$", transform=plt.gca().transAxes, fontsize=32)
 
-  mplhep.cms.label(llabel="Work in Progress", data=True, lumi=common.tot_lumi, loc=0)
+  mplhep.cms.label(lumi=common.tot_lumi, loc=2)
+#  mplhep.cms.label( data=True, lumi=common.tot_lumi, loc=0)
 
-  plt.savefig(savename+".png")
-  plt.savefig(savename+".pdf")
+  if doObserved:
+      plt.savefig(savename+"_observed.png")
+      plt.savefig(savename+"_observed.pdf")
+  else:
+      plt.savefig(savename+".png")
+      plt.savefig(savename+".pdf")
   
   plt.fill_between([250,650],[65,65],[my_edges[-1],my_edges[-1]],facecolor="none",hatch="/",edgecolor="red", label="Limit below maximally\nallowed in NMSSM")
   plt.legend(frameon=True)
@@ -415,14 +567,14 @@ if not opt.doObserved:
 tabulateLimits(masses, limits, os.path.join(opt.outputFile, "Limits_xs_br"))
 if not opt.doObserved:
   tabulateLimitsAll(masses, limits, limits_no_sys, limits_no_res_bkg, os.path.join(opt.outputFile, "Limits_xs_br"))
-tabulateLimits(masses, limits / BR_HH_GGBB, os.path.join(opt.outputFile, "Limits_xs"))
+tabulateLimits(masses, limits / BR_XYH_GGBB, os.path.join(opt.outputFile, "Limits_xs"))
 
 if not opt.doObserved:
   tabulateLimits(masses, limits_no_sys, os.path.join(opt.outputFile, "Limits_xs_br_no_sys"))
-  tabulateLimits(masses, limits_no_sys / BR_HH_GGBB, os.path.join(opt.outputFile, "Limits_xs_no_sys"))
+  tabulateLimits(masses, limits_no_sys / BR_XYH_GGBB, os.path.join(opt.outputFile, "Limits_xs_no_sys"))
 
   tabulateLimits(masses, limits_no_res_bkg, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg"))
-  tabulateLimits(masses, limits_no_res_bkg / BR_HH_GGBB, os.path.join(opt.outputFile, "Limits_xs_no_res_bkg"))
+  tabulateLimits(masses, limits_no_res_bkg / BR_XYH_GGBB, os.path.join(opt.outputFile, "Limits_xs_no_res_bkg"))
 
 if len(np.unique(masses[:,1])) == 1: #if 1D (graviton or radion)
   mx = masses[:,0]
@@ -435,20 +587,20 @@ if len(np.unique(masses[:,1])) == 1: #if 1D (graviton or radion)
 
   nominal_masses = [260,270,280,290,300,320,350,400,450,500,550,600,650,700,750,800,900,1000]
   
-  ylabel = r"$\sigma(pp \rightarrow X) B(X \rightarrow HH \rightarrow \gamma\gamma bb)$ [fb]"
+  ylabel = r"$\sigma(pp \rightarrow X) 𝓑(X \rightarrow HH \rightarrow \gamma\gamma bb)$ [fb]"
   if opt.doObserved:
     plotLimits(mx, limits, limits_observed, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs_br", "limits"))
   else:
     plotLimits(mx, limits, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs_br", "limits"))
-    plotLimits(mx, limits_no_sys, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_no_sys"))
-    plotLimits(mx, limits_no_res_bkg, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_no_res_bkg"))
+#    plotLimits(mx, limits_no_sys, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_no_sys"))
+#    plotLimits(mx, limits_no_res_bkg, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_no_res_bkg"))
 
   ylabel = r"$\sigma(pp \rightarrow X) B(X \rightarrow HH)$ [fb]"
   if opt.doObserved:
-    plotLimits(mx, limits / BR_HH_GGBB, limits_observed / BR_HH_GGBB, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs", "limits"))
-  else:
-    plotLimits(mx, limits_no_sys / BR_HH_GGBB, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs_no_sys", "limits_no_sys"))
-    plotLimits(mx, limits_no_res_bkg / BR_HH_GGBB, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs_no_res_bkg", "limits_no_res_bkg"))
+    plotLimits(mx, limits / BR_XYH_GGBB, limits_observed / BR_XYH_GGBB, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs", "limits"))
+#  else:
+#    plotLimits(mx, limits_no_sys / BR_XYH_GGBB, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs_no_sys", "limits_no_sys"))
+#    plotLimits(mx, limits_no_res_bkg / BR_XYH_GGBB, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs_no_res_bkg", "limits_no_res_bkg"))
 
     plotSystematicComparison(mx, limits, limits_no_sys, nominal_masses, os.path.join(opt.outputFile, "Limits_systematics_comparison", "125"))
     ylabel = r"$\sigma(pp \rightarrow X) B(X \rightarrow HH \rightarrow \gamma\gamma bb)$ [fb]"
@@ -464,20 +616,23 @@ else:
   # limits = limits[:, s]
   # limits_no_sys = limits_no_sys[:, s]
   # masses = masses[s]
-  ylabel = r"$\sigma(pp \rightarrow X) B(X \rightarrow YH \rightarrow \gamma\gamma bb)$ [fb]"
+  ylabel = r"$\sigma(pp \rightarrow X) 𝓑(X \rightarrow YH \rightarrow \gamma\gamma bb)$ [fb]"
   if opt.doObserved:
-    plotLimitsStackMX(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br", "limits_stack_mx"), opt.doObserved, limits_observed)
+    plotLimitsStackMXLow(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br", "limits_stack_mx"), opt.doObserved, limits_observed)
+    plotLimitsStackMXHigh(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br", "limits_stack_mx"), opt.doObserved, limits_observed)
+    plotLimits2D(masses, limits_observed,        ylabel, os.path.join(opt.outputFile, "Limits_xs_br", "limits_2d"), opt.doObserved)
   else:
-    plotLimitsStackMX(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br", "limits_stack_mx"), opt.doObserved)
-    plotLimitsStackMX(masses, limits_no_sys,      ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_stack_mx_no_sys"), opt.doObserved)
-    plotLimitsStackMX(masses, limits_no_res_bkg,  ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_stack_mx_no_res_bkg"), opt.doObserved)
+    plotLimitsStackMXLow(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br", "limits_stack_mx"), opt.doObserved)
+    plotLimitsStackMXHigh(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br", "limits_stack_mx"), opt.doObserved)
+#    plotLimitsStackMXLow(masses, limits_no_sys,      ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_stack_mx_no_sys"), opt.doObserved)
+#    plotLimitsStackMXLow(masses, limits_no_res_bkg,  ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_stack_mx_no_res_bkg"), opt.doObserved)
 #  plotLimitsStackMY(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br", "limits_stack_my"))
 #  plotLimitsStackMY(masses, limits_no_sys,      ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_stack_my_no_sys"))
 #  plotLimitsStackMY(masses, limits_no_res_bkg,  ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_stack_my_no_res_bkg"))
   plotLimits2D(masses, limits,        ylabel, os.path.join(opt.outputFile, "Limits_xs_br", "limits_2d"))
-  if not opt.doObserved:
-    plotLimits2D(masses, limits_no_sys, ylabel, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_2d_no_sys"))
-    plotLimits2D(masses, limits_no_res_bkg, ylabel, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_2d_no_res_bkg"))
+#  if not opt.doObserved:
+#    plotLimits2D(masses, limits_no_sys, ylabel, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_2d_no_sys"))
+#    plotLimits2D(masses, limits_no_res_bkg, ylabel, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_2d_no_res_bkg"))
 
   for mx in np.unique(masses[:,0]):
     my = masses[masses[:,0]==mx,1]
@@ -485,6 +640,9 @@ else:
     limits_no_sys_slice = limits_no_sys[:,masses[:,0]==mx]
     limits_no_res_bkg_slice = limits_no_res_bkg[:,masses[:,0]==mx]
     limits_no_dy_bkg_slice = limits_no_dy_bkg[:,masses[:,0]==mx]
+    if opt.doObserved:
+      limits_observed_slice = limits_observed[masses[:,0]==mx]
+      limits_observed_slice = limits_observed_slice[np.argsort(my)]
 
     limits_slice = limits_slice[:,np.argsort(my)]
     limits_no_sys_slice = limits_no_sys_slice[:,np.argsort(my)]
@@ -498,15 +656,26 @@ else:
       nm = []
 
 
-    ylabel = r"$\sigma(pp \rightarrow X(%d)) B(X \rightarrow YH \rightarrow \gamma\gamma bb)$ [fb]"%mx
-    plotLimits(my, limits_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br", "limits_mx%d"%mx), xlabel=r"$m_Y$")
-    if not opt.doObserved:
-      plotLimits(my, limits_no_sys_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_mx%d_no_sys"%mx), xlabel=r"$m_Y$")
-      plotLimits(my, limits_no_res_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_mx%d_no_res_bkg"%mx), xlabel=r"$m_Y$")
-      plotSystematicComparison(my, limits_slice, limits_no_sys_slice, nm, os.path.join(opt.outputFile, "Limits_systematics_comparison", "mx%d"%mx), xlabel=r"$m_Y$")
-      plotSystematicComparison2(my, limits_slice, limits_no_sys_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_systematics_comparison", "mx%d_2"%mx), xlabel=r"$m_Y$")
-      plotResBkgComparison2(my, limits_slice, limits_no_res_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_res_bkg_comparison", "mx%d_2"%mx), xlabel=r"$m_Y$")
-      plotDYBkgComparison2(my, limits_slice, limits_no_dy_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_dy_bkg_comparison", "mx%d_2"%mx), xlabel=r"$m_Y$")
+    ylabel = r"$\sigma(pp \rightarrow X) 𝓑(X \rightarrow YH \rightarrow \gamma\gamma bb)$ [fb]"
+#    ylabel = r"$\sigma(pp \rightarrow X)\ \mathrm{B}(X \rightarrow HH \rightarrow \gamma\gamma bb)$ [fb]"
+#    ylabel = r"$𝓑$"
+
+#temp disabled
+    if opt.doObserved:
+      #if mx==650 or mx==240 or mx==1000:
+      #if mx!=240 and mx!=1000:
+      if mx==240:
+        plotLimits(my, limits_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br", "limits_mx%d"%mx), xlabel=r"$m_Y \ [GeV]$", doObserved = opt.doObserved, limits_observed = limits_observed_slice,tag=mx)
+    else:
+      plotLimits(my, limits_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br", "limits_mx%d"%mx), xlabel=r"$m_Y \ [GeV]$",tag=mx)
+
+#    if not opt.doObserved:
+#      plotLimits(my, limits_no_sys_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_mx%d_no_sys"%mx), xlabel=r"$m_Y$")
+#      plotLimits(my, limits_no_res_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_mx%d_no_res_bkg"%mx), xlabel=r"$m_Y$")
+#      plotSystematicComparison(my, limits_slice, limits_no_sys_slice, nm, os.path.join(opt.outputFile, "Limits_systematics_comparison", "mx%d"%mx), xlabel=r"$m_Y$")
+#      plotSystematicComparison2(my, limits_slice, limits_no_sys_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_systematics_comparison", "mx%d_2"%mx), xlabel=r"$m_Y$")
+#      plotResBkgComparison2(my, limits_slice, limits_no_res_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_res_bkg_comparison", "mx%d_2"%mx), xlabel=r"$m_Y$")
+#      plotDYBkgComparison2(my, limits_slice, limits_no_dy_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_dy_bkg_comparison", "mx%d_2"%mx), xlabel=r"$m_Y$")
 
   for my in np.unique(masses[:,1]):
     mx = masses[masses[:,1]==my,0]
@@ -514,12 +683,15 @@ else:
     limits_no_sys_slice = limits_no_sys[:,masses[:,1]==my]
     limits_no_res_bkg_slice = limits_no_res_bkg[:,masses[:,1]==my]
     limits_no_dy_bkg_slice = limits_no_dy_bkg[:,masses[:,1]==my]
-
+    if opt.doObserved:
+      limits_observed_slice = limits_observed[masses[:,1]==my]
+      limits_observed_slice = limits_observed_slice[np.argsort(mx)]
 
     limits_slice = limits_slice[:,np.argsort(mx)]
     limits_no_sys_slice = limits_no_sys_slice[:,np.argsort(mx)]
     limits_no_res_bkg_slice = limits_no_res_bkg_slice[:,np.argsort(mx)]
     limits_no_dy_bkg_slice = limits_no_dy_bkg_slice[:,np.argsort(mx)]
+
     mx = mx[np.argsort(mx)]
 
     if my in nominal_my:
@@ -528,13 +700,17 @@ else:
       nm = []
 
     ylabel = r"$\sigma(pp \rightarrow X) B(X \rightarrow Y(%d)H \rightarrow \gamma\gamma bb)$ [fb]"%my
-    plotLimits(mx, limits_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br", "limits_my%d"%my))
-    if not opt.doObserved:
-      plotLimits(mx, limits_no_sys_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_my%d_no_sys"%my))
-      plotLimits(mx, limits_no_res_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_my%d_no_res_bkg"%my))
-      plotSystematicComparison(mx, limits_slice, limits_no_sys_slice, nm, os.path.join(opt.outputFile, "Limits_systematics_comparison", "my%d"%my))
-      plotSystematicComparison2(mx, limits_slice, limits_no_sys_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_systematics_comparison", "my%d_2"%my))
-      plotResBkgComparison2(mx, limits_slice, limits_no_res_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_res_bkg_comparison", "my%d_2"%my))
-      plotDYBkgComparison2(mx, limits_slice, limits_no_dy_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_dy_bkg_comparison", "my%d_2"%my))
+#temp disabled
+#    if opt.doObserved:
+#      plotLimits(mx, limits_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br", "limits_my%d"%my), xlabel=r"$m_X$", doObserved = opt.doObserved, limits_observed = limits_observed_slice)
+#      plotLimits(mx, limits_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br", "limits_my%d"%my), xlabel=r"$m_X$")
+
+#    if not opt.doObserved:
+#      plotLimits(mx, limits_no_sys_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_my%d_no_sys"%my))
+#      plotLimits(mx, limits_no_res_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_my%d_no_res_bkg"%my))
+#      plotSystematicComparison(mx, limits_slice, limits_no_sys_slice, nm, os.path.join(opt.outputFile, "Limits_systematics_comparison", "my%d"%my))
+#      plotSystematicComparison2(mx, limits_slice, limits_no_sys_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_systematics_comparison", "my%d_2"%my))
+#      plotResBkgComparison2(mx, limits_slice, limits_no_res_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_res_bkg_comparison", "my%d_2"%my))
+#      plotDYBkgComparison2(mx, limits_slice, limits_no_dy_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_dy_bkg_comparison", "my%d_2"%my))
 
   

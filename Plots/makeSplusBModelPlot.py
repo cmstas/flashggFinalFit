@@ -47,8 +47,8 @@ def get_options():
   parser.add_option("--ext", dest="ext", default='', help="Extension for saving")
   parser.add_option("--mass", dest="mass", default=None, help="Higgs mass")
   parser.add_option("--xvar", dest="xvar", default="CMS_hgg_mass,m_{#gamma#gamma},GeV", help="X-variable: name,title,units")
-  parser.add_option("--nBins", dest="nBins", default=160, type='int', help="Number of bins")
-  parser.add_option("--pdfNBins", dest="pdfNBins", default=160, type='int', help="Number of bins")
+  parser.add_option("--nBins", dest="nBins", default=160, type='int', help="Number of bins") # default 160 
+  parser.add_option("--pdfNBins", dest="pdfNBins", default=160, type='int', help="Number of bins") #default 160, set 187 bins to account for 5 GeV per bin
   parser.add_option("--translateCats", dest="translateCats", default=None, help="JSON to store cat translations")
   parser.add_option("--translatePOIs", dest="translatePOIs", default=None, help="JSON to store poi translations")
   parser.add_option("--problematicCats", dest="problematicCats", default='', help='Problematic analysis categories to skip when processing all')
@@ -216,6 +216,7 @@ if opt.doBands:
     df_bands = pd.DataFrame(columns=_columns)
     # Loop over toys file and add row for each toy dataset
     toyFiles = glob.glob("./postfit/SplusBModels%s/toys/toy_*.root"%opt.ext)
+#    toyFiles = glob.glob("/home/users/yagu/XYH/XtoYH_sys/plots_2023-12-19_CategorizationAndPreselSFCorrected/CMSSW_10_2_13/src/flashggFinalFit/Combine/input.root")
     if len(toyFiles) == 0:
       print "     * [ERROR] No toys files of form ./postfit/SplusBModels%s/toys/toy_*.root. Skipping bands"%opt.ext
       opt.doBands = False
@@ -289,7 +290,11 @@ for cidx in range(len(cats)):
   # Create data histogram (+weighted)
   print "    * creating data histogram"
   h_data = _xvar.createHistogram("h_data_%s"%c, ROOT.RooFit.Binning(opt.nBins,xvar.getMin(),xvar.getMax()))
+#  h_data = _xvar.createHistogram("h_data_%s"%c, ROOT.RooFit.Binning(opt.nBins,xvar.getMin(),995))
   h_data.SetBinErrorOption(ROOT.TH1.kPoisson)
+#  h_data = ROOT.TGraphAsymmErrors()
+#  h_data.BayesDivide(g_data, g_data, "cl=0.683 b(1,1) mode")
+
   if opt.unblind: d.fillHistogram(h_data,_xvar_arglist)
   else: d.reduce("%s<%f|%s>%f"%(_xvar.GetName(),blindingRegion[0],_xvar.GetName(),blindingRegion[1])).fillHistogram(h_data,_xvar_arglist)
   if opt.doCatWeights:
@@ -325,6 +330,16 @@ for cidx in range(len(cats)):
   h_nonrespdf = {'pdfNBins':nonrespdf.createHistogram("h_b_pdfNBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.pdfNBins,xvar.getMin(),xvar.getMax())),
              'nBins':nonrespdf.createHistogram("h_b_nBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.nBins,xvar.getMin(),xvar.getMax()))
             }
+
+#  h_sbpdf = {'pdfNBins':sbpdf.createHistogram("h_sb_pdfNBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.pdfNBins,xvar.getMin(),995)),
+#             'nBins':sbpdf.createHistogram("h_sb_nBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.nBins,xvar.getMin(),995))
+#            }
+#  h_bpdf = {'pdfNBins':bpdf.createHistogram("h_b_pdfNBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.pdfNBins,xvar.getMin(),995)),
+#             'nBins':bpdf.createHistogram("h_b_nBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.nBins,xvar.getMin(),995))
+#            }
+#  h_nonrespdf = {'pdfNBins':nonrespdf.createHistogram("h_b_pdfNBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.pdfNBins,xvar.getMin(),995)),
+#             'nBins':nonrespdf.createHistogram("h_b_nBins_%s"%c,_xvar,ROOT.RooFit.Binning(opt.nBins,xvar.getMin(),995))
+#            }
   # Calculate yields
   SB, B = sbpdf.expectedEvents(_xvar_argset), bpdf.expectedEvents(_xvar_argset)
   S = SB-B
@@ -375,7 +390,7 @@ for cidx in range(len(cats)):
     bkgerr = h_bpdf['nBins'].GetBinError(ibin)
     if berr!=0:
       h_data_ratio.SetBinContent(ibin,(bval-bkgval)/berr)
-      h_data_ratio.SetBinError(ibin,berr)
+      h_data_ratio.SetBinError(ibin,berr/berr)
   if opt.doCatWeights:
     h_wbpdf_ratio = h_wbpdf['pdfNBins']-h_wbpdf['pdfNBins']
     h_wspdf_ratio = h_wspdf['pdfNBins'].Clone()
