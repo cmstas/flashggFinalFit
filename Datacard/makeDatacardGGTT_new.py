@@ -234,7 +234,8 @@ def grabYields(df, args):
     df.loc[idx, "sig_yield"] = norm * sf * row.rate
 
     if (args.procTemplate in row.proc) and (row.year == "2016"): # only need bkg yield in one row (choose 2016)
-      bkg_workspace_file = "../Background/outdir_%s_combined_mx%dmy%d/fTest/output/CMS-HGG_multipdf_%s_combined.root"%(args.procTemplate, args.MX, args.MY, row["cat"])
+      #bkg_workspace_file = "../Background/outdir_%s_combined_mx%dmy%d/fTest/output/CMS-HGG_multipdf_%s_combined.root"%(args.procTemplate, args.MX, args.MY, row["cat"])
+      bkg_workspace_file = "../Combine/Models/background/CMS-HGG_multipdf_%s_combined.root"%(row["cat"])
       df.loc[idx, "bkg_yield"] = getBackgroundYield(bkg_workspace_file, row["cat"], args.MY)
 
   return df
@@ -346,12 +347,21 @@ def main(args):
   for sideband in sidebands:
     nCatPerMasspoint[args.procTemplate+'mx'+sideband['sig_proc'].split('_')[-3]+'my'+sideband['sig_proc'].split('_')[-1]] = len(sideband['N'])
 
-  for fname, model, proc, cat, year in getProcesses(args.sig_model_dir, args, nCatPerMasspoint):
-    rows.append([proc, cat, year, lumiMap[year]*1000, os.path.join("./Models/signal", fname), os.path.join(args.sig_model_dir, fname), model, 0])
+  if args.useMassGrid_Interp is not None:
+    sig_dir = os.path.join("../SignalModelInterpolation", "outdir_"+args.useMassGrid_Interp+'_part'+args.temp_part)
+    res_dir = os.path.join("../SignalModelInterpolation","res_bkg_outdir_"+args.useMassGrid_Interp+'_part'+args.temp_part)
+  for fname, model, proc, cat, year in getProcesses(sig_dir, args, nCatPerMasspoint):
+    if args.useMassGrid_Interp is not None:
+      rows.append([proc, cat, year, lumiMap[year]*1000, os.path.join("./Models/signal", args.useMassGrid_Interp+'_part'+args.temp_part, fname), os.path.join(sig_dir, fname), model, 0])
+    else:
+      rows.append([proc, cat, year, lumiMap[year]*1000, os.path.join("./Models/signal", fname), os.path.join(args.sig_model_dir, fname), model, 0])
 
   if args.do_res_bkg:
-    for fname, model, proc, cat, year in getProcesses(args.res_bkg_model_dir, args, nCatPerMasspoint):
-      rows.append([proc, cat, year, lumiMap[year]*1000, os.path.join("./Models/res_bkg", fname), os.path.join(args.res_bkg_model_dir, fname), model, 0])
+    for fname, model, proc, cat, year in getProcesses(res_dir, args, nCatPerMasspoint):
+      if args.useMassGrid_Interp is not None:
+        rows.append([proc, cat, year, lumiMap[year]*1000, os.path.join("./Models/res_bkg", args.useMassGrid_Interp+'_part'+args.temp_part, fname), os.path.join(res_dir, fname), model, 0])
+      else:
+        rows.append([proc, cat, year, lumiMap[year]*1000, os.path.join("./Models/res_bkg", fname), os.path.join(args.res_bkg_model_dir, fname), model, 0])
 
   # if args.do_dy_bkg:
   #   for fname, model, proc, cat, year in getProcesses(args.dy_bkg_model_dir, args):
@@ -455,7 +465,8 @@ def main(args):
           continue
         catnum = int(cat.split("cat")[1])
         df_row = df[(df.proc=="data_obs")&(df.cat==cat+"cr")].iloc[0]
-        df_row.current_modelWSFile = bkg_workspace_file = "../Background/outdir_%s_combined_mx%dmy%d/fTest/output/CMS-HGG_ws_%s_combined.root"%(args.procTemplate, args.MX, args.MY, df_row["cat"])
+        #df_row.current_modelWSFile = bkg_workspace_file = "../Background/outdir_%s_combined_mx%dmy%d/fTest/output/CMS-HGG_ws_%s_combined.root"%(args.procTemplate, args.MX, args.MY, df_row["cat"])
+        df_row.current_modelWSFile = bkg_workspace_file = "../Combine/Models/background/CMS-HGG_ws_%s_combined.root"%(df_row["cat"])
         cr_yield = getNEvents(df_row.current_modelWSFile, df_row.model)
         upper_bound = cr_yield*2
 
@@ -498,6 +509,9 @@ if __name__=="__main__":
 
   parser.add_argument('--prune', action="store_true")
   parser.add_argument('--pruneThreshold', type=float, default=0.01)
+
+  parser.add_argument('--useMassGrid_Interp', type=str, default=None)
+  parser.add_argument('--temp_part', type=str, default=None)
 
   args = parser.parse_args()
 

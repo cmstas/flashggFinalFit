@@ -2,10 +2,11 @@
 import argparse
 import os
 import sys
+import re
 
 from detect_mass_points import detect_mass_points
 
-doSystSignal = True
+doSyst = True
 doSystResBkg = True
 
 
@@ -97,6 +98,12 @@ def modelNonResBkg(doFailedFits, nonResYears, masses, nonResBkgTrees, procTempla
             os.system('sed -i "s/--gofCriteria 0.001/--gofCriteria 0.0/g" Background/outdir_'+procTemplate+'_'+year+'_'+m+'/fTest/jobs/sub_fTest_'+procTemplate+'_'+year+'_'+m+'_'+proc+'cat'+str(i)+'.sh')
             os.system('set +e; bash Background/outdir_'+procTemplate+'_'+year+'_'+m+'/fTest/jobs/sub_fTest_'+procTemplate+'_'+year+'_'+m+'_'+proc+'cat'+str(i)+'.sh >> rerunning_background.log 2>&1; set -e')
 
+          proc = procTemplate+m
+          if not os.path.exists('Background/outdir_'+procTemplate+'_'+year+'_'+m+'/fTest/output/CMS-HGG_ws_'+proc+'cat'+str(i)+'cr.root') and not os.path.exists('Background/outdir_'+procTemplate+'_'+year+'_'+m+'/fTest/output/CMS-HGG_ws_'+proc+'cat'+str(i)+'cr_combined.root'):
+            failed_jobs=failed_jobs+year+' '+m+' cat'+str(i)+'cr \n'
+            print(year+' '+m+' cat'+str(i)+'cr')
+            os.system('set +e; bash Background/outdir_'+procTemplate+'_'+year+'_'+m+'/fTest/jobs/sub_fTest_'+procTemplate+'_'+year+'_'+m+'_'+proc+'cat'+str(i)+'cr.sh >> rerunning_background.log 2>&1; set -e')
+
     print(failed_jobs)
 
     for year in nonResYears:
@@ -111,14 +118,14 @@ def modelSignalAndResBkg(sigModels, resHBkgModels, mggl, mggh):
   print('Starting step 3: Get the models for signal and resonant background')
   print("")
 
-  os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d.py -i '+sigModels+' -o SignalModelInterpolation/outdir --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSystSignal' if doSystSignal else ''))
-#  os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d_res_bkg.py -i '+resHBkgModels+' -o SignalModelInterpolation/res_bkg_outdir --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSystSignal' if doSystResBkg else ''))
+  os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d.py -i '+sigModels+' -o SignalModelInterpolation/outdir_'+args.useMassGrid_Interp+'_part'+args.temp_part+' --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSyst' if doSyst else ''))
+  os.system('python SignalModelInterpolation/create_signal_ws_new_cat_2d_res_bkg.py -i '+resHBkgModels+' -o SignalModelInterpolation/res_bkg_outdir_'+args.useMassGrid_Interp+'_part'+args.temp_part+' --mgg-range '+str(mggl)+' '+str(mggh)+(' --doSyst' if doSystResBkg else ''))
 
   print('Finished step 3: Get the models for signal and resonant background')
   print("")
 
 
-def makeDatacards(masses, sigModels, resHBkgModels, resDYBkg, config, procTemplate, indir):
+def makeDatacards(masses, sigModels, resHBkgModels, resDYBkg, config, procTemplate, indir, ):
   print('Starting step 4: Make datacards')
   print("")
 
@@ -126,10 +133,13 @@ def makeDatacards(masses, sigModels, resHBkgModels, resDYBkg, config, procTempla
     mH = str(get_mH(config, m))
     mX = str(get_mX(m))
     mY = str(get_mY(m))
-    if resDYBkg:
-      os.system('bash get_limit_datacard.sh '+sigModels+' '+resHBkgModels+' '+m+' '+mH+' '+mX+' '+mY+' 1 '+procTemplate+' '+indir +(' 1' if doSystResBkg else ' 0'))
-    else:
-      os.system('bash get_limit_datacard.sh '+sigModels+' '+resHBkgModels+' '+m+' '+mH+' '+mX+' '+mY+' 0 '+procTemplate+' '+indir +(' 1' if doSystResBkg else ' 0'))
+#    if resDYBkg:
+#      os.system('bash get_limit_datacard.sh '+sigModels+' '+resHBkgModels+' '+m+' '+mH+' '+mX+' '+mY+' 1 '+procTemplate+' '+indir +(' 1' if doSystResBkg else ' 0'))
+#    else:
+#      os.system('bash get_limit_datacard.sh '+sigModels+' '+resHBkgModels+' '+m+' '+mH+' '+mX+' '+mY+' 0 '+procTemplate+' '+indir +(' 1' if doSystResBkg else ' 0'))
+
+    if args.useMassGrid_Interp is not None:
+      os.system('bash get_limit_datacard.sh '+sigModels+' '+resHBkgModels+' '+m+' '+mH+' '+mX+' '+mY+' 1 '+procTemplate+' '+indir +(' 1' if doSystResBkg else ' 0') + ' '+args.useMassGrid_Interp + ' ' + args.temp_part)  
 
   print('Finished step 4: Make datacards')
   print("")
@@ -142,12 +152,17 @@ def makeWorkspaces(procTemplate, masses, config, mggl, mggh):
   os.system('mkdir -p Combine/Models; ' + \
             'mkdir -p Combine/Models/signal; ' + \
             'mkdir -p Combine/Models/res_bkg; '+ \
-            'mkdir -p Combine/Models/background; ' + \
-            'cp SignalModelInterpolation/outdir/* Combine/Models/signal/.; ' + \
-            'cp SignalModelInterpolation/res_bkg_outdir/* Combine/Models/res_bkg/.; ' + \
-            'cp Background/outdir_'+procTemplate+'_*/fTest/output/CMS-HGG*.root Combine/Models/background/.; ' + \
-            'cp Datacard/Datacard_'+procTemplate+'*.txt Combine/.; ' \
+            'mkdir -p Combine/Models/background; ' 
   )
+  os.system('mkdir -p Combine/Models/signal/'+args.useMassGrid_Interp+'_part'+args.temp_part+'; ')
+  os.system('mkdir -p Combine/Models/res_bkg/'+args.useMassGrid_Interp+'_part'+args.temp_part+'; ')
+
+  for m in masses:
+    os.system('cp -r SignalModelInterpolation/outdir_'+args.useMassGrid_Interp+'_part'+args.temp_part+'/*'+' Combine/Models/signal/'+args.useMassGrid_Interp+'_part'+args.temp_part+'/; ' + \
+              'cp -r SignalModelInterpolation/res_bkg_outdir_'+args.useMassGrid_Interp+'_part'+args.temp_part+'/*'+' Combine/Models/res_bkg/'+args.useMassGrid_Interp+'_part'+args.temp_part+'; ' + \
+              'cp Background/outdir_'+procTemplate+'_combined_'+m+'/fTest/output/CMS-HGG*.root Combine/Models/background/.; ' + \
+              'cp Datacard/Datacard_'+procTemplate+'_'+m+'.txt Combine/.; ' \
+    )
 
   for m in masses:
     mH = str(get_mH(config, m))
@@ -172,19 +187,19 @@ def getLimit(masses, config, mggl, mggh, procTemplate):
 
   os.system('grep "r <" Combine/combine_results_'+procTemplate+'*_mx*.txt > Combine/summary_combine_results_'+procTemplate+'.txt')
 
-  os.system('mkdir -p Outputs/CollectedPlots_'+procTemplate+'; ' + \
-            'cp -r Background/plots Outputs/CollectedPlots_'+procTemplate+'/Background/; ' + \
-            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine; ' + \
-            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/Datacard; ' + \
-            'cp Combine/Datacard_'+procTemplate+'* Outputs/CollectedPlots_'+procTemplate+'/Combine/Datacard; ' + \
-            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/Results; ' + \
-            'cp Combine/*combine_results_'+procTemplate+'_* Outputs/CollectedPlots_'+procTemplate+'/Combine/Results; ' + \
-            'cp -r Combine/Models Outputs/CollectedPlots_'+procTemplate+'/Combine/Models; ' + \
+#  os.system('mkdir -p Outputs/CollectedPlots_'+procTemplate+'; ' + \
+#            'cp -r Background/plots Outputs/CollectedPlots_'+procTemplate+'/Background/; ' + \
+#            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine; ' + \
+#            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/Datacard; ' + \
+#            'cp Combine/Datacard_'+procTemplate+'* Outputs/CollectedPlots_'+procTemplate+'/Combine/Datacard; ' + \
+#            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/Results; ' + \
+#            'cp Combine/*combine_results_'+procTemplate+'_* Outputs/CollectedPlots_'+procTemplate+'/Combine/Results; ' + \
+#            'cp -r Combine/Models Outputs/CollectedPlots_'+procTemplate+'/Combine/Models; ' + \
 #            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts; ' + \
 #            'cp Combine/impacts* Outputs/CollectedPlots_'+procTemplate+'/Combine/Impacts/; ' + \
-            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/NLL_Scans; ' + \
-            'cp Combine/NLL_Scan* Outputs/CollectedPlots_'+procTemplate+'/Combine/NLL_Scans; ' \
-  )
+#            'mkdir -p Outputs/CollectedPlots_'+procTemplate+'/Combine/NLL_Scans; ' + \
+#            'cp Combine/NLL_Scan* Outputs/CollectedPlots_'+procTemplate+'/Combine/NLL_Scans; ' \
+#  )
 
   print('Finished step 6: Get limit')
   print("")
@@ -222,6 +237,19 @@ def getFitDiagnostics(masses, config, mggl, mggh, procTemplate):
   print('Finished step 8: Get fit diagnostics')
   print("")
 
+def getSignificance(masses, config, mggl, mggh, procTemplate):
+  print('Starting step 9: Get Significance')
+  print("")
+
+  for m in masses:
+    mH = str(get_mH(config, m))
+    mX = str(get_mX(m))
+    mY = str(get_mY(m))
+    print("Significance for mX = "+mX+", mY = "+mY)
+    os.system('bash get_significance.sh '+str(mggl)+' '+str(mggh)+' '+mX+' '+mY+' '+mH+' '+procTemplate)
+
+  print('Finished step 9: Get Significance')
+  print("")
 
 def main(args):
   print("")
@@ -260,10 +288,21 @@ def main(args):
     treePerYearDir = args.nonResBkgTrees+'/'+year
     masses=[m for m in detect_mass_points(treePerYearDir) if args.masses in m]
     if args.useSmallMassGrid:
-      masses=["mx1000my100","mx240my100","mx280my100","mx300my100","mx320my100","mx360my100",
-              "mx400my100","mx450my100","mx500my100","mx550my100",
-              "mx600my100","mx650my100","mx700my100","mx750my100",
-              "mx800my100","mx850my100","mx900my100","mx950my100"]
+      masses = ["mx650my450"]
+      #masses=["mx1000my100","mx240my100","mx280my100","mx300my100","mx320my100","mx360my100",
+      #        "mx400my100","mx450my100","mx500my100","mx550my100",
+      #        "mx600my100","mx650my100","mx700my100","mx750my100",
+      #        "mx800my100","mx850my100","mx900my100","mx950my100"]
+    if args.useMassGrid_Interp is not None:
+      masses=[]
+      file_name = "Intermediate_mass_gird/{}_part{}.txt".format(args.useMassGrid_Interp, args.temp_part)
+      with open(file_name, "r") as file:
+        for line in file:
+          match = re.search(r"MX_(\d+)_MY_(\d+)", line)
+          if match:
+            mx, my = match.groups()
+            masses.append("mx{}my{}".format(mx, my))
+
     masses=[m for m in masses if args.masses in m]
     print('Year = '+year)
     print('Detected mass points,\tSRs,\tCRs:')
@@ -291,6 +330,8 @@ def main(args):
     getImpact(masses, args.config, mggl, mggh, args.procTemplate)
   if '8' in args.steps:
     getFitDiagnostics(masses, args.config, mggl, mggh, args.procTemplate)
+  if '9' in args.steps:
+    getSignificance(masses, args.config, mggl, mggh, args.procTemplate)
 
 
 if __name__=="__main__":
@@ -305,6 +346,8 @@ if __name__=="__main__":
   parser.add_argument('--procTemplate', '-p', type=str, default='ggbbres')
   parser.add_argument('--doFailedFits', action="store_true", default=False)
   parser.add_argument('--useSmallMassGrid', action="store_true", default=False)
+  parser.add_argument('--useMassGrid_Interp', type=str, default=None)
+  parser.add_argument('--temp_part', type=str, default=None)
   args = parser.parse_args()
 
   main(args)
