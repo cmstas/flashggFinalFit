@@ -77,10 +77,11 @@ def extractBandProperties(data,category,bidx):
   props['down2sigma'] = np.percentile(data['%s_%g'%(c,bidx)].values,50*(1+math.erf(-2./math.sqrt(2))))
   return props
 
-def makeSplusBPlot(workspace,hD,hSB,hB,hS,hDr,hBr,hSr,cat,options,dB=None,reduceRange=None,limit=None):
-  translateCats = {} if options.translateCats is None else LoadTranslations(options.translateCats)
-  translatePOIs = {} if options.translatePOIs is None else LoadTranslations(options.translatePOIs)
+def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNonRes,hDr,hBr,hSr,cat,options,dB=None,reduceRange=None,limit=None):
+  translateCats = {} #if options.translateCats is None else LoadTranslations(options.translateCats)
+  translatePOIs = {} #if options.translatePOIs is None else LoadTranslations(options.translatePOIs)
   blindingRegion = [float(options.blindingRegion.split(",")[0]),float(options.blindingRegion.split(",")[1])]
+  reduceRange=[65,500]
   if reduceRange is not None:
     for h in [hD,hDr,hBr,hSr]: h.GetXaxis().SetRangeUser(reduceRange[0],reduceRange[1])
     for h_ipdf in [hSB,hB,hS]:
@@ -134,6 +135,7 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hDr,hBr,hSr,cat,options,dB=None,reduce
       xval = h_axes.GetXaxis().GetBinCenter(ibin)
       xerr = 0.5*(h_axes.GetXaxis().GetBinWidth(ibin))
       bkgval = hB['nBins'].GetBinContent(ibin)
+      bkgerr = hB['nBins'].GetBinError(ibin)
       properties = extractBandProperties(dB,cat,ibin)
       gr_1sig.SetPoint(gr_i,xval,properties['median'])
       gr_2sig.SetPoint(gr_i,xval,properties['median'])
@@ -166,7 +168,7 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hDr,hBr,hSr,cat,options,dB=None,reduce
   leg.SetTextSize(0.045)
   leg.AddEntry(hD,"Data","ep")
   if options.unblind:
-    leg.AddEntry(hSB['pdfNBins'],"S+B fit","l")
+#    leg.AddEntry(hSB['pdfNBins'],"S+B fit","l")
     leg.AddEntry(hB['pdfNBins'],"B component","l")
   else:
     leg.AddEntry(hB['pdfNBins'],"B fit","l")
@@ -177,12 +179,12 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hDr,hBr,hSr,cat,options,dB=None,reduce
   leg.Draw("Same")
   # Set pdf style
   if options.unblind:
-    hSB['pdfNBins'].SetLineWidth(3)
-    hSB['pdfNBins'].SetLineColor(2)
-    hSB['pdfNBins'].Draw("Hist same c")
+#    hSB['pdfNBins'].SetLineWidth(3)
+#    hSB['pdfNBins'].SetLineColor(2)
+#    hSB['pdfNBins'].Draw("Hist same c")
+#    hSB['pdfNBins'].SetLineStyle(2)
     hB['pdfNBins'].SetLineWidth(3)
     hB['pdfNBins'].SetLineColor(2)
-    hB['pdfNBins'].SetLineStyle(2)
     hB['pdfNBins'].Draw("Hist same c")
   else:
     hS['pdfNBins'].SetLineWidth(3)
@@ -211,9 +213,9 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hDr,hBr,hSr,cat,options,dB=None,reduce
   lat0.DrawLatex(0.6,0.8,"#scale[0.6]{%s}"%Translate(cat,translateCats))
   #lat0.DrawLatex(0.15,0.83,"#scale[0.75]{H#rightarrow#gamma#gamma}")
   #lat0.DrawLatex(0.15,0.83,"#scale[0.75]{Non-resonant HH #rightarrow #gamma#gamma#tau#tau}")
-  if(options.loadSnapshot is not None):
+#  if(options.loadSnapshot is not None):
     #lat0.DrawLatex(0.15,0.77,"#scale[0.6]{#vec{#alpha} = STXS stage 1.2 minimal}")
-    lat0.DrawLatex(0.15,0.77,"#scale[0.6]{#vec{#alpha} = (#mu_{ggH}, #mu_{VBF}, #mu_{VH}, #mu_{top})}")
+    #lat0.DrawLatex(0.15,0.77,"#scale[0.6]{#vec{#alpha} = (#mu_{ggH}, #mu_{VBF}, #mu_{VH}, #mu_{top})}")
     #lat0.DrawLatex(0.15,0.77,"#scale[0.5]{(#hat{#mu}_{ggH},#hat{#mu}_{VBF},#hat{#mu}_{VH},#hat{#mu}_{top}) = (1.07,1.04,1.34,1.35)}")
     #lat0.DrawLatex(0.15,0.77,"#scale[0.75]{#hat{#mu} = 1.03}")
     #muhat_ggh, muhat_vbf, muhat_vh, muhat_top, mhhat = workspace.var("r_ggH").getVal(), workspace.var("r_VBF").getVal(), workspace.var("r_VH").getVal(), workspace.var("r_top").getVal(), workspace.var("MH").getVal()
@@ -227,14 +229,14 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hDr,hBr,hSr,cat,options,dB=None,reduce
   #    poiStr += ' %s = %.1f,'%(Translate(k,translatePOIs),float(v))
   #  poiStr = poiStr[:-1]
   #  lat0.DrawLatex(0.13,0.77,"#scale[0.75]{%s}"%poiStr)
-  else: 
-    if limit is not None: lat0.DrawLatex(0.15,0.77,"#scale[0.5]{m_{X} = %s GeV, #sigma #bf{#it{#Beta}} = %.3f fb}"%(options.MX,limit))
-    else: lat0.DrawLatex(0.15,0.77,"#scale[0.75]{m_{H} = 125.38 GeV}")
+#  else: 
+#    if limit is not None: lat0.DrawLatex(0.15,0.77,"#scale[0.5]{m_{X} = %s GeV, #sigma #bf{#it{#Beta}} = %.3f fb}"%(options.MX,limit))
   # Ratio plot
   pad2.cd()
   h_axes_ratio = hDr.Clone()
   h_axes_ratio.Reset()
-  h_axes_ratio.SetMaximum(max((hDr.GetMaximum()+hDr.GetBinError(hDr.GetMaximumBin()))*1.5,hSr.GetMaximum()*1.2))
+###  h_axes_ratio.SetMaximum(max((hDr.GetMaximum()+hDr.GetBinError(hDr.GetMaximumBin()))*1.5,hSr.GetMaximum()*1.2))
+  h_axes_ratio.SetMaximum((hDr.GetMaximum()+hDr.GetBinError(hDr.GetMaximumBin()))*1.5)
   h_axes_ratio.SetMinimum((hDr.GetMinimum()-hDr.GetBinError(hDr.GetMinimumBin()))*1.3)
   h_axes_ratio.SetTitle("")
   h_axes_ratio.GetXaxis().SetTitleSize(0.05*padSizeRatio)
@@ -243,19 +245,23 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hDr,hBr,hSr,cat,options,dB=None,reduce
   h_axes_ratio.GetXaxis().SetTickLength(0.03*padSizeRatio)
   h_axes_ratio.GetYaxis().SetLabelSize(0.035*padSizeRatio)
   h_axes_ratio.GetYaxis().SetLabelOffset(0.007)
-  h_axes_ratio.GetYaxis().SetTitle("")
+  h_axes_ratio.GetYaxis().SetTitleSize(0.08)
+  h_axes_ratio.GetYaxis().SetTitleOffset(0.6)
+  h_axes_ratio.GetYaxis().SetTitle("(data-fit)/unc_{data}")
   h_axes_ratio.Draw()
+
+
   # Draw bands 
   if options.doBands:
     gr_2sig_r.Draw("LE3SAME")
     gr_1sig_r.Draw("LE3SAME")
   # Set pdf style
   if options.unblind:
-    hSr.SetLineWidth(3)
-    hSr.SetLineColor(2)
-    hSr.Draw("Hist same c")
+  ###  hSr.SetLineWidth(3)
+  ###  hSr.SetLineColor(2)
+  ###  hSr.Draw("Hist same c")
     hBr.SetLineWidth(3)
-    hBr.SetLineStyle(2)
+    hBr.SetLineStyle(1)
     hBr.SetLineColor(2)
     hBr.Draw("Hist same c")
   else:
@@ -279,7 +285,7 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hDr,hBr,hSr,cat,options,dB=None,reduce
   lat1.SetTextAlign(33)
   lat1.SetNDC(1)
   lat1.SetTextSize(0.045*padSizeRatio)
-  lat1.DrawLatex(0.87,0.91,"B component subtracted")
+  lat1.DrawLatex(0.87,0.91,"(data-fit)/unc_{data}")
 
   # Save canvas
   canv.Update()

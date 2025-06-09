@@ -10,6 +10,7 @@ import sys
 import tabulate
 import pandas as pd
 import os
+from optparse import OptionParser
 
 import scipy.interpolate as spi
 
@@ -26,6 +27,13 @@ BR_HH_GGBB = 2 * BR_H_GG * BR_H_BB
 #                                       "MY":   [70,    250,   550,   800,   70,    100,   70,    70,    125,   300,   90,    400,   70,    100,   300,   250,   500,   70,    190,   450,   550,   70,    500,   600,   70,    170,   400,   650,   70,    80,    190,   650,   700,   70,    500], 
 #                                       "limit":[0.0559,0.1305,0.1922,0.4891,0.7906,0.8094,0.3141,0.1508,0.3344,0.7500,0.1289,0.6969,0.0871,0.1262,0.3438,0.2656,0.6969,0.0699,0.1953,0.3734,0.7312,0.0645,0.3750,0.7719,0.0633,0.1414,0.2227,0.7469,0.1063,0.0621,0.1266,0.3562,0.4969,0.0535,0.1914]})
 
+def get_options():
+  parser = OptionParser()
+  parser.add_option("--inputFile", dest="inputFile", default=None, help="Input limit result file")
+  parser.add_option("--outputFile", dest="outputFile", default=None, help="Output folder to save results")
+  parser.add_option("--doObserved", dest="doObserved", default=False, action="store_true", help="do observed limit")
+  return parser.parse_args()
+(opt,args) = get_options()
 
 def getLimits(results_path):
   with open(results_path, "r") as f:
@@ -45,6 +53,7 @@ def getLimits(results_path):
   limits_no_sys = np.zeros((5, len(masses)))
   limits_no_res_bkg = np.zeros((5, len(masses)))
   limits_no_dy_bkg = np.zeros((5, len(masses)))
+  limits_observed = np.zeros(len(masses))
 
   for line in results:
     m = line.split(".")[0].split("_")[-1]
@@ -66,8 +75,10 @@ def getLimits(results_path):
     
     limit = float(line.split("r < ")[1])
 
-    if "no_" not in line:
+    if "no_" not in line and "Expected" in line:
       limits[idx2][idx1] = limit
+    elif "no_" not in line and "Observed" in line:
+      limits_observed[idx1] = limit
     else:
       if "no_sys" in line:
         limits_no_sys[idx2][idx1] = limit
@@ -75,9 +86,6 @@ def getLimits(results_path):
         limits_no_res_bkg[idx2][idx1] = limit
       elif "no_dy_bkg" in line:
         limits_no_dy_bkg[idx2][idx1] = limit
-
-  #print(limits[2])
-  #print(limits_no_sys[2])
 
   masses = np.array(masses)
   #sort out scan over mh (mgg)
@@ -100,12 +108,7 @@ def getLimits(results_path):
         limits_no_res_bkg = np.delete(limits_no_res_bkg, to_delete, axis=1)
         limits_no_dy_bkg = np.delete(limits_no_dy_bkg, to_delete, axis=1)
 
-  #  masses[:,1] = masses[:,2] #set my to be mh
-  
-  #masses = masses[:,:2]
-  #print(masses)
-
-  return masses, limits, limits_no_sys, limits_no_res_bkg, limits_no_dy_bkg
+  return masses, limits, limits_no_sys, limits_no_res_bkg, limits_no_dy_bkg, limits_observed
     
 def plotLimits(mX, limits, ylabel, nominal_masses, savename=None, xlabel=r"$m_X$"):
   plt.scatter(mX, limits[2], zorder=3, facecolors="none", edgecolors="blue")
@@ -129,17 +132,22 @@ def plotLimits(mX, limits, ylabel, nominal_masses, savename=None, xlabel=r"$m_X$
     plt.savefig(savename+"_log.pdf")
     plt.clf()
 
-def plotLimitsStackMX(masses, limits, ylabel, nominal_mx, nominal_my, savename):
+def plotLimitsStackMX(masses, limits, ylabel, nominal_mx, nominal_my, savename, doObserved = False, limits_observed = None):
   label1 = "Nominal masses"
   label2 = "Expected 95% CL limit"
   label3 = r"$\pm$ $1\sigma$"
   label4 = r"$\pm$ $2\sigma$"
+  label5 = "Observed 95% CL limits"
 
   for i, mx in enumerate(np.sort(np.unique(masses[:,0]))):
     my = masses[masses[:,0]==mx,1]
     limits_slice = limits[:,masses[:,0]==mx]
-    
     limits_slice = limits_slice[:,np.argsort(my)]
+
+    if doObserved:
+      limits_observed_slice = limits_observed[masses[:,0]==mx]
+      limits_observed_slice = limits_observed_slice[np.argsort(my)]
+
     my = my[np.argsort(my)]
 
     limits_slice *= 10**i
@@ -153,7 +161,26 @@ def plotLimitsStackMX(masses, limits, ylabel, nominal_mx, nominal_my, savename):
     label1 = label2 = label3 = label4 = None
 
     plt.text(my[-1]+10, limits_slice[2][-1], r"$m_X=%d$ GeV $(\times 10^{%d})$"%(mx, i), fontsize=12, verticalalignment="center")
+   
+    if doObserved:
+      limits_observed_slice *= 10**i
+      if mx == 600:
+      # Apply the mask only when mx is 600 to exclude my=400
+        mask = my != 400
+      else:
+      # No mask applied, include all points
+        mask = np.ones_like(my, dtype=bool)
 
+      plt.scatter(my[mask], limits_observed_slice[mask], zorder=3, facecolors="none", edgecolors="black")
+      #plt.scatter(my, limits_observed_slice, zorder=3, facecolors="none", edgecolors="black")
+      if mx in nominal_mx:
+        plt.scatter(my[np.isin(my, nominal_my) & mask],
+                limits_observed_slice[np.isin(my, nominal_my) & mask],
+                zorder=5, facecolors="black", edgecolors="black")
+        #plt.scatter(my[np.isin(my, nominal_my)], limits_observed_slice[np.isin(my, nominal_my)], zorder=5, facecolors="black", edgecolors="black")
+      #plt.plot(my, limits_observed_slice, 'k-', zorder=5, label=label5)
+      plt.plot(my[mask], limits_observed_slice[mask], 'k-', zorder=5, label=label5)
+      label5 = None
 
   plt.xlabel(r"$m_Y$")
   plt.ylabel(ylabel)  
@@ -259,9 +286,6 @@ def plotLimits2D(masses, limits, ylabel, savename):
   plt.savefig(savename+"_exclude.pdf")
   #s = limits[2] < max_allowed_values
 #  s = limits[2]
-#  print(limits)
-#  print(s)
-#  print(masses[s,0])
 
 #  plt.scatter(masses[s,0], masses[s,1], marker='x', color="r", label="Limit below maximally allowed in NMSSM") 
 #  plt.savefig(savename+"_exclude_points.png")
@@ -375,28 +399,30 @@ def tabulateLimitsAll(masses, limits, limits_no_sys, limits_no_res_bkg, path):
     f.write(df.to_latex(float_format="%.4f", index=False))
   df.to_csv(os.path.join(path, "limits.csv"), float_format="%.4f")
 
-masses, limits, limits_no_sys, limits_no_res_bkg, limits_no_dy_bkg = getLimits(sys.argv[1])
-print(masses)
-os.makedirs(os.path.join(sys.argv[2], "Limits_xs_br"), exist_ok=True)
-os.makedirs(os.path.join(sys.argv[2], "Limits_xs"), exist_ok=True)
-os.makedirs(os.path.join(sys.argv[2], "Limits_xs_br_no_sys"), exist_ok=True)
-os.makedirs(os.path.join(sys.argv[2], "Limits_xs_no_sys"), exist_ok=True)
-os.makedirs(os.path.join(sys.argv[2], "Limits_xs_br_no_res_bkg"), exist_ok=True)
-os.makedirs(os.path.join(sys.argv[2], "Limits_xs_no_res_bkg"), exist_ok=True)
-os.makedirs(os.path.join(sys.argv[2], "Limits_systematics_comparison"), exist_ok=True)
-os.makedirs(os.path.join(sys.argv[2], "Limits_res_bkg_comparison"), exist_ok=True)
-os.makedirs(os.path.join(sys.argv[2], "Limits_dy_bkg_comparison"), exist_ok=True)
+masses, limits, limits_no_sys, limits_no_res_bkg, limits_no_dy_bkg, limits_observed = getLimits(opt.inputFile)
+os.makedirs(os.path.join(opt.outputFile, "Limits_xs_br"), exist_ok=True)
+os.makedirs(os.path.join(opt.outputFile, "Limits_xs"), exist_ok=True)
+if not opt.doObserved:
+  os.makedirs(os.path.join(opt.outputFile, "Limits_xs_br_no_sys"), exist_ok=True)
+  os.makedirs(os.path.join(opt.outputFile, "Limits_xs_no_sys"), exist_ok=True)
+  os.makedirs(os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg"), exist_ok=True)
+  os.makedirs(os.path.join(opt.outputFile, "Limits_xs_no_res_bkg"), exist_ok=True)
+  os.makedirs(os.path.join(opt.outputFile, "Limits_systematics_comparison"), exist_ok=True)
+  os.makedirs(os.path.join(opt.outputFile, "Limits_res_bkg_comparison"), exist_ok=True)
+  os.makedirs(os.path.join(opt.outputFile, "Limits_dy_bkg_comparison"), exist_ok=True)
 
 
-tabulateLimits(masses, limits, os.path.join(sys.argv[2], "Limits_xs_br"))
-tabulateLimitsAll(masses, limits, limits_no_sys, limits_no_res_bkg, os.path.join(sys.argv[2], "Limits_xs_br"))
-tabulateLimits(masses, limits / BR_HH_GGBB, os.path.join(sys.argv[2], "Limits_xs"))
+tabulateLimits(masses, limits, os.path.join(opt.outputFile, "Limits_xs_br"))
+if not opt.doObserved:
+  tabulateLimitsAll(masses, limits, limits_no_sys, limits_no_res_bkg, os.path.join(opt.outputFile, "Limits_xs_br"))
+tabulateLimits(masses, limits / BR_HH_GGBB, os.path.join(opt.outputFile, "Limits_xs"))
 
-tabulateLimits(masses, limits_no_sys, os.path.join(sys.argv[2], "Limits_xs_br_no_sys"))
-tabulateLimits(masses, limits_no_sys / BR_HH_GGBB, os.path.join(sys.argv[2], "Limits_xs_no_sys"))
+if not opt.doObserved:
+  tabulateLimits(masses, limits_no_sys, os.path.join(opt.outputFile, "Limits_xs_br_no_sys"))
+  tabulateLimits(masses, limits_no_sys / BR_HH_GGBB, os.path.join(opt.outputFile, "Limits_xs_no_sys"))
 
-tabulateLimits(masses, limits_no_res_bkg, os.path.join(sys.argv[2], "Limits_xs_br_no_res_bkg"))
-tabulateLimits(masses, limits_no_res_bkg / BR_HH_GGBB, os.path.join(sys.argv[2], "Limits_xs_no_res_bkg"))
+  tabulateLimits(masses, limits_no_res_bkg, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg"))
+  tabulateLimits(masses, limits_no_res_bkg / BR_HH_GGBB, os.path.join(opt.outputFile, "Limits_xs_no_res_bkg"))
 
 if len(np.unique(masses[:,1])) == 1: #if 1D (graviton or radion)
   mx = masses[:,0]
@@ -404,31 +430,32 @@ if len(np.unique(masses[:,1])) == 1: #if 1D (graviton or radion)
   limits_no_sys = limits_no_sys[:,np.argsort(mx)]
   limits_no_res_bkg = limits_no_res_bkg[:,np.argsort(mx)]
   limits_no_dy_bkg = limits_no_dy_bkg[:,np.argsort(mx)]
-
+  limits_observed = limits_observed[np.argsort(mx)]
   mx = mx[np.argsort(mx)]
 
   nominal_masses = [260,270,280,290,300,320,350,400,450,500,550,600,650,700,750,800,900,1000]
   
   ylabel = r"$\sigma(pp \rightarrow X) B(X \rightarrow HH \rightarrow \gamma\gamma bb)$ [fb]"
-  plotLimits(mx, limits, ylabel, nominal_masses, os.path.join(sys.argv[2], "Limits_xs_br", "limits"))
-  plotLimits(mx, limits_no_sys, ylabel, nominal_masses, os.path.join(sys.argv[2], "Limits_xs_br_no_sys", "limits_no_sys"))
-  plotLimits(mx, limits_no_res_bkg, ylabel, nominal_masses, os.path.join(sys.argv[2], "Limits_xs_br_no_res_bkg", "limits_no_res_bkg"))
+  if opt.doObserved:
+    plotLimits(mx, limits, limits_observed, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs_br", "limits"))
+  else:
+    plotLimits(mx, limits, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs_br", "limits"))
+    plotLimits(mx, limits_no_sys, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_no_sys"))
+    plotLimits(mx, limits_no_res_bkg, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_no_res_bkg"))
 
   ylabel = r"$\sigma(pp \rightarrow X) B(X \rightarrow HH)$ [fb]"
-  plotLimits(mx, limits / BR_HH_GGBB, ylabel, nominal_masses, os.path.join(sys.argv[2], "Limits_xs", "limits"))
-  plotLimits(mx, limits_no_sys / BR_HH_GGBB, ylabel, nominal_masses, os.path.join(sys.argv[2], "Limits_xs_no_sys", "limits_no_sys"))
-  plotLimits(mx, limits_no_res_bkg / BR_HH_GGBB, ylabel, nominal_masses, os.path.join(sys.argv[2], "Limits_xs_no_res_bkg", "limits_no_res_bkg"))
+  if opt.doObserved:
+    plotLimits(mx, limits / BR_HH_GGBB, limits_observed / BR_HH_GGBB, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs", "limits"))
+  else:
+    plotLimits(mx, limits_no_sys / BR_HH_GGBB, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs_no_sys", "limits_no_sys"))
+    plotLimits(mx, limits_no_res_bkg / BR_HH_GGBB, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_xs_no_res_bkg", "limits_no_res_bkg"))
 
-  plotSystematicComparison(mx, limits, limits_no_sys, nominal_masses, os.path.join(sys.argv[2], "Limits_systematics_comparison", "125"))
-  ylabel = r"$\sigma(pp \rightarrow X) B(X \rightarrow HH \rightarrow \gamma\gamma bb)$ [fb]"
-  plotSystematicComparison2(mx, limits, limits_no_sys, ylabel, nominal_masses, os.path.join(sys.argv[2], "Limits_systematics_comparison", "125_2"))
-  plotResBkgComparison2(mx, limits, limits_no_res_bkg, ylabel, nominal_masses, os.path.join(sys.argv[2], "Limits_res_bkg_comparison", "125_2"))
+    plotSystematicComparison(mx, limits, limits_no_sys, nominal_masses, os.path.join(opt.outputFile, "Limits_systematics_comparison", "125"))
+    ylabel = r"$\sigma(pp \rightarrow X) B(X \rightarrow HH \rightarrow \gamma\gamma bb)$ [fb]"
+    plotSystematicComparison2(mx, limits, limits_no_sys, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_systematics_comparison", "125_2"))
+    plotResBkgComparison2(mx, limits, limits_no_res_bkg, ylabel, nominal_masses, os.path.join(opt.outputFile, "Limits_res_bkg_comparison", "125_2"))
 
 else:
-  #nominal_mx = [300,400,500,600,700,800,900,1000]
-  #nominal_my = [70,80,90,100,125]
-  #nominal_my = [70,80,90,100,125,150,200,250,300,400,500,600,700,800]
-  #nominal_my = [125,150,200,250,300,400,500,600,700,800]
   nominal_mx = [240,280,300,320,360,400,450,500,550,600,650,700,750,800,850,900,950,1000]
   nominal_my = [70,80,90,100,125,150,170,190,250,300,350,400,450,500,550,600,650,700,800]
 
@@ -438,15 +465,19 @@ else:
   # limits_no_sys = limits_no_sys[:, s]
   # masses = masses[s]
   ylabel = r"$\sigma(pp \rightarrow X) B(X \rightarrow YH \rightarrow \gamma\gamma bb)$ [fb]"
-  plotLimitsStackMX(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br", "limits_stack_mx"))
-  plotLimitsStackMX(masses, limits_no_sys,      ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br_no_sys", "limits_stack_mx_no_sys"))
-  plotLimitsStackMX(masses, limits_no_res_bkg,  ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br_no_res_bkg", "limits_stack_mx_no_res_bkg"))
-#  plotLimitsStackMY(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br", "limits_stack_my"))
-#  plotLimitsStackMY(masses, limits_no_sys,      ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br_no_sys", "limits_stack_my_no_sys"))
-#  plotLimitsStackMY(masses, limits_no_res_bkg,  ylabel, nominal_mx, nominal_my, os.path.join(sys.argv[2], "Limits_xs_br_no_res_bkg", "limits_stack_my_no_res_bkg"))
-  plotLimits2D(masses, limits,        ylabel, os.path.join(sys.argv[2], "Limits_xs_br", "limits_2d"))
-  plotLimits2D(masses, limits_no_sys, ylabel, os.path.join(sys.argv[2], "Limits_xs_br_no_sys", "limits_2d_no_sys"))
-  plotLimits2D(masses, limits_no_res_bkg, ylabel, os.path.join(sys.argv[2], "Limits_xs_br_no_res_bkg", "limits_2d_no_res_bkg"))
+  if opt.doObserved:
+    plotLimitsStackMX(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br", "limits_stack_mx"), opt.doObserved, limits_observed)
+  else:
+    plotLimitsStackMX(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br", "limits_stack_mx"), opt.doObserved)
+    plotLimitsStackMX(masses, limits_no_sys,      ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_stack_mx_no_sys"), opt.doObserved)
+    plotLimitsStackMX(masses, limits_no_res_bkg,  ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_stack_mx_no_res_bkg"), opt.doObserved)
+#  plotLimitsStackMY(masses, limits,             ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br", "limits_stack_my"))
+#  plotLimitsStackMY(masses, limits_no_sys,      ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_stack_my_no_sys"))
+#  plotLimitsStackMY(masses, limits_no_res_bkg,  ylabel, nominal_mx, nominal_my, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_stack_my_no_res_bkg"))
+  plotLimits2D(masses, limits,        ylabel, os.path.join(opt.outputFile, "Limits_xs_br", "limits_2d"))
+  if not opt.doObserved:
+    plotLimits2D(masses, limits_no_sys, ylabel, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_2d_no_sys"))
+    plotLimits2D(masses, limits_no_res_bkg, ylabel, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_2d_no_res_bkg"))
 
   for mx in np.unique(masses[:,0]):
     my = masses[masses[:,0]==mx,1]
@@ -466,17 +497,16 @@ else:
     else:
       nm = []
 
-    print(mx)
-    print(my, limits_slice)
 
     ylabel = r"$\sigma(pp \rightarrow X(%d)) B(X \rightarrow YH \rightarrow \gamma\gamma bb)$ [fb]"%mx
-    plotLimits(my, limits_slice, ylabel, nm, os.path.join(sys.argv[2], "Limits_xs_br", "limits_mx%d"%mx), xlabel=r"$m_Y$")
-    plotLimits(my, limits_no_sys_slice, ylabel, nm, os.path.join(sys.argv[2], "Limits_xs_br_no_sys", "limits_mx%d_no_sys"%mx), xlabel=r"$m_Y$")
-    plotLimits(my, limits_no_res_bkg_slice, ylabel, nm, os.path.join(sys.argv[2], "Limits_xs_br_no_res_bkg", "limits_mx%d_no_res_bkg"%mx), xlabel=r"$m_Y$")
-    plotSystematicComparison(my, limits_slice, limits_no_sys_slice, nm, os.path.join(sys.argv[2], "Limits_systematics_comparison", "mx%d"%mx), xlabel=r"$m_Y$")
-    plotSystematicComparison2(my, limits_slice, limits_no_sys_slice, ylabel, nm, os.path.join(sys.argv[2], "Limits_systematics_comparison", "mx%d_2"%mx), xlabel=r"$m_Y$")
-    plotResBkgComparison2(my, limits_slice, limits_no_res_bkg_slice, ylabel, nm, os.path.join(sys.argv[2], "Limits_res_bkg_comparison", "mx%d_2"%mx), xlabel=r"$m_Y$")
-    plotDYBkgComparison2(my, limits_slice, limits_no_dy_bkg_slice, ylabel, nm, os.path.join(sys.argv[2], "Limits_dy_bkg_comparison", "mx%d_2"%mx), xlabel=r"$m_Y$")
+    plotLimits(my, limits_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br", "limits_mx%d"%mx), xlabel=r"$m_Y$")
+    if not opt.doObserved:
+      plotLimits(my, limits_no_sys_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_mx%d_no_sys"%mx), xlabel=r"$m_Y$")
+      plotLimits(my, limits_no_res_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_mx%d_no_res_bkg"%mx), xlabel=r"$m_Y$")
+      plotSystematicComparison(my, limits_slice, limits_no_sys_slice, nm, os.path.join(opt.outputFile, "Limits_systematics_comparison", "mx%d"%mx), xlabel=r"$m_Y$")
+      plotSystematicComparison2(my, limits_slice, limits_no_sys_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_systematics_comparison", "mx%d_2"%mx), xlabel=r"$m_Y$")
+      plotResBkgComparison2(my, limits_slice, limits_no_res_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_res_bkg_comparison", "mx%d_2"%mx), xlabel=r"$m_Y$")
+      plotDYBkgComparison2(my, limits_slice, limits_no_dy_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_dy_bkg_comparison", "mx%d_2"%mx), xlabel=r"$m_Y$")
 
   for my in np.unique(masses[:,1]):
     mx = masses[masses[:,1]==my,0]
@@ -498,12 +528,13 @@ else:
       nm = []
 
     ylabel = r"$\sigma(pp \rightarrow X) B(X \rightarrow Y(%d)H \rightarrow \gamma\gamma bb)$ [fb]"%my
-    plotLimits(mx, limits_slice, ylabel, nm, os.path.join(sys.argv[2], "Limits_xs_br", "limits_my%d"%my))
-    plotLimits(mx, limits_no_sys_slice, ylabel, nm, os.path.join(sys.argv[2], "Limits_xs_br_no_sys", "limits_my%d_no_sys"%my))
-    plotLimits(mx, limits_no_res_bkg_slice, ylabel, nm, os.path.join(sys.argv[2], "Limits_xs_br_no_res_bkg", "limits_my%d_no_res_bkg"%my))
-    plotSystematicComparison(mx, limits_slice, limits_no_sys_slice, nm, os.path.join(sys.argv[2], "Limits_systematics_comparison", "my%d"%my))
-    plotSystematicComparison2(mx, limits_slice, limits_no_sys_slice, ylabel, nm, os.path.join(sys.argv[2], "Limits_systematics_comparison", "my%d_2"%my))
-    plotResBkgComparison2(mx, limits_slice, limits_no_res_bkg_slice, ylabel, nm, os.path.join(sys.argv[2], "Limits_res_bkg_comparison", "my%d_2"%my))
-    plotDYBkgComparison2(mx, limits_slice, limits_no_dy_bkg_slice, ylabel, nm, os.path.join(sys.argv[2], "Limits_dy_bkg_comparison", "my%d_2"%my))
+    plotLimits(mx, limits_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br", "limits_my%d"%my))
+    if not opt.doObserved:
+      plotLimits(mx, limits_no_sys_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br_no_sys", "limits_my%d_no_sys"%my))
+      plotLimits(mx, limits_no_res_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_xs_br_no_res_bkg", "limits_my%d_no_res_bkg"%my))
+      plotSystematicComparison(mx, limits_slice, limits_no_sys_slice, nm, os.path.join(opt.outputFile, "Limits_systematics_comparison", "my%d"%my))
+      plotSystematicComparison2(mx, limits_slice, limits_no_sys_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_systematics_comparison", "my%d_2"%my))
+      plotResBkgComparison2(mx, limits_slice, limits_no_res_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_res_bkg_comparison", "my%d_2"%my))
+      plotDYBkgComparison2(mx, limits_slice, limits_no_dy_bkg_slice, ylabel, nm, os.path.join(opt.outputFile, "Limits_dy_bkg_comparison", "my%d_2"%my))
 
   
