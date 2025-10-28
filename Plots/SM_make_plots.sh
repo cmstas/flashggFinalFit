@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 
+#combine /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_${interpretation}.root -m 125.38 -M MultiDimFit -P r --floatOtherPOIs=1 --freezeParameters MH --saveWorkspace  -n _initialSnapshot --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2
+combine /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacardspecial_${interpretation}.root -m 125.38 -M MultiDimFit -P r --floatOtherPOIs=1 --freezeParameters MH --saveWorkspace  -n _specialSnapshot --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2
+
 nToys=1000
 make_toys(){
     pushd Plots 
         rm -rf SplusBModels$tag
-        python makeToysHH.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/higgsCombinefits_comp.FitDiagnostics.mH125.38.root --ext $tag --dryRun --nToys $nToys #--dropResonantBkg
-        #python makeToysHH.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/higgsCombinefits_comp.MultiDimFit.mH125.38.root --ext $tag --dryRun --nToys $nToys #--dropResonantBkg
-        #python makeToysHH.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/fitDiagnosticsfits_comp.root --ext $tag --dryRun --nToys $nToys #--dropResonantBkg
-        #python makeToysHH.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_${interpretation}.root --ext $tag --dryRun --nToys $nToys #--dropResonantBkg
+        #python makeToysHH.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Plots/higgsCombine_initialSnapshot.MultiDimFit.mH125.38.root --ext $tag --dryRun --nToys $nToys --loadSnapshot MultiDimFit #--dropResonantBkg
+        #python makeToysHH.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/higgsCombine_fits_comp.FitDiagnostics.mH125.38.root --ext $tag --dryRun --nToys $nToys #--loadSnapshot "clean" #--dropResonantBkg
+        #python makeToysHH.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/higgsCombinefits_comp_v2.MultiDimFit.mH125.38.root --ext $tag --dryRun --nToys $nToys #--dropResonantBkg
+        python makeToysHH.py --inputWSFile /home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/Datacard_${interpretation}.root --ext $tag --dryRun --nToys $nToys #--dropResonantBkg
         iter=0
         while [ $iter -lt $nToys ]
         do 
@@ -73,25 +76,32 @@ make_SpB(){
     #mv SplusBModels${tag}/SR1_CMS_hgg_mass.png SplusBModels${tag}/SR1_CMS_hgg_mass_blind.png
 
     #python makeSplusBModelPlot.py --inputWSFile "/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/higgsCombinestandard.MultiDimFit.mH125.38.root" --inputSpecialFile "/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/higgsCombinespecial.MultiDimFit.mH125.38.root" --cat "SR1" --doBands --ext $tag --unblind --loadSnapshot MultiDimFit
-    python makeSplusBModelPlot.py --inputWSFile "${path}higgsCombinefits_comp.FitDiagnostics.mH125.38.root" --inputSpecialFile "${path}higgsCombinefits_comp.FitDiagnostics.mH125.38.root" --cat "SR1" --doBands --ext $tag --unblind --loadSnapshot FitDiagnostics --doToyVeto
-    python makeSplusBModelPlot.py --inputWSFile "${path}higgsCombinefits_comp.FitDiagnostics.mH125.38.root" --inputSpecialFile "${path}higgsCombinefits_comp.FitDiagnostics.mH125.38.root" --cat "SR2" --doBands --ext $tag --unblind --loadSnapshot FitDiagnostics --doToyVeto
-    #python makeSplusBModelPlot.py --inputWSFile "${path}higgsCombinefits_comp.MultiDimFit.mH125.38.root" --inputSpecialFile "${path}higgsCombinefits_comp.MultiDimFit.mH125.38.root" --cat "SR1" --doBands --ext $tag --unblind --loadSnapshot MultiDimFit
-    #python makeSplusBModelPlot.py --inputWSFile "${path}higgsCombinefits_comp.MultiDimFit.mH125.38.root" --inputSpecialFile "${path}higgsCombinefits_comp.MultiDimFit.mH125.38.root" --cat "SR2" --doBands --ext $tag --unblind --loadSnapshot MultiDimFit
+    #python makeSplusBModelPlot.py --inputWSFile "higgsCombine_initialSnapshot.MultiDimFit.mH125.38.root" --cat "SR1" --doBands --ext $tag --unblind  --loadSnapshot MultiDimFit --doBkgRenormalization
+    #python makeSplusBModelPlot.py --inputWSFile "higgsCombine_initialSnapshot.MultiDimFit.mH125.38.root" --inputSpecialFile "higgsCombine_specialSnapshot.MultiDimFit.mH125.38.root" --cat "SR1" --doBands --ext $tag --unblind  --loadSnapshot MultiDimFit #--doBkgRenormalization
+    #python makeSplusBModelPlot.py --inputWSFile "higgsCombine_initialSnapshot.MultiDimFit.mH125.38.root" --inputSpecialFile "higgsCombine_initialSnapshot.MultiDimFit.mH125.38.root" --cat "SR2" --doBands --ext $tag --unblind #--loadSnapshot "clean" 
+    #python makeSplusBModelPlot.py --inputWSFile "${path}higgsCombine_fits_comp.FitDiagnostics.mH125.38.root" --inputSpecialFile "${path}higgsCombine_fits_comp.FitDiagnostics.mH125.38.root" --cat "SR1" --doBands --ext $tag --unblind #--loadSnapshot "clean" 
+    #python makeSplusBModelPlot.py --inputWSFile "${path}higgsCombine_fits_comp.FitDiagnostics.mH125.38.root" --inputSpecialFile "${path}higgsCombine_fits_comp.FitDiagnostics.mH125.38.root" --cat "SR2" --doBands --ext $tag --unblind #--loadSnapshot "clean" 
+    #python makeSplusBModelPlot.py --inputWSFile "${path}higgsCombinefits_comp_v2.MultiDimFit.mH125.38.root" --inputSpecialFile "${path}higgsCombinefits_comp_v2.MultiDimFit.mH125.38.root" --cat "SR1" --doBands --ext $tag --unblind --loadSnapshot MultiDimFit
+    #python makeSplusBModelPlot.py --inputWSFile "${path}higgsCombinefits_comp_v2.MultiDimFit.mH125.38.root" --inputSpecialFile "${path}higgsCombinefits_comp_v2.MultiDimFit.mH125.38.root" --cat "SR2" --doBands --ext $tag --unblind --loadSnapshot MultiDimFit
     #python makeSplusBModelPlot.py --inputWSFile "${path}higgsCombinefits_comp.MultiDimFit.mH125.38.root" --inputSpecialFile "${path}Datacardspecial_${interpretation}.root" --cat "SR1" --doBands --ext $tag --unblind --loadSnapshot MultiDimFit
     #python makeSplusBModelPlot.py --inputWSFile "${path}higgsCombinefits_comp.MultiDimFit.mH125.38.root" --inputSpecialFile "${path}Datacardspecial_${interpretation}.root" --cat "SR2" --doBands --ext $tag --unblind --loadSnapshot MultiDimFit
     #python makeSplusBModelPlot.py --inputWSFile "${path}higgsCombinefits_comp.MultiDimFit.mH125.38.root" --inputSpecialFile "${path}higgsCombinefits_comp.MultiDimFit.mH125.38.root" --cat "SR1" --doBands --ext $tag --unblind --loadSnapshot MultiDimFit
     #python makeSplusBModelPlot.py --inputWSFile "${path}higgsCombinefits_comp.FitDiagnostics.mH125.38.root" --inputSpecialFile "${path}Datacardspecial_${interpretation}.root" --cat "SR1" --doBands --ext $tag --unblind --loadSnapshot FitDiagnostics
     #python makeSplusBModelPlot.py --inputWSFile "${path}higgsCombinefits_comp.FitDiagnostics.mH125.38.root" --inputSpecialFile "${path}higgsCombinefits_comp.FitDiagnostics.mH125.38.root" --cat "SR1" --doBands --ext $tag --unblind --loadSnapshot FitDiagnostics
-    #python makeSplusBModelPlot.py --inputWSFile "${path}Datacard_${interpretation}.root" --inputSpecialFile "${path}Datacardspecial_${interpretation}.root" --cat "SR1" --doBands --ext $tag --unblind
+    python makeSplusBModelPlot.py --inputWSFile "${path}Datacard_${interpretation}.root" --inputSpecialFile "${path}Datacardspecial_${interpretation}.root" --cat "SR1" --doBands --ext $tag --unblind --doBkgRenormalization --doZeroes
     mv SplusBModels${tag}/SR1_CMS_hgg_mass.pdf SplusBModels${tag}/SR1_CMS_hgg_mass_unblind.pdf
-    mv SplusBModels${tag}/SR1_CMS_hgg_mass.png SplusBModels${tag}/SR1_CMS_hgg_mass_unblind.png
+    #mv SplusBModels${tag}/SR1_CMS_hgg_mass.pdf SplusBModels${tag}/SR1_CMS_hgg_mass_renorm_unblind.pdf
+    #mv SplusBModels${tag}/SR1_CMS_hgg_mass.pdf SplusBModels${tag}/SR1_CMS_hgg_mass_multiDimFit_unblind.pdf
+    #mv SplusBModels${tag}/SR1_CMS_hgg_mass.png SplusBModels${tag}/SR1_CMS_hgg_mass_multiDimFit_unblind.png
+    #mv SplusBModels${tag}/SR2_CMS_hgg_mass.pdf SplusBModels${tag}/SR2_CMS_hgg_mass_multiDimFit_unblind.pdf
+    #mv SplusBModels${tag}/SR2_CMS_hgg_mass.png SplusBModels${tag}/SR2_CMS_hgg_mass_multiDimFit_unblind.png
 
     #python makeSplusBModelPlot.py --inputWSFile "${path}Datacard_${interpretation}.root" --inputSpecialFile "${path}Datacardspecial_${interpretation}.root" --cat "SR2" --doBands --ext $tag 
     #mv SplusBModels${tag}/SR2_CMS_hgg_mass.pdf SplusBModels${tag}/SR2_CMS_hgg_mass_blind.pdf
     #mv SplusBModels${tag}/SR2_CMS_hgg_mass.png SplusBModels${tag}/SR2_CMS_hgg_mass_blind.png
 
-    #python makeSplusBModelPlot.py --inputWSFile "${path}Datacard_${interpretation}.root" --inputSpecialFile "${path}Datacardspecial_${interpretation}.root" --cat "SR2" --doBands --ext $tag --unblind
-    #mv SplusBModels${tag}/SR2_CMS_hgg_mass.pdf SplusBModels${tag}/SR2_CMS_hgg_mass_unblind.pdf
+    python makeSplusBModelPlot.py --inputWSFile "${path}Datacard_${interpretation}.root" --inputSpecialFile "${path}Datacardspecial_${interpretation}.root" --cat "SR2" --doBands --ext $tag --unblind --doBkgRenormalization --doZeroes
+    mv SplusBModels${tag}/SR2_CMS_hgg_mass.pdf SplusBModels${tag}/SR2_CMS_hgg_mass_unblind.pdf
     #mv SplusBModels${tag}/SR2_CMS_hgg_mass.png SplusBModels${tag}/SR2_CMS_hgg_mass_unblind.png
 
     #mkdir -p /home/users/iareed/public_html/ttHH/flashggFinalFit/${tag}/Bands/
@@ -99,7 +109,7 @@ make_SpB(){
 }
 
 path=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/Combine/
-tag=SM_arc_20241205_blind/
+tag=SM_arc_20241205_unblind/
 interpretation=ttHHggXX
-#make_toys
+make_toys
 make_SpB

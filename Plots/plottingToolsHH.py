@@ -41,7 +41,7 @@ def getEffSigma(_h):
         r+=y
         if r>rlim: reachedLimit = True
       else:
-        print " --> Reach nBins in effSigma calc: %s. Returning 0 for effSigma"%_h.GetName()
+        print (" --> Reach nBins in effSigma calc: %s. Returning 0 for effSigma"%_h.GetName())
         return 0
       # Down:
       if( not reachedLimit ):
@@ -52,7 +52,7 @@ def getEffSigma(_h):
           r+=y
           if r>rlim: reachedLimit = True
         else:
-          print " --> Reach 0 in effSigma calc: %s. Returning 0 for effSigma"%_h.GetName()
+          print (" --> Reach 0 in effSigma calc: %s. Returning 0 for effSigma"%_h.GetName())
           return 0
     # Calculate fractional width in bin takes above limt (assume linear)
     if y == 0.: dx = 0.
@@ -109,6 +109,7 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNR,hDr,hBr,hSr,cat,options,dB=None,re
   # Nominal plot
   pad1.cd()
   h_axes = hD.Clone()
+  # h_axes = hSB['pdfNBins'].Clone()
   h_axes.Reset()
   if options.doBands: h_axes.SetMaximum((hD.GetMaximum()+hD.GetBinError(hD.GetMaximumBin()))*1.4)
   else: h_axes.SetMaximum((hD.GetMaximum()+hD.GetBinError(hD.GetMaximumBin()))*1.3)
@@ -116,9 +117,9 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNR,hDr,hBr,hSr,cat,options,dB=None,re
   h_axes.SetTitle("")
   h_axes.GetXaxis().SetTitle("")
   h_axes.GetXaxis().SetLabelSize(0)
-  h_axes.GetYaxis().SetTitleSize(0.05)
+  h_axes.GetYaxis().SetTitleSize(0.05*1.2)
   h_axes.GetYaxis().SetTitle("Events / GeV")
-  h_axes.GetYaxis().SetTitleOffset(1.1)
+  h_axes.GetYaxis().SetTitleOffset(0.8)
   h_axes.GetYaxis().SetLabelSize(0.035)
   h_axes.GetYaxis().SetLabelOffset(0.007)
   #if cat == "wall": h_axes.GetYaxis().SetTitle("S/(S+B) Weighted %s"%h_axes.GetYaxis().GetTitle())
@@ -130,23 +131,30 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNR,hDr,hBr,hSr,cat,options,dB=None,re
     gr_2sig, gr_2sig_r = ROOT.TGraphAsymmErrors(), ROOT.TGraphAsymmErrors()
     gr_i = 0
     # Loop over bins and extract median and +-1/2sigma bands
+    bbin = 1
     for ibin in range(h_axes.GetXaxis().GetFirst(),h_axes.GetNbinsX()+1):
       xval = h_axes.GetXaxis().GetBinCenter(ibin)
       xerr = 0.5*(h_axes.GetXaxis().GetBinWidth(ibin))
-      #bkgval = hNR['nBins'].GetBinContent(ibin)
       bkgval = hB['nBins'].GetBinContent(ibin)
       properties = extractBandProperties(dB,cat,ibin)
-      gr_1sig.SetPoint(gr_i,xval,properties['median'])
-      gr_2sig.SetPoint(gr_i,xval,properties['median'])
-      gr_1sig_r.SetPoint(gr_i,xval,properties['median']-bkgval)
-      gr_2sig_r.SetPoint(gr_i,xval,properties['median']-bkgval)
-      #gr_1sig.SetPointError(gr_i,xerr,xerr,properties['down1sigma'],properties['up1sigma'])
+      #stupid attempt at getting more points in the bands 
+      # bkgval = hB['pdfNBins'].GetBinContent(ibin)
+      # fine2coarse = int(options.pdfNBins/options.nBins)
+      # if ibin % fine2coarse == 0:
+      #   bbin += 1
+      # properties = extractBandProperties(dB,cat,min(80,bbin))
+
+      gr_1sig.SetPoint(gr_i,xval,bkgval)
+      gr_2sig.SetPoint(gr_i,xval,bkgval)
+      gr_1sig_r.SetPoint(gr_i,xval,bkgval-bkgval)
+      gr_2sig_r.SetPoint(gr_i,xval,bkgval-bkgval)
+      # gr_1sig.SetPointError(gr_i,xerr,xerr,properties['down1sigma'],properties['up1sigma'])
       gr_1sig.SetPointError(gr_i,xerr,xerr,properties['median']-properties['down1sigma'],properties['up1sigma']-properties['median'])
-      #gr_2sig.SetPointError(gr_i,xerr,xerr,properties['down2sigma'],properties['up2sigma'])
+      # gr_2sig.SetPointError(gr_i,xerr,xerr,properties['down2sigma'],properties['up2sigma'])
       gr_2sig.SetPointError(gr_i,xerr,xerr,properties['median']-properties['down2sigma'],properties['up2sigma']-properties['median'])
-      #gr_1sig_r.SetPointError(gr_i,xerr,xerr,properties['median'],properties['up1sigma'])
+      # gr_1sig_r.SetPointError(gr_i,xerr,xerr,properties['median'],properties['up1sigma'])
       gr_1sig_r.SetPointError(gr_i,xerr,xerr,properties['median']-properties['down1sigma'],properties['up1sigma']-properties['median'])
-      #gr_2sig_r.SetPointError(gr_i,xerr,xerr,properties['down2sigma'],properties['up2sigma'])
+      # gr_2sig_r.SetPointError(gr_i,xerr,xerr,properties['down2sigma'],properties['up2sigma'])
       gr_2sig_r.SetPointError(gr_i,xerr,xerr,properties['median']-properties['down2sigma'],properties['up2sigma']-properties['median'])
       gr_i += 1
     gr_1sig.SetFillColor(ROOT.TColor.GetColor("#FFDF7Fff"))
@@ -164,13 +172,13 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNR,hDr,hBr,hSr,cat,options,dB=None,re
   else: leg = ROOT.TLegend(0.58,0.52,0.86,0.76)
   leg.SetFillStyle(0)
   leg.SetLineColor(0)
-  leg.SetTextSize(0.045)
+  leg.SetTextSize(0.045*1.2)
   leg.AddEntry(hD,"Data","ep")
   if options.unblind:
     leg.AddEntry(hSB['pdfNBins'],"S+B","l")
-    leg.AddEntry(hNR['pdfNBins'],"NRB","l")
-    leg.AddEntry(hB['pdfNBins'],"Tot B","l")
-    leg.AddEntry(hS['pdfNBins'],"S","l")
+    leg.AddEntry(hNR['pdfNBins'],"Non-res B","l")
+    leg.AddEntry(hB['pdfNBins'],"Total B","l")
+    leg.AddEntry(hS['pdfNBins'],"S(x50)","l")
   else:
     leg.AddEntry(hB['pdfNBins'],"Total bkg fit","l")
     leg.AddEntry(hS['pdfNBins'],"Sig model","fl")
@@ -215,11 +223,12 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNR,hDr,hBr,hSr,cat,options,dB=None,re
   lat0.SetTextFont(42)
   lat0.SetTextAlign(11)
   lat0.SetNDC()
-  lat0.SetTextSize(0.06)
-  lat0.DrawLatex(0.12,0.92,"#bf{CMS} #it{Preliminary}")
-  #lat0.DrawLatex(0.12,0.92,"#bf{CMS}")
-  lat0.DrawLatex(0.6,0.92,"138 fb^{-1} (13 TeV)")
-  lat0.DrawLatex(0.6,0.8,"#scale[0.6]{%s}"%Translate(cat,translateCats))
+  lat0.SetTextSize(0.06*1.2)
+  #lat0.DrawLatex(0.12,0.92,"#bf{CMS} #it{Preliminary}")
+  lat0.DrawLatex(0.12,0.92,"#bf{CMS}")
+  lat0.DrawLatex(0.54,0.92,"138 fb^{-1} (13 TeV)")
+  translateCats = {"SR1":"SR_{1}", "SR2":"SR_{2}"}
+  lat0.DrawLatex(0.6,0.8,translateCats[cat])
   #lat0.DrawLatex(0.15,0.83,"#scale[0.75]{H#rightarrow#gamma#gamma}")
   if(options.loadSnapshot is not None):
     #lat0.DrawLatex(0.15,0.77,"#scale[0.6]{#vec{#alpha} = STXS stage 1.2 minimal}")
@@ -239,18 +248,18 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNR,hDr,hBr,hSr,cat,options,dB=None,re
   #  lat0.DrawLatex(0.13,0.77,"#scale[0.75]{%s}"%poiStr)
   else: 
     if limit is not None: lat0.DrawLatex(0.15,0.77,"#scale[0.5]{m_{X} = %s GeV, #sigma #bf{#it{#Beta}} = %.3f fb}"%(options.MX,limit))
-    else: lat0.DrawLatex(0.15,0.77,"#scale[0.75]{m_{H} = 125.38 GeV}")
+    else: lat0.DrawLatex(0.15,0.77,"#scale[0.75*1.2]{m_{H} = 125.38 GeV}")
   # Ratio plot
   pad2.cd()
   h_axes_ratio = hDr.Clone()
   h_axes_ratio.Reset()
-  h_axes_ratio.SetMaximum(2)
+  h_axes_ratio.SetMaximum(3)
   #h_axes_ratio.SetMaximum(max((hDr.GetMaximum()+hDr.GetBinError(hDr.GetMaximumBin()))*1.5,hSr.GetMaximum()*1.2))
-  h_axes_ratio.SetMinimum(-1)
+  h_axes_ratio.SetMinimum(-2)
   #h_axes_ratio.SetMinimum((hDr.GetMinimum()-hDr.GetBinError(hDr.GetMinimumBin()))*1.3)
   h_axes_ratio.SetTitle("")
   h_axes_ratio.GetXaxis().SetTitleSize(0.05*padSizeRatio)
-  h_axes_ratio.GetXaxis().SetLabelSize(0.035*padSizeRatio)
+  h_axes_ratio.GetXaxis().SetLabelSize(0.035*padSizeRatio*1.2)
   h_axes_ratio.GetXaxis().SetLabelOffset(0.007)
   h_axes_ratio.GetXaxis().SetTickLength(0.03*padSizeRatio)
   h_axes_ratio.GetYaxis().SetLabelSize(0.035*padSizeRatio)
@@ -290,12 +299,12 @@ def makeSplusBPlot(workspace,hD,hSB,hB,hS,hNR,hDr,hBr,hSr,cat,options,dB=None,re
   lat1.SetTextFont(42)
   lat1.SetTextAlign(33)
   lat1.SetNDC(1)
-  lat1.SetTextSize(0.045*padSizeRatio)
-  lat1.DrawLatex(0.87,0.91,"NRB subtracted")
-  #lat1.DrawLatex(0.87,0.91,"Tot B subtracted")
+  lat1.SetTextSize(0.045*padSizeRatio*1.2)
+  # lat1.DrawLatex(0.87,0.91,"NRB subtracted")
+  lat1.DrawLatex(0.87,0.91,"Total B subtracted")
 
   # Save canvas
   canv.Update()
-  canv.SaveAs("./SplusBModels%s/%s_%s.png"%(options.ext,cat,options.xvar.split(",")[0]))
-  canv.SaveAs("./SplusBModels%s/%s_%s.pdf"%(options.ext,cat,options.xvar.split(",")[0]))
+  canv.SaveAs("./SplusBModels%s%s_%s.png"%(options.ext,cat,options.xvar.split(",")[0]))
+  canv.SaveAs("./SplusBModels%s%s_%s.pdf"%(options.ext,cat,options.xvar.split(",")[0]))
   #raw_input("Press any key to continue...")
