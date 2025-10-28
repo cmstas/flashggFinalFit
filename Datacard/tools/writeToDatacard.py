@@ -45,7 +45,10 @@ def writeProcesses(f,d,options):
       if r['proc'] == "data_obs": continue
       lbin_procXcat += "%-55s "%cat
       lproc += "%-55s "%r['proc']
-      if r['proc'] == "bkg_mass": lprocid += "%-55s "%"1"
+      if 'ttHH_' not in r['proc']: 
+        print(r['proc'])
+        lprocid += "%-55s "%"1"
+      #if r['proc'] == "bkg_mass": lprocid += "%-55s "%"1"
       else:
         lprocid += "%-55s "%sigID
         sigID -= 1
