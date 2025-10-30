@@ -183,8 +183,8 @@ run_combine(){
         #eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --run=blind --freezeParameters MH $common_runes > combine_results_${tag}.txt"
 	#eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --run=blind --freezeParameters allConstrainedNuisances $common_runes > stat_only_${tag}.txt"
         ##Unblind
-        #eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters MH $common_runes > combine_results_${tag}_unblind.txt"
-	#eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters allConstrainedNuisances $common_runes > stat_only_${tag}_unblind.txt"
+        eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters MH $common_runes > combine_results_${tag}_unblind.txt"
+	eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters allConstrainedNuisances $common_runes > stat_only_${tag}_unblind.txt"
 
         ## Likelyhood scan parts
 	##combine --expectSignal 1 -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M MultiDimFit --algo grid --points 100 -m 125.38 -d Datacard_${interpretation}.root -n _Scan_r --freezeParameters MH --rMin -10 --rMax 200
@@ -255,10 +255,10 @@ copy_plot(){
     cp /home/users/iareed/public_html/ttHH/index.php /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/Signal
 }
 
-for mass in 500 550; do
+#for mass in 500 550; do
 #for mass in 500 550 600 650 700 750 800 850 900 950; do
 #for mass in 1000 1100 1200 1300 1400 1500; do
-#for mass in 500 550 600 650 700 750 800 850 900 950 1000 1100 1200 1300 1400 1500; do
+for mass in 500 550 600 650 700 750 800 850 900 950 1000 1100 1200 1300 1400 1500; do
     mass_point=M${mass}
     tag=Tprime_M${mass}_pre_app
     SR1_only=1000
@@ -271,8 +271,8 @@ for mass in 500 550; do
 
     #model_bkg
     #model_sig
-    make_datacard_for_SB_plots
-    #make_datacard
+    #make_datacard_for_SB_plots
+    make_datacard
     #run_combine
     #syst_plots
     #copy_plot

@@ -133,7 +133,7 @@ run_combine(){
 	cp ../Signal/outdir_${tag}_packaged/CMS-HGG*.root ./Models/signal/
 	cp ../Background/outdir_${tag}/CMS-HGG*.root ./Models/background/
 	cp ../Background/outdir_${tag}/CMS-HGG*.root ./Models/data/
-	#cp ../Datacard/Datacard_${tag}.txt Datacard_${tag}.txt
+	cp ../Datacard/Datacard_${tag}.txt Datacard_${tag}.txt
 	cp ../Datacard/Datacardspecial_${tag}.txt Datacardspecial_${tag}.txt
 
 	python RunText2Workspace.py --tag ${tag} --ext "special" --mode $interpretation --dryRun
@@ -145,8 +145,8 @@ run_combine(){
         #eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --run=blind --freezeParameters MH $common_runes > combine_results_${tag}.txt"
 	#eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --run=blind --freezeParameters allConstrainedNuisances $common_runes > stat_only_${tag}.txt"
         ##Unblind
-        #eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters MH $common_runes > combine_results_${tag}_unblind.txt"
-	#eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters allConstrainedNuisances $common_runes > stat_only_${tag}_unblind.txt"
+        eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters MH $common_runes > combine_results_${tag}_unblind.txt"
+	eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters allConstrainedNuisances $common_runes > stat_only_${tag}_unblind.txt"
 
         ### Likelyhood scan parts
 	###combine --expectSignal 1 -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M MultiDimFit --algo grid --points 100 -m 125.38 -d Datacard_${interpretation}.root -n _Scan_r --freezeParameters MH --rMin -10 --rMax 200
@@ -156,7 +156,8 @@ run_combine(){
         #echo "Blind"
 	#tail combine_results_${tag}.txt
         #echo "Unblind"
-	#tail combine_results_${tag}_unblind.txt
+	tail stat_only_${tag}_unblind.txt
+	tail combine_results_${tag}_unblind.txt
     popd
 }
 
@@ -218,7 +219,7 @@ copy_plot(){
 }
 
 #TODO: Get output naming split from tag to allow multiple runs from the same input files
-for mass in 250; do # 275 300 325 350; do
+for mass in 250 275 300 325 350; do
     mass_point=M${mass}
     tag=2HDM_M${mass}_pre_app_1108_unblind
     interpretation=2HDM_${mass_point}
@@ -226,8 +227,8 @@ for mass in 250; do # 275 300 325 350; do
     trees=/home/users/iareed/CMSSW_10_2_13/src/flashggFinalFit/files_systs/$tag/
     #model_bkg
     #model_sig
-    #make_datacard
-    #run_combine
-    syst_plots
+    make_datacard
+    run_combine
+    #syst_plots
     #copy_plot
 done

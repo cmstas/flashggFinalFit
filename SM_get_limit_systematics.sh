@@ -33,35 +33,35 @@ model_sig(){
     procs=("ttHH_ggbb" "ttHH_ggWW" "ttHH_ggTauTau" "ggH" "ttH" "tHq" "tHW" "VH" "ggHH_ggbb" "ggHH_ggWWsemileptonic" "ggHH_ggWWdileptonic" "ggHH_ggTauTau")
     #procs=("ttHH_ggbb" "ttHH_ggWW" "ttHH_ggTauTau" "ggH" "ttH" "VBFH" "tHq" "tHW" "VH" "ggHH_ggbb" "ggHH_ggWWsemileptonic" "ggHH_ggWWdileptonic" "ggHH_ggTauTau")
     for year in 2016 2017 2018; do
-	rm -rf $trees/ws_signal_$year
-	mkdir -p $trees/ws_signal_$year
-	for proc in "${procs[@]}"; do
-	    rm -rf $trees/$year/ws_$proc
+        rm -rf $trees/ws_signal_$year
+        mkdir -p $trees/ws_signal_$year
+        for proc in "${procs[@]}"; do
+            rm -rf $trees/$year/ws_$proc
 
             # You should use the same config here as in the background modeling section
-	    pushd Trees2WS
-		python trees2ws.py --inputConfig syst_config_ttHH_ggXX.py --inputTreeFile $trees/$year/${proc}_125.38_13TeV.root --inputMass 125.38 --productionMode $proc --year $year --doSystematics
-	    popd
-	    mv $trees/$year/ws_$proc/${proc}_125.38_13TeV_$proc.root $trees/ws_signal_$year/output_${proc}_M125.38_13TeV_pythia8_${proc}.root
-	done
+            pushd Trees2WS
+        	python trees2ws.py --inputConfig syst_config_ttHH_ggXX.py --inputTreeFile $trees/$year/${proc}_125.38_13TeV.root --inputMass 125.38 --productionMode $proc --year $year --doSystematics
+            popd
+            mv $trees/$year/ws_$proc/${proc}_125.38_13TeV_$proc.root $trees/ws_signal_$year/output_${proc}_M125.38_13TeV_pythia8_${proc}.root
+        done
 
         # Configs here are on a per mapping basis
         #TODO: Have mapping updated on the fly too, not just the tag and year
         # Mappings defined here Signal/tools/replacementMap.py and Signal/tools/XSBRMap.py
-	pushd Signal
-	    rm -rf outdir_${tag}_$year
-	    sed -i "s/dummy_tag/${tag}/g" syst_config_ttHH_ggXX.py
-	    sed -i "s/dummy_year/${year}/g" syst_config_ttHH_ggXX.py
-	    sed -i "s/dummy_interpretation/${interpretation}/g" syst_config_ttHH_ggXX.py
+        pushd Signal
+            rm -rf outdir_${tag}_$year
+            sed -i "s/dummy_tag/${tag}/g" syst_config_ttHH_ggXX.py
+            sed -i "s/dummy_year/${year}/g" syst_config_ttHH_ggXX.py
+            sed -i "s/dummy_interpretation/${interpretation}/g" syst_config_ttHH_ggXX.py
 
             python RunSignalScripts.py --inputConfig syst_config_ttHH_ggXX.py --mode fTest --modeOpts "--doPlots"
-	    python RunSignalScripts.py --inputConfig syst_config_ttHH_ggXX.py --mode calcPhotonSyst
-	    python RunSignalScripts.py --inputConfig syst_config_ttHH_ggXX.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit"
+            python RunSignalScripts.py --inputConfig syst_config_ttHH_ggXX.py --mode calcPhotonSyst
+            python RunSignalScripts.py --inputConfig syst_config_ttHH_ggXX.py --mode signalFit --groupSignalFitJobsByCat --modeOpts "--skipVertexScenarioSplit"
 
-	    sed -i "s/${tag}/dummy_tag/g" syst_config_ttHH_ggXX.py
-	    sed -i "s/${year}/dummy_year/g" syst_config_ttHH_ggXX.py
-	    sed -i "s/${interpretation}/dummy_interpretation/g" syst_config_ttHH_ggXX.py
-	popd
+            sed -i "s/${tag}/dummy_tag/g" syst_config_ttHH_ggXX.py
+            sed -i "s/${year}/dummy_year/g" syst_config_ttHH_ggXX.py
+            sed -i "s/${interpretation}/dummy_interpretation/g" syst_config_ttHH_ggXX.py
+        popd
     done
 
     pushd Signal
@@ -73,8 +73,8 @@ model_sig(){
 	python RunPackager.py --cats SR2 --exts ${tag}_2016,${tag}_2017,${tag}_2018 --batch local --massPoints 125.38 --mergeYears
 	python RunPlotter.py --procs all --cats SR2 --years 2016,2017,2018 --ext packaged
 
-        #python RunPlotter.py --procs ttHH_ggbb --cats SR1 --years 2016,2017,2018 --ext packaged
-        #python RunPlotter.py --procs ttHH_ggbb --cats SR2 --years 2016,2017,2018 --ext packaged
+        python RunPlotter.py --procs ttHH_ggbb --cats SR1 --years 2016,2017,2018 --ext packaged --translateProcs prettyProcs.json --label "Simulation"
+        python RunPlotter.py --procs ttHH_ggbb --cats SR2 --years 2016,2017,2018 --ext packaged --translateProcs prettyProcs.json --label "Simulation"
         #python RunPlotter.py --procs ttHH_ggWW --cats SR1 --years 2016,2017,2018 --ext packaged
         #python RunPlotter.py --procs ttHH_ggWW --cats SR2 --years 2016,2017,2018 --ext packaged
         #python RunPlotter.py --procs ttHH_ggTauTau --cats SR1 --years 2016,2017,2018 --ext packaged
@@ -108,17 +108,17 @@ model_sig(){
 
 make_datacard(){
     #Make sure desired systematics are specified here Datacard/systematics.py
-    #TODO: Check theory_uncertainties are updated for 2HDM and Tprime
     pushd Datacard
         rm -rf yields_$tag
         rm Datacard.txt
 
         python RunYields.py --mass "125.38" --inputWSDirMap 2016=${trees}/ws_signal_2016,2017=${trees}/ws_signal_2017,2018=${trees}/ws_signal_2018 --cats auto --procs auto --batch local --mergeYears --skipZeroes --ext $tag --doSystematics
-        #python RunYields.py --mass "125.38" --inputWSDirMap 2016=${trees}/ws_signal_2016,2017=${trees}/ws_signal_2017,2018=${trees}/ws_signal_2018 --cats auto --procs "ttHH_ggbb,ttHH_ggWW,ttHH_ggTauTau" --batch local --mergeYears --skipZeroes --ext $tag --doSystematics
-
         python makeDatacard.py --years 2016,2017,2018 --ext $tag --prune --pruneThreshold 0.00001 --doSystematics
-        #cp Datacard.txt Datacard_${tag}.txt
-        cp Datacard.txt Datacardspecial_${tag}.txt
+        cp Datacard.txt Datacard_${tag}.txt
+        
+        #python RunYields.py --mass "125.38" --inputWSDirMap 2016=${trees}/ws_signal_2016,2017=${trees}/ws_signal_2017,2018=${trees}/ws_signal_2018 --cats auto --procs "ttHH_ggbb,ttHH_ggWW,ttHH_ggTauTau" --batch local --mergeYears --skipZeroes --ext $tag --doSystematics
+        #python makeDatacard.py --years 2016,2017,2018 --ext $tag --prune --pruneThreshold 0.00001 --doSystematics
+        #cp Datacard.txt Datacardspecial_${tag}.txt
     popd
 }
 
@@ -135,29 +135,34 @@ run_combine(){
 	cp ../Datacard/Datacard_${tag}.txt Datacard_${tag}.txt
 	#cp ../Datacard/Datacardspecial_${tag}.txt Datacardspecial_${tag}.txt
 
-	#python RunText2Workspace.py --tag $tag --mode $interpretation --dryRun
+	python RunText2Workspace.py --tag $tag --mode $interpretation --dryRun
 	#python RunText2Workspace.py --tag ${tag} --ext "special" --mode $interpretation --dryRun
-	#./t2w_jobs/t2w_${interpretation}.sh
+	./t2w_jobs/t2w_${interpretation}.sh
 	#./t2w_jobs/t2w_${interpretation}special.sh
-	#rm combine_results_${tag}.txt
+	rm combine_results_${tag}.txt
 	#rm combine_results_${tag}_unblind.txt
         common_runes=" --cminDefaultMinimizerStrategy 0 --X-rtd MINIMIZER_freezeDisassociatedParams --X-rtd MINIMIZER_multiMin_hideConstants --X-rtd MINIMIZER_multiMin_maskConstraints --X-rtd MINIMIZER_multiMin_maskChannels=2"
         ##Blind
-        #eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --run=blind --freezeParameters MH $common_runes > combine_results_${tag}.txt"
+        eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --run=blind --freezeParameters MH $common_runes > combine_results_${tag}.txt"
 	#eval "combine --redefineSignalPOI r -M AsymptoticLimits -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --run=blind --freezeParameters allConstrainedNuisances $common_runes > stat_only_${tag}.txt"
         ##Unblind
-        #eval "combine -M AsymptoticLimits --redefineSignalPOI r -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters MH $common_runes > combine_results_${tag}_unblind.txt"
+        eval "combine -M AsymptoticLimits --redefineSignalPOI r -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters MH $common_runes > combine_results_${tag}_unblind.txt"
+	eval "combine -M AsymptoticLimits --redefineSignalPOI r -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters all $common_runes > stat_only_${tag}_unblind.txt"
+	#eval "combine -M AsymptoticLimits --redefineSignalPOI r -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters MH,allConstrainedNuisances $common_runes > stat_only_${tag}_unblind.txt"
 	#eval "combine -M AsymptoticLimits --redefineSignalPOI r -m 125.38 -d Datacard_${interpretation}.root -n _AsymptoticLimit_r --freezeParameters allConstrainedNuisances $common_runes > stat_only_${tag}_unblind.txt"
-	#eval "combine -M FitDiagnostics   --redefineSignalPOI r -m 125.38 -d Datacard_${interpretation}.root -n _fits_comp --saveShapes --saveWithUncertainties --saveWorkspace"
-	eval "combine --redefineSignalPOI r -M MultiDimFit -m 125.38 -d Datacard_${interpretation}.root -n fits_comp_v2 --freezeParameters MH --setParameters MH=125.38 --saveWorkspace --rMin 0 --rMax 100  $common_runes"
+        #---------------
+	#eval "combine -M FitDiagnostics   --redefineSignalPOI r -m 125.38 -d Datacard_${interpretation}.root -n _fits_comp --saveShapes --saveWithUncertainties --saveWorkspace --plots"
+	#eval "combine --redefineSignalPOI r -M MultiDimFit -m 125.38 -d Datacard_${interpretation}.root -n fits_comp_v2 --freezeParameters MH --setParameters MH=125.38 --saveWorkspace --rMin 0 --rMax 100  $common_runes"
 
         # Likelyhood scan parts
 	#combine --expectSignal 1 -t -1 --redefineSignalPOI r --cminDefaultMinimizerStrategy 0 -M MultiDimFit --algo grid --points 100 -m 125.38 -d Datacard_${interpretation}.root -n _Scan_r --freezeParameters MH --rMin -10 --rMax 200
 	#python plotLScan.py higgsCombine_Scan_r.MultiDimFit.mH125.root
 	#cp NLL_scan* /home/users/iareed/public_html/ttHH/flashggFinalFit/$tag/
 
-        #echo "Blind"
-	#tail combine_results_${tag}.txt
+        echo "Stat Only"
+	tail stat_only_${tag}_unblind.txt
+        echo "Blind"
+	tail combine_results_${tag}.txt
         echo "Unblind"
 	tail combine_results_${tag}_unblind.txt
     popd
@@ -222,7 +227,7 @@ copy_plot(){
 
 #model_bkg
 #model_sig
-#make_datacard
+make_datacard
 run_combine
 #syst_plots
 #copy_plot
