@@ -14,14 +14,17 @@ twd__ = "%s/Trees2WS"%cwd__
 sqrts__ = "13TeV"
 
 # Luminosity map in fb^-1: for using UL 2018
+# lumiMap = {
+#     '2016':36.33, 
+#     '2017':41.48, 
+#     '2018':59.83, 
+#     'combined':137.65, 
+#     'merged':137.65,
+#     '2022preEE':8.00,
+#     '2022postEE':26.70
+# }
 lumiMap = {
-    '2016':36.33, 
-    '2017':41.48, 
-    '2018':59.83, 
-    'combined':137.65, 
-    'merged':137.65,
-    '2022preEE':8.00,
-    '2022postEE':26.70
+    'combined':282.72 # 2022-2025
 }
 # If using ReReco samples then switch to lumiMap below (missing data in 2018 EGamma data set)
 #lumiMap = {'2016':36.33, '2017':41.48, '2018':59.35, 'combined':137.17, 'merged':137.17}
@@ -39,10 +42,11 @@ productionModes = ['ggH','qqH','ttH','tHq','tHW','ggZH','WH','ZH','bbH']
 decayMode = 'hgg'
 
 # List of years
-years_to_process = ['2016','2017','2018','2022preEE','2022postEE']
+# years_to_process = ['2016','2017','2018','2022preEE','2022postEE']
+years_to_process = ['2022preEE','2022postEE', '2023preBPix', '2023postBPix', '2024', '2025']
 
 # flashgg input WS objects
-inputWSName__ = "tagsDumper/cms_hgg_13TeV"
+inputWSName__ = "wfit"
 inputNuisanceExtMap = {'scales':'','scalesCorr':'','smears':''}
 # Signal output WS objects
 outputWSName__ = "wsig"

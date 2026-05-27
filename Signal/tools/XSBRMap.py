@@ -151,3 +151,7 @@ globalXSBRMap['STXS']['THQ_FWDH'] = {'mode':'tHq','factor':0.0279}
 globalXSBRMap['STXS']['THQ'] = {'mode':'tHq','factor':0.9721}
 globalXSBRMap['STXS']['THW_FWDH'] = {'mode':'tHW','factor':0.0106}
 globalXSBRMap['STXS']['THW'] = {'mode':'tHW','factor':0.9894}
+
+globalXSBRMap['XHH'] = od()
+globalXSBRMap['XHH']['decay'] = {'mode':'constant','factor':1}
+globalXSBRMap['XHH']['xhh_m300'] = {'mode': 'constant', 'factor':3.024}
